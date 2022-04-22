@@ -65,7 +65,7 @@ export default function useAirCache(cache: string) {
           .toString(16)
           .padStart(64, 0)}.json`;
 
-        const response = await axios.get(metaurl + "?hello");
+        const response = await axios.get(metaurl);
         console.log(response);
         setCaches([caches]);
       })();
