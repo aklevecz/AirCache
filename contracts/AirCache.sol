@@ -50,7 +50,8 @@ contract AirCache is Ownable {
 
         // ERC721 contractInterface = ERC721(tokenAddress);
         // contractInterface.transferFrom(msg.sender, address(this), tokenId);
-
+        Cache memory _cache = caches[_cacheId];
+        require(_cache.tokenId == 0, "Cache is being used");
         (bool success, bytes memory returnData) = address(tokenAddress).call(
             abi.encodeWithSignature(
                 "transferFrom(address,address,uint256)",
@@ -60,7 +61,6 @@ contract AirCache is Ownable {
             )
         );
         require(success);
-        Cache memory _cache = caches[_cacheId];
         _cache.tokenAddress = tokenAddress;
         _cache.tokenId = tokenId;
         caches[_cacheId] = _cache;

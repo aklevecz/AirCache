@@ -3,7 +3,8 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import AirCacheInterface from "./AirCache.json";
 import { ethers } from "ethers";
 import { haversineDistance } from "../../libs/utils";
-const AIRCACHE_ADDRESS = "0x83a3d9bE1F032C1f1eC28F9Fa95B7bf2cC3f36B4";
+import { AIRCACHE_ADDRESS } from "../../libs/constants";
+
 const ALCHEMY_KEY = process.env.ALCHEMY_KEY_MUMBAI;
 const PP2 = process.env.PP2 as string;
 const defaultProvider = new ethers.providers.AlchemyProvider(
@@ -12,15 +13,9 @@ const defaultProvider = new ethers.providers.AlchemyProvider(
 );
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
-const masterWallet = new ethers.Wallet(PP2, defaultProvider);
-const contract = new ethers.Contract(
-  AIRCACHE_ADDRESS,
-  AirCacheInterface.abi,
-  masterWallet.provider
-);
-
 type Data = {
-  user: string | JwtPayload;
+  tx: ethers.Transaction | null;
+  message: string;
 };
 
 export default async function handler(
@@ -43,21 +38,35 @@ export default async function handler(
     // Figure out way to avoid faking location
 
     // The reference from cacheId to location or vice versa should be in a db or something
-    console.log(req.body);
     const { cacheId, userLocation, cacheLocation, navigator } = req.body;
-    const distance = haversineDistance(userLocation, cacheLocation);
-    console.log(navigator);
-    console.log(distance);
-    return res.status(200).end();
-    const signer = contract.connect(masterWallet);
-    const tx = await signer.dropNFT(cacheId, user.publicAddress);
-    const receipt = await tx.wait();
-    for (const event of receipt.events) {
-      console.log(event);
-    }
 
-    res.status(200).end();
+    const distance = haversineDistance(userLocation, cacheLocation);
+    if (distance > 100) {
+      return res.json({ tx: null, message: "TOO_FAR" });
+    }
+    const masterWallet = new ethers.Wallet(PP2, defaultProvider);
+    const contract = new ethers.Contract(
+      AIRCACHE_ADDRESS,
+      AirCacheInterface.abi,
+      masterWallet.provider
+    );
+    const signer = contract.connect(masterWallet);
+    // signer.estimateGas
+    //   .dropNFT(cacheId, user.publicAddresss)
+    //   .then((b) => console.log(b.toString()));
+    // console.log("HELLO");
+    // res.status(200).end();
+    // return;
+    const tx = await signer.dropNFT(cacheId, user.publicAddress);
+    console.log(tx);
+    // const receipt = await tx.wait();
+    // for (const event of receipt.events) {
+    //   console.log(event.event);
+    // }
+
+    res.status(200).json({ tx, message: "SUCCESS" });
   } catch (e) {
+    console.log(e);
     res.status(405).end();
   }
 }

@@ -7,7 +7,12 @@ module.exports = {
     fontFamily: {
       fatfrank: ["fatfrank", "sans-serif"],
     },
-    extend: {},
+
+    extend: {
+      colors: {
+        polygon: "#8247E5",
+      },
+    },
   },
   plugins: [],
 };

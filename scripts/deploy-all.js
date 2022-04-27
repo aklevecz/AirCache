@@ -7,11 +7,11 @@ async function main() {
 
   console.log("AirCache deployed to:", airCache.address);
 
-  const FakeNFT = await hre.ethers.getContractFactory("FakeNFT");
-  const fakeNFT = await FakeNFT.deploy();
-  await fakeNFT.deployed();
+  const SpottedPigs = await hre.ethers.getContractFactory("SpottedPigs");
+  const spottedPigs = await SpottedPigs.deploy(airCache.address);
+  await spottedPigs.deployed();
 
-  console.log("FakeNFT deployed to:", fakeNFT.address);
+  console.log("SpottedPigs deployed to:", spottedPigs.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

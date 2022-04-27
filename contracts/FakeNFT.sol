@@ -7,6 +7,7 @@ contract FakeNFT is ERC721 {
     constructor() ERC721("FakeNFT", "FAKE") {
         _mint(msg.sender, 1);
         _mint(msg.sender, 2);
+        _mint(msg.sender, 3);
     }
 
     function makeFake(uint256 tokenId) public {

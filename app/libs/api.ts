@@ -39,7 +39,6 @@ export const claimCache = async (
   navigator: any
 ) => {
   try {
-    console.log(navigator);
     const response = await api.post(endpoints.claim, {
       cacheId,
       cacheLocation,

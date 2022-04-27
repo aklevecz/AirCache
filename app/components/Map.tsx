@@ -3,8 +3,9 @@ import { Loader } from "@googlemaps/js-api-loader";
 import silverMap from "../assets/map-style/silver-map.json";
 import smiler from "../assets/icons/smiler.svg";
 import cacheIcon from "../assets/icons/cache.png";
+import eggIcon from "../assets/icons/egg2.png";
 import { ethers } from "ethers";
-import { claimCache } from "../libs/api";
+import storage from "../libs/storage";
 
 const loader = new Loader({
   apiKey: process.env.NEXT_PUBLIC_GMAP_KEY as string,
@@ -19,18 +20,31 @@ const LA_COORDS = {
 type Props = {
   markerPosition: any;
   caches: any;
+  toggleModal: (data: any) => void;
+  showEmpty: boolean;
 };
 
-export default function Map({ markerPosition, caches }: Props) {
+export default function Map({
+  markerPosition,
+  caches,
+  toggleModal,
+  showEmpty,
+}: Props) {
   const [map, setMap] = useState<google.maps.Map>();
   const mapContainer = useRef<HTMLDivElement>(null);
 
   const userRef = useRef<any>(null);
   const navigatorRef = useRef<any>(null);
+  const markerRefs = useRef<any>([]);
 
-  const createCacheMarker = (lat: number, lng: number, id: number) => {
+  const createCacheMarker = (
+    lat: number,
+    lng: number,
+    id: number,
+    NFT: any
+  ) => {
     const icon = {
-      url: cacheIcon.src,
+      url: eggIcon.src,
       scaledSize: new google.maps.Size(40, 40),
     };
     const cacheMarker = new google.maps.Marker({
@@ -38,48 +52,57 @@ export default function Map({ markerPosition, caches }: Props) {
       map,
       icon,
     });
-    const cacheLocation = { lat, lng };
-
+    // console.log(NFT);
+    // if (!NFT.name) {
+    //   cacheMarker.setMap(null);
+    // }
+    markerRefs.current = [...markerRefs.current, { marker: cacheMarker, NFT }];
     cacheMarker.addListener("click", () => {
-      const timestamp = navigatorRef.current.timestamp;
-      const coords = navigatorRef.current.coords;
-      const o = {
-        accuracy: coords.accuracy,
-        altitude: coords.altitude,
-        altitudeAccuracy: coords.altitudeAccuracy,
-        heading: coords.heading,
-        latitude: coords.latitude,
-        longitude: coords.longitude,
-        speed: coords.speed,
-      };
-      claimCache(id, cacheLocation, userRef.current, { timestamp, o });
+      toggleModal({ cache: { id, location: { lat, lng } }, NFT });
     });
   };
+
+  useEffect(() => {
+    markerRefs.current.forEach((marker: any) => {
+      if (marker.NFT.name || showEmpty) {
+        marker.marker.setMap(map);
+      } else {
+        marker.marker.setMap(null);
+      }
+    });
+  }, [showEmpty]);
+
   useEffect(() => {
     if (map) {
       for (let i = 0; i < caches.length; i++) {
-        const id = caches[i].id.toNumber();
-        const tokenId = caches[i].id.toNumber();
-        if (tokenId === 0) {
-          console.log("Empty Cache");
-        } else {
-          const lat = ethers.utils.parseBytes32String(caches[i].lat);
-          const lng = ethers.utils.parseBytes32String(caches[i].lng);
-          createCacheMarker(parseFloat(lat), parseFloat(lng), id);
-        }
+        // const id = caches[i].id.toNumber();
+        const id = caches[i].id;
+        const tokenId = caches[i].tokenId;
+        const isEmpty = tokenId === 0;
+        // if (isEmpty) {
+        //   console.log("Empty Cache");
+        // } else {
+        // const lat = ethers.utils.parseBytes32String(caches[i].lat);
+        // const lng = ethers.utils.parseBytes32String(caches[i].lng);
+        const lat = caches[i].lat;
+        const lng = caches[i].lng;
+        createCacheMarker(parseFloat(lat), parseFloat(lng), id, caches[i].NFT);
       }
+      // }
     }
   }, [caches, map]);
+
   useEffect(() => {
     loader.load().then(() => {
       if (mapContainer.current) {
+        const last_location = storage.getItem(storage.keys.user_location);
+        const center = last_location
+          ? JSON.parse(last_location)
+          : { lat: LA_COORDS.lat, lng: LA_COORDS.lng };
         const map = new google.maps.Map(mapContainer.current, {
-          zoom: 13,
+          zoom: 15,
           styles: silverMap,
-          center: {
-            lat: LA_COORDS.lat,
-            lng: LA_COORDS.lng,
-          },
+          center,
         });
         setMap(map);
       }
@@ -91,7 +114,6 @@ export default function Map({ markerPosition, caches }: Props) {
     let tries = 0;
     return new Promise((resolve, __) => {
       const pollMarker = (): any => {
-        console.log("polling");
         const markerDom = document.querySelector(selector) as HTMLImageElement;
         if (!markerDom && tries < MAX_TRIES) {
           tries++;
@@ -104,37 +126,38 @@ export default function Map({ markerPosition, caches }: Props) {
   };
 
   useEffect(() => {
-    if (map && navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const pos = position.coords;
-        map.setCenter({
-          lat: pos.latitude,
-          lng: pos.longitude,
+    if (map && navigator.geolocation && typeof window !== "undefined") {
+      try {
+        navigator.geolocation.getCurrentPosition((position) => {
+          const pos = position.coords;
+          map.setCenter({
+            lat: pos.latitude,
+            lng: pos.longitude,
+          });
+          const icon = {
+            url: smiler.src,
+            scaledSize: new google.maps.Size(20, 20),
+          };
+          const latLng = { lat: pos.latitude, lng: pos.longitude };
+          new google.maps.Marker({
+            position: latLng,
+            map,
+            icon,
+            draggable: true,
+          });
+          getMarker(`img[src='${smiler.src}']`).then((marker: any) => {
+            if (marker) {
+              marker.classList.add("pulse");
+              marker.classList.add("user-marker");
+            }
+          });
+          userRef.current = latLng;
+          navigatorRef.current = position;
+          storage.setItem(storage.keys.user_location, JSON.stringify(latLng));
         });
-        const icon = {
-          url: smiler.src,
-          scaledSize: new google.maps.Size(20, 20),
-        };
-        // console.log(ethers.utils.formatBytes32String(pos.latitude.toString()));
-        // console.log(ethers.utils.formatBytes32String(pos.longitude.toString()));
-        const latLng = { lat: pos.latitude, lng: pos.longitude };
-        const userMarker = new google.maps.Marker({
-          position: latLng,
-          map,
-          icon,
-          draggable: true,
-        });
-        console.log(position);
-        getMarker(`img[src='${smiler.src}']`).then((marker: any) => {
-          console.log(marker);
-          marker.classList.add("pulse");
-          marker.classList.add("user-marker");
-        });
-        userRef.current = latLng;
-        navigatorRef.current = position;
-      });
-    } else {
-      console.error("Geolocation is not supported by this browser.");
+      } catch (e) {
+        console.error("Geolocation error");
+      }
     }
   }, [map]);
 
