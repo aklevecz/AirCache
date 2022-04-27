@@ -87,7 +87,6 @@ export default function CacheContentModal({
   const claim = () => {
     setFetchingLocation(true);
     navigator.geolocation.getCurrentPosition(async (position) => {
-      setFetchingLocation(false);
       const timestamp = position.timestamp;
       const coords = position.coords;
       const o = {
@@ -114,6 +113,7 @@ export default function CacheContentModal({
           o,
         }
       );
+      setFetchingLocation(false);
       setTxState(TxState.Mining);
       if (res.tx) {
         setTxHash(res.tx.hash);
