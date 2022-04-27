@@ -77,18 +77,20 @@ export default function useAirCache(cacheId: string | null) {
       const cache = await contract.caches(cacheId);
       const cacheKey = `cache_${cacheId}`;
       const cachedCache = storage.getItem(cacheKey);
+      const lat = ethers.utils.parseBytes32String(cache.lat);
+      const lng = ethers.utils.parseBytes32String(cache.lng);
       if (!cachedCache) {
         storage.setItem(
           cacheKey,
           JSON.stringify({
-            lat: ethers.utils.parseBytes32String(cache.lat),
-            lng: ethers.utils.parseBytes32String(cache.lng),
+            lat,
+            lng,
           })
         );
       }
       const tokenAddress = cache.tokenAddress;
       const tokenId = cache.tokenId.toNumber();
-      return { ...cache, tokenAddress, tokenId };
+      return { ...cache, lat, lng, tokenAddress, tokenId };
     }
   };
 

@@ -86,6 +86,7 @@ export default function Map({
         // const lng = ethers.utils.parseBytes32String(caches[i].lng);
         const lat = caches[i].lat;
         const lng = caches[i].lng;
+        console.log(caches[i]);
         createCacheMarker(parseFloat(lat), parseFloat(lng), id, caches[i].NFT);
       }
       // }
@@ -143,7 +144,8 @@ export default function Map({
             position: latLng,
             map,
             icon,
-            draggable: true,
+            // draggable: true,
+            clickable: false,
           });
           getMarker(`img[src='${smiler.src}']`).then((marker: any) => {
             if (marker) {
