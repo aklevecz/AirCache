@@ -1,6 +1,6 @@
 export default function EgglineIcon({ color = "white" }) {
   return (
-    <svg viewBox="12 8 50 50">
+    <svg width="100%" height="100%" viewBox="12 8 50 50">
       <path
         fill="none"
         stroke={color}

@@ -16,7 +16,7 @@ export default function useAuth() {
     setFetching(true);
     const did = await magic.auth.loginWithMagicLink({
       email,
-      redirectURI: `${window.location.protocol}//${window.location.host}/callback`,
+      // redirectURI: `${window.location.protocol}//${window.location.host}/callback`,
     });
     const authRequest = await api.post(endpoints.login, null, {
       headers: { Authorization: `Bearer ${did}` },

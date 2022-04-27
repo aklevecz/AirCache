@@ -57,7 +57,10 @@ const Home: NextPage = () => {
   // const cacheInfo = airCache.caches[0];
   // const emptyCache = cacheInfo && cacheInfo.tokenId === 0;
   return (
-    <div className="relative">
+    <div
+      className="relative"
+      style={{ height: "100%", paddingBottom: 50, backgroundColor: "red" }}
+    >
       {/* <div className="absolute w-full z-10">
         <div className="flex justify-center items-center">
           <label className="text-black" htmlFor="show-empty">

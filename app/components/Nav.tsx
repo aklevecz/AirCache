@@ -14,13 +14,20 @@ export default function Nav() {
 
   return (
     <div
-      style={{ display: router.asPath === "/login" ? "none" : "flex" }}
+      style={{
+        display: router.asPath === "/login" ? "none" : "flex",
+        height: 50,
+      }}
       className="fixed bottom-0 left-0 bg-black w-full justify-around"
     >
       {links.map((link) => (
         <Link key={link.name} href={`${link.path}`}>
           <div
-            style={{ width: 40 }}
+            style={{
+              width: 50,
+              height: 50,
+              boxSizing: "border-box",
+            }}
             className="capitalize text-white font-bold text-2xl p-2 items-center justify-center flex"
           >
             {link.icon}
