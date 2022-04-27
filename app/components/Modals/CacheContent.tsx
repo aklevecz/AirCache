@@ -105,7 +105,6 @@ export default function CacheContentModal({
       };
       console.log(haversineDistance(userLocation, data.cache.location));
 
-      setTxState(TxState.Mining);
       const res = await claimCache(
         data.cache.id,
         data.cache.location,
