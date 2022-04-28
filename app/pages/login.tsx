@@ -12,8 +12,10 @@ export default function Login() {
     console.log("going home");
     router.push("/");
   };
+
   useEffect(() => {
     if (auth.user) {
+      //   alert(auth.user.email);
       goHome();
     }
   }, [auth.user]);
@@ -24,6 +26,7 @@ export default function Login() {
         login={auth.login}
         logout={auth.logout}
         mutate={auth.mutate}
+        fetching={auth.fetching}
         goHome={goHome}
       />
     </FullCenter>

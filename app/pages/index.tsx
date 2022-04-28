@@ -33,7 +33,7 @@ const Home: NextPage = () => {
       router.push("/login");
     }
   }, [auth.user]);
-  console.log(auth.user);
+
   if (auth.user === undefined) {
     return (
       <FullCenter>

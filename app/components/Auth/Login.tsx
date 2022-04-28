@@ -29,9 +29,14 @@ export default function Login({
         onChange={onChange}
         value={email}
       />
-      <Button className="w-32 mt-10 font-bold" onClick={() => login(email)}>
+      <Button
+        className="w-32 mt-10 font-bold"
+        onClick={() => {
+          login(email);
+        }}
+      >
         {fetching ? (
-          <div className="bg-black rounded-full">
+          <div id="button" className="bg-black rounded-full">
             <Spinner />
           </div>
         ) : (

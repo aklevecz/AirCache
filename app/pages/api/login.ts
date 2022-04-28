@@ -17,10 +17,8 @@ export default async function handler(
     return res.status(405).end();
 
   let magic = new Magic(MAGIC_SECRET);
-  console.log(req.headers.authorization);
   const did = magic.utils.parseAuthorizationHeader(req.headers.authorization);
   const user = await magic.users.getMetadataByToken(did);
   var token = jwt.sign(user, JWT_SECRET, { expiresIn: "7d" });
-
   res.status(200).json({ token });
 }
