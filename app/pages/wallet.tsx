@@ -30,7 +30,7 @@ export default function Wallet() {
   }
   return (
     <div className="pb-20">
-      <div className="text-3xl text-center m-4 font-bold font-fatfrank tracking-wider">
+      <div className="text-3xl text-center m-4 font-bold font-fatfrank tracking-wider bg-white text-black">
         Your NFTs
       </div>
       <div className="flex flex-wrap items-center justify-center pb-10">
