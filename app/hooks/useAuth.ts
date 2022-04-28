@@ -32,10 +32,10 @@ export default function useAuth() {
       mutate();
       setTimeout(() => {
         router.push("/");
-        window.location.reload();
+        // window.location.reload();
+        setFetching(false);
       }, 1000);
     }
-    setFetching(false);
   };
 
   const logout = async () => {

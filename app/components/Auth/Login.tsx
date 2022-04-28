@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Button from "../Button";
 import Spinner from "../Loading/Spinner";
 
@@ -12,6 +12,9 @@ export default function Login({
   const [email, setEmail] = useState("");
   const onChange = (e: FormEvent<HTMLInputElement>) =>
     setEmail(e.currentTarget.value);
+  useEffect(() => {
+    logout();
+  }, []);
 
   return (
     <div className="flex flex-col justify-center items-center">
@@ -43,6 +46,9 @@ export default function Login({
           "Login"
         )}
       </Button>
+      {/* <Button className="w-32" onClick={logout}>
+        Logout
+      </Button> */}
     </div>
   );
 }
