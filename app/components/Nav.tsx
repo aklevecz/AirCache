@@ -26,6 +26,7 @@ export default function Nav() {
             style={{
               width: 50,
               height: 50,
+              padding: 12,
               boxSizing: "border-box",
             }}
             className="capitalize text-white font-bold text-2xl p-2 items-center justify-center flex"
