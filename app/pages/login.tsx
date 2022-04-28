@@ -8,9 +8,13 @@ export default function Login() {
   const auth = useAuth();
   const router = useRouter();
 
+  const goHome = () => {
+    console.log("going home");
+    router.push("/");
+  };
   useEffect(() => {
     if (auth.user) {
-      router.push("/");
+      goHome();
     }
   }, [auth.user]);
 
@@ -19,7 +23,8 @@ export default function Login() {
       <LoginComponent
         login={auth.login}
         logout={auth.logout}
-        fetching={auth.fetching}
+        mutate={auth.mutate}
+        goHome={goHome}
       />
     </FullCenter>
   );

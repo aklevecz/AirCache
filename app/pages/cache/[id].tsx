@@ -46,7 +46,7 @@ const Cache: NextPage = () => {
   //   }
 
   if (!cache) {
-    <div className="relative">
+    <div className="relative h-full">
       {/* <div className="absolute w-full bg-black z-10">
         <div className="overflow-hidden">{auth.user.publicAddress}</div>
       </div> */}
@@ -63,7 +63,7 @@ const Cache: NextPage = () => {
   const cacheInfo = airCache.caches && airCache.caches[0];
   const emptyCache = cacheInfo && cacheInfo.tokenId === 0;
   return (
-    <div className="relative">
+    <div className="relative h-full">
       {/* <div className="absolute w-full bg-black z-10">
         <div className="overflow-hidden">{auth.user.publicAddress}</div>
       </div> */}

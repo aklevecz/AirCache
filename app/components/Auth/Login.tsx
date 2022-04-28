@@ -2,7 +2,13 @@ import { FormEvent, useState } from "react";
 import Button from "../Button";
 import Spinner from "../Loading/Spinner";
 
-export default function Login({ login, logout, fetching }: any) {
+export default function Login({
+  login,
+  logout,
+  mutate,
+  goHome,
+  fetching,
+}: any) {
   const [email, setEmail] = useState("");
   const onChange = (e: FormEvent<HTMLInputElement>) =>
     setEmail(e.currentTarget.value);
@@ -14,7 +20,15 @@ export default function Login({ login, logout, fetching }: any) {
         Type your email below, you will be send a verification link
       </div>
 
-      <input className="h-10 p-2 w-64" onChange={onChange} value={email} />
+      <input
+        autoComplete="email"
+        name="email"
+        type="email"
+        placeholder="Email"
+        className="h-10 p-2 w-64"
+        onChange={onChange}
+        value={email}
+      />
       <Button className="w-32 mt-10 font-bold" onClick={() => login(email)}>
         {fetching ? (
           <div className="bg-black rounded-full">

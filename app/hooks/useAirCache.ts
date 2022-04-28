@@ -152,6 +152,7 @@ export default function useAirCache(cacheId: string | null) {
       // IF SINGLE CACHEE
       if (contract && signer && cacheId) {
         const cache = await getCache(parseInt(cacheId), contractSigner);
+        console.log(cache);
         const { tokenId, tokenAddress } = cache;
         let NFT: object | null = {};
         if (tokenId === 0) {
@@ -160,7 +161,7 @@ export default function useAirCache(cacheId: string | null) {
         } else {
           NFT = await getNFTMeta(tokenId, tokenAddress, signer.provider!);
         }
-        setCaches([{ ...cache, NFT }]);
+        setCaches([{ ...cache, id: cache.id.toNumber(), NFT }]);
 
         // IF ALL CACHE
       } else if (cacheId === null) {

@@ -8,6 +8,8 @@ import CacheContentModal from "../components/Modals/CacheContent";
 import useAirCache from "../hooks/useAirCache";
 import useAuth from "../hooks/useAuth";
 import useModal from "../hooks/useModal";
+import LoginComponent from "../components/Auth/Login";
+import Link from "next/link";
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -31,7 +33,7 @@ const Home: NextPage = () => {
       router.push("/login");
     }
   }, [auth.user]);
-
+  console.log(auth.user);
   if (auth.user === undefined) {
     return (
       <FullCenter>
@@ -39,6 +41,13 @@ const Home: NextPage = () => {
       </FullCenter>
     );
   }
+  // if (auth.user === null) {
+  //   return (
+  //     <FullCenter>
+  //       <Link href="/login">Login</Link>
+  //     </FullCenter>
+  //   );
+  // }
   // ????
   if (!cache) {
     <div className="relative">

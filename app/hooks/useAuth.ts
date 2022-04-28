@@ -12,19 +12,27 @@ export default function useAuth() {
     if (typeof window === "undefined") {
       return console.error("No Window");
     }
-    const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!);
+    console.log("logging in");
     setFetching(true);
+    console.log(fetching);
+    // const redirectURI = `${window.location.protocol}//${window.location.host}/callback`;
+    // const redirectURI = "https://air.yaytso.art/callback";
+    const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!);
     const did = await magic.auth.loginWithMagicLink({
       email,
-      // redirectURI: `${window.location.protocol}//${window.location.host}/callback`,
+      // redirectURI,
     });
+    console.log(did);
     const authRequest = await api.post(endpoints.login, null, {
       headers: { Authorization: `Bearer ${did}` },
     });
+    console.log(authRequest);
     if (authRequest.status === 200) {
       const { token } = authRequest.data;
       storage.setItem(storage.keys.token, token);
       mutate();
+
+      window.location.reload();
     }
     setFetching(false);
   };

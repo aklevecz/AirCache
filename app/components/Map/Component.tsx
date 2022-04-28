@@ -42,5 +42,5 @@ export const Map = forwardRef<Ref, Props>(({ initMap, map }, ref) => {
     });
   }, []);
 
-  return <div ref={mapContainer} style={{ height: "92vh" }}></div>;
+  return <div ref={mapContainer} style={{ height: "100%" }}></div>;
 });

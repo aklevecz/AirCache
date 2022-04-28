@@ -45,6 +45,7 @@ export default function CacheContentModal({
   const [message, setMessage] = useState("");
   const [fetchingLocation, setFetchingLocation] = useState(false);
   const [fetchingMeta, setFetchingMeta] = useState(false);
+  console.log(data);
   const fetchCache = async (cacheId: number) => {
     setFetchingMeta(true);
     const cache = await airCache.getCache(data.cache.id);

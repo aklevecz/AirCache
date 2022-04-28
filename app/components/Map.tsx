@@ -30,6 +30,7 @@ export default function Map({
   toggleModal,
   showEmpty,
 }: Props) {
+  console.log("map");
   const [map, setMap] = useState<google.maps.Map>();
   const mapContainer = useRef<HTMLDivElement>(null);
 
