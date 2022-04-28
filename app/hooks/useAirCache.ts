@@ -90,7 +90,14 @@ export default function useAirCache(cacheId: string | null) {
       }
       const tokenAddress = cache.tokenAddress;
       const tokenId = cache.tokenId.toNumber();
-      return { ...cache, lat, lng, tokenAddress, tokenId };
+      return {
+        ...cache,
+        id: cache.id.toNumber(),
+        lat,
+        lng,
+        tokenAddress,
+        tokenId,
+      };
     }
   };
 
