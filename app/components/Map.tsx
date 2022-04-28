@@ -6,6 +6,7 @@ import cacheIcon from "../assets/icons/cache.png";
 import eggIcon from "../assets/icons/egg2.png";
 import { ethers } from "ethers";
 import storage from "../libs/storage";
+import { Latlng } from "../libs/types";
 
 const loader = new Loader({
   apiKey: process.env.NEXT_PUBLIC_GMAP_KEY as string,
@@ -36,6 +37,7 @@ export default function Map({
 
   const userRef = useRef<any>(null);
   const navigatorRef = useRef<any>(null);
+  const userMarkerRef = useRef<google.maps.Marker | null>(null);
   const markerRefs = useRef<any>([]);
 
   const createCacheMarker = (
@@ -127,6 +129,33 @@ export default function Map({
     });
   };
 
+  const getUserLocation = () => {
+    return new Promise((resolve) => {
+      navigator.geolocation.getCurrentPosition((position) => {
+        resolve({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      });
+    });
+  };
+
+  const updateUserMarker = async () => {
+    const position = await getUserLocation();
+    if (position && userMarkerRef.current) {
+      console.log("update", position);
+      userMarkerRef.current.setPosition(position as Latlng);
+    }
+  };
+
+  useEffect(() => {
+    let interval = setInterval(updateUserMarker, 3000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
   useEffect(() => {
     if (map && navigator.geolocation && typeof window !== "undefined") {
       try {
@@ -141,7 +170,7 @@ export default function Map({
             scaledSize: new google.maps.Size(20, 20),
           };
           const latLng = { lat: pos.latitude, lng: pos.longitude };
-          new google.maps.Marker({
+          const userMarker = new google.maps.Marker({
             position: latLng,
             map,
             icon,
@@ -154,6 +183,7 @@ export default function Map({
               marker.classList.add("user-marker");
             }
           });
+          userMarkerRef.current = userMarker;
           userRef.current = latLng;
           navigatorRef.current = position;
           storage.setItem(storage.keys.user_location, JSON.stringify(latLng));

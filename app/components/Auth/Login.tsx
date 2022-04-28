@@ -17,7 +17,7 @@ export default function Login({
     <div className="flex flex-col justify-center items-center">
       <div className="text-3xl font-bold w-3/4 text-center mb-10">Login</div>
       <div className="text-1xl font-bold w-3/4 text-center mb-10">
-        Type your email below, you will be send a verification link
+        Type your email below, you will be sent a verification link
       </div>
 
       <input
