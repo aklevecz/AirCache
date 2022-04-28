@@ -1,6 +1,8 @@
 import { FormEvent, useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import Button from "../Button";
 import Spinner from "../Loading/Spinner";
+import eggImg from "../../assets/icons/egg.png";
 
 export default function Login({
   login,
@@ -18,10 +20,8 @@ export default function Login({
 
   return (
     <div className="flex flex-col justify-center items-center">
+      <img src={eggImg.src} />
       <div className="text-3xl font-bold w-3/4 text-center mb-10">Login</div>
-      <div className="text-1xl font-bold w-3/4 text-center mb-10">
-        Type your email below, you will be sent a verification link
-      </div>
 
       <input
         autoComplete="email"
@@ -32,8 +32,15 @@ export default function Login({
         onChange={onChange}
         value={email}
       />
+      <motion.div
+        style={{ fontSize: email ? 14 : 0 }}
+        layout
+        className="text-1xl font-bold w-4/5 text-center m-4"
+      >
+        You will be sent a verification link
+      </motion.div>
       <Button
-        className="w-32 mt-10 font-bold"
+        className="w-32 mt-4 font-bold"
         onClick={() => {
           login(email);
         }}
@@ -46,6 +53,7 @@ export default function Login({
           "Login"
         )}
       </Button>
+
       {/* <Button className="w-32" onClick={logout}>
         Logout
       </Button> */}

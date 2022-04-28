@@ -1,3 +1,5 @@
+import { useRouter } from "next/router";
+import Button from "../components/Button";
 import FullScreenSpinner from "../components/Loading/FullScreenSpinner";
 import Spinner from "../components/Loading/Spinner";
 import NFT from "../components/Wallet/NFT";
@@ -5,8 +7,19 @@ import useAuth from "../hooks/useAuth";
 import useWallet from "../hooks/useWallet";
 
 export default function Wallet() {
+  const router = useRouter();
   const auth = useAuth();
   const wallet = useWallet(auth.user && auth.user.publicAddress);
+
+  const onLogout = () => {
+    auth.logout();
+    router.push("/");
+    // if (typeof window !== "undefined") {
+    //   setTimeout(() => {
+    //     window.location.reload();
+    //   }, 2000);
+    // }
+  };
 
   if (!wallet.nfts) {
     return (
@@ -16,11 +29,11 @@ export default function Wallet() {
     );
   }
   return (
-    <div className="pb-10">
+    <div className="pb-20">
       <div className="text-3xl text-center m-4 font-bold font-fatfrank tracking-wider">
         Your NFTs
       </div>
-      <div className="flex flex-wrap items-center justify-center pb-20">
+      <div className="flex flex-wrap items-center justify-center pb-10">
         {wallet.metadatas.map((nft: any, i) => (
           <NFT nft={nft} key={nft.name + i} />
         ))}
@@ -31,6 +44,9 @@ export default function Wallet() {
           </div>
         )}
       </div>
+      <Button className="w-32 m-auto font-bold block" onClick={onLogout}>
+        Logout
+      </Button>
     </div>
   );
 }

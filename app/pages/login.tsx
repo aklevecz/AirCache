@@ -21,7 +21,7 @@ export default function Login() {
   }, [auth.user]);
 
   return (
-    <FullCenter>
+    <div>
       <LoginComponent
         login={auth.login}
         logout={auth.logout}
@@ -29,6 +29,6 @@ export default function Login() {
         fetching={auth.fetching}
         goHome={goHome}
       />
-    </FullCenter>
+    </div>
   );
 }

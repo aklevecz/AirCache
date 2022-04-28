@@ -33,7 +33,7 @@ export default function NFT({ nft }: any) {
     }
   }, [inView]);
   return (
-    <div ref={observe} className="bg-black text-white m-2 rounded-lg max-w-sm">
+    <div ref={observe} className="bg-black text-white m-10 rounded-lg max-w-sm">
       <div className="text-center font-bold text-2xl mt-4">{nft.name}</div>
       <div>
         <img ref={imgRef} className="m-auto p-5" />
