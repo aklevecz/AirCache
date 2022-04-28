@@ -45,11 +45,9 @@ export default function CacheContentModal({
   const [message, setMessage] = useState("");
   const [fetchingLocation, setFetchingLocation] = useState(false);
   const [fetchingMeta, setFetchingMeta] = useState(false);
-  console.log(data);
   const fetchCache = async (cacheId: number) => {
     setFetchingMeta(true);
     const cache = await airCache.getCache(data.cache.id);
-    console.log(cache);
     const tokenId = cache.tokenId;
     if (!tokenId) {
       setFetchingMeta(false);
@@ -68,7 +66,6 @@ export default function CacheContentModal({
       setTxState(TxState.Idle);
       setNFT(null);
     } else {
-      console.log(data.cache);
       fetchCache(data.cache.id);
     }
   }, [open, data]);
@@ -180,7 +177,6 @@ export default function CacheContentModal({
       </Container>
     );
   }
-  console.log(NFT.image);
   return (
     <Container open={open} toggleModal={toggleModal}>
       {txState === TxState.Idle || txState === TxState.Fetching ? (
@@ -188,7 +184,7 @@ export default function CacheContentModal({
           <div className="text-3xl font-bold text-center pb-5">{NFT.name}</div>
           <div>
             <img
-              className="m-auto"
+              className="m-auto p-4"
               src={isIpfs(NFT.image) ? ipfsToPinata(NFT.image) : NFT.image}
             />
           </div>
