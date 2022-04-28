@@ -251,10 +251,10 @@ export default function CacheContentModal({
       )}
       {txState === TxState.Error ? (
         <>
-          <div className="text-4xl font-bold text-center pb-5">
+          <div className="text-3xl font-bold text-center pb-5">
             {message === "TOO_FAR" && "You must get closer to claim!"}
           </div>
-          <div className="max-w-xs p-10 m-auto">
+          <div className="max-w-xs p-14 m-auto">
             {message === "TOO_FAR" && <MapIcon />}
           </div>
           <Button
