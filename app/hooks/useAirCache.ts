@@ -211,6 +211,7 @@ export default function useAirCache(cacheId: string | null) {
         }
         return true;
       } catch (e) {
+        alert(e);
         console.error(e);
         return false;
       }

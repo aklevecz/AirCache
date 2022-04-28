@@ -16,12 +16,15 @@ export default function useAuth() {
     // }
 
     setFetching(true);
-    // const redirectURI = `${window.location.protocol}//${window.location.host}/callback`;
+    let redirectURI = "https://air.yaytso.art/callback";
+    if (typeof window !== "undefined") {
+      redirectURI = `${window.location.protocol}//${window.location.host}/callback`;
+    }
     // const redirectURI = "https://air.yaytso.art/callback";
     const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!);
     const did = await magic.auth.loginWithMagicLink({
       email,
-      // redirectURI,
+      redirectURI,
     });
     const authRequest = await api.post(endpoints.login, null, {
       headers: { Authorization: `Bearer ${did}` },

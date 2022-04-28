@@ -4,6 +4,7 @@ import AirCacheInterface from "./AirCache.json";
 import { ethers } from "ethers";
 import { haversineDistance } from "../../libs/utils";
 import { AIRCACHE_ADDRESS } from "../../libs/constants";
+import AWS from "aws-sdk";
 
 const ALCHEMY_KEY = process.env.ALCHEMY_KEY_MUMBAI;
 const PP2 = process.env.PP2 as string;
@@ -18,10 +19,41 @@ type Data = {
   message: string;
 };
 
+AWS.config.update({
+  region: "us-west-2",
+  accessKeyId: process.env.AWS_S3_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_S3_SECRET_KEY,
+});
+const sqsUrl =
+  "https://sqs.us-west-1.amazonaws.com/669844428319/air-yaytso.fifo";
+var sqs = new AWS.SQS({ apiVersion: "2012-11-05" });
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
+  const mintParams = {
+    MessageAttributes: {
+      address: { DataType: "String", StringValue: " user.publicAddress" },
+      email: { DataType: "String", StringValue: "user.email" },
+      tokenId: {
+        DataType: "Number",
+        StringValue: "1",
+      },
+    },
+    MessageBody: `Printing `,
+    MessageDeduplicationId: "TheWhistler", // Required for FIFO queues
+    MessageGroupId: "Group1", // Required for FIFO queues
+    QueueUrl: sqsUrl,
+  };
+  console.log("SENDING MESSAGE");
+  sqs.sendMessage(mintParams, function (err, data) {
+    if (err) {
+      console.log("Error", err);
+    } else {
+      console.log("Success", data.MessageId);
+    }
+  });
   if (!req.headers.authorization) return res.status(405).end();
   try {
     const user = (await jwt.verify(

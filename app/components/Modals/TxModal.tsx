@@ -11,7 +11,7 @@ export default function TxModal({ open, toggleModal, txState }: Props) {
       <>{txState === TxState.Idle && <Waiting />}</>
       <>{txState === TxState.Mining && <Mining />}</>
       <>{txState === TxState.Complete && <Complete />}</>
-      <>{txState === TxState.Error && <Complete />}</>
+      <>{txState === TxState.Error && <Error />}</>
     </Container>
   );
 }
