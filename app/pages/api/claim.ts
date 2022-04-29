@@ -72,11 +72,12 @@ export default async function handler(
     sqs.sendMessage(mintParams, function (err, data) {
       if (err) {
         console.log("Error", err);
+        res.status(400).json({ tx: data.MessageId, message: "FAIL" });
       } else {
         console.log("Success", data.MessageId);
+        res.status(200).json({ tx: data.MessageId, message: "SUCCESS" });
       }
     });
-    res.status(200).json({ tx: "tx", message: "SUCCESS" });
 
     // const masterWallet = new ethers.Wallet(PP2, defaultProvider);
     // const contract = new ethers.Contract(

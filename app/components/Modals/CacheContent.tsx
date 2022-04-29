@@ -213,7 +213,7 @@ export default function CacheContentModal({
             The NFT is being sent to you...
           </div>
           <AxeAnimation />
-          <div className="text-center">
+          {/* <div className="text-center">
             <a
               target={"_blank"}
               className="text-polygon"
@@ -221,7 +221,7 @@ export default function CacheContentModal({
             >
               Polyscan Tx
             </a>
-          </div>
+          </div> */}
         </>
       ) : (
         <></>
