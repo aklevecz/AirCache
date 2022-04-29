@@ -31,7 +31,6 @@ export default function Map({
   toggleModal,
   showEmpty,
 }: Props) {
-  console.log("map");
   const [map, setMap] = useState<google.maps.Map>();
   const mapContainer = useRef<HTMLDivElement>(null);
 
@@ -89,7 +88,6 @@ export default function Map({
         // const lng = ethers.utils.parseBytes32String(caches[i].lng);
         const lat = caches[i].lat;
         const lng = caches[i].lng;
-        console.log(caches[i]);
         createCacheMarker(parseFloat(lat), parseFloat(lng), id, caches[i].NFT);
       }
       // }
@@ -143,7 +141,6 @@ export default function Map({
   const updateUserMarker = async () => {
     const position = await getUserLocation();
     if (position && userMarkerRef.current) {
-      console.log("update", position);
       userMarkerRef.current.setPosition(position as Latlng);
     }
   };

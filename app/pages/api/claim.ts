@@ -49,7 +49,7 @@ export default async function handler(
     const { cacheId, userLocation, cacheLocation, navigator } = req.body;
 
     const distance = haversineDistance(userLocation, cacheLocation);
-    if (distance > 10000) {
+    if (distance > 100) {
       return res.json({ tx: null, message: "TOO_FAR" });
     }
     const mintParams = {

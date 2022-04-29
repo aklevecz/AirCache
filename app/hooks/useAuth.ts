@@ -10,11 +10,11 @@ export default function useAuth() {
   const { data: user, error, mutate } = useSWR(endpoints.user, getUser);
   const [fetching, setFetching] = useState(false);
   const router = useRouter();
+  console.log(user);
   const login = async (email: string) => {
     // if (typeof window === "undefined") {
     //   return console.error("No Window");
     // }
-
     setFetching(true);
     let redirectURI = "https://air.yaytso.art/callback";
     if (typeof window !== "undefined") {
