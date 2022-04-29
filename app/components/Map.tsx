@@ -73,7 +73,6 @@ export default function Map({
       }
     });
   }, [showEmpty]);
-
   useEffect(() => {
     if (map) {
       for (let i = 0; i < caches.length; i++) {

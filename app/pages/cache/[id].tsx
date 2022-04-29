@@ -1,4 +1,6 @@
+import { ethers } from "ethers";
 import type { NextPage } from "next";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
 import FullCenter from "../../components/Layout/FullCenter";
@@ -8,8 +10,11 @@ import CacheContentModal from "../../components/Modals/CacheContent";
 import useAirCache from "../../hooks/useAirCache";
 import useAuth from "../../hooks/useAuth";
 import useModal from "../../hooks/useModal";
+import { ipfsToPinata } from "../../libs/utils";
+import web3Api from "../../libs/web3Api";
 
-const Cache: NextPage = () => {
+const Cache: NextPage = (props: any) => {
+  console.log(props);
   const router = useRouter();
   const { id: cache } = router.query;
   const markerPosition = useRef<{ lat: number; lng: number }>(null);
@@ -28,7 +33,7 @@ const Cache: NextPage = () => {
       airCache.collectCacheMeta();
     }
   }, [airCache.web3Ready]);
-
+  console.log(airCache.caches);
   if (auth.user === undefined) {
     return (
       <FullCenter>
@@ -51,7 +56,8 @@ const Cache: NextPage = () => {
         <div className="overflow-hidden">{auth.user.publicAddress}</div>
       </div> */}
       <Map
-        caches={airCache.caches}
+        // caches={airCache.caches}
+        caches={props}
         markerPosition={markerPosition}
         toggleModal={modal.toggleModal}
         showEmpty={false}
@@ -60,20 +66,37 @@ const Cache: NextPage = () => {
     </div>;
   }
 
-  const cacheInfo = airCache.caches && airCache.caches[0];
-  const emptyCache = cacheInfo && cacheInfo.tokenId === 0;
+  //   const cacheInfo = airCache.caches && airCache.caches[0];
+  //   const emptyCache = cacheInfo && cacheInfo.tokenId === 0;
+
+  // I COULD JUST SET THE NFT META DATA FROM THE STATIC PARAMS
   return (
     <div className="relative h-full">
+      <Head>
+        <title>
+          {props.id} - {props.NFT && props.NFT.name}
+        </title>
+        <meta
+          property="og:description"
+          content={`An egg with ${props.NFT && props.NFT.name} inside!`}
+        />
+        <meta
+          property="og:image"
+          content={`${props.NFT ? ipfsToPinata(props.NFT.image) : ""}`}
+        />
+      </Head>
       {/* <div className="absolute w-full bg-black z-10">
         <div className="overflow-hidden">{auth.user.publicAddress}</div>
       </div> */}
       <Map
-        caches={airCache.caches}
+        // caches={airCache.caches}
+        caches={[props]}
         markerPosition={markerPosition}
         toggleModal={modal.toggleModal}
         showEmpty={false}
       />
-      {!airCache.loading && cacheInfo && (
+
+      {!airCache.loading && props && (
         <CacheContentModal
           open={modal.open}
           toggleModal={modal.toggleModal}
@@ -88,3 +111,34 @@ const Cache: NextPage = () => {
 };
 
 export default Cache;
+
+export async function getStaticPaths() {
+  const caches = await web3Api.getAllCaches();
+  return {
+    paths: caches.map((cache) => `/cache/${cache.id.toNumber()}`) ?? [],
+    fallback: true,
+  };
+}
+
+type Params = {
+  params: any;
+};
+export const getStaticProps = async ({ params }: Params) => {
+  const cache = await web3Api.getCache(parseInt(params.id));
+  const { id, lat, lng, tokenId, tokenAddress } = cache;
+  const tokenIdNumber = tokenId.toNumber();
+  let NFT = null;
+  if (tokenIdNumber) {
+    NFT = await web3Api.getNFTMeta(tokenId.toNumber(), tokenAddress);
+  }
+  return {
+    props: {
+      id: id.toNumber(),
+      lat: parseFloat(ethers.utils.parseBytes32String(lat)),
+      lng: parseFloat(ethers.utils.parseBytes32String(lng)),
+      tokenId: tokenId.toNumber(),
+      tokenAddress,
+      NFT,
+    },
+  };
+};

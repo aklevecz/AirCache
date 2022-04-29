@@ -90,6 +90,9 @@ const PINATA = "https://gateway.pinata.cloud";
 export const ipfsToPinata = (uri: string) =>
   uri.replace("ipfs://", `${PINATA}/ipfs/`);
 
+export const ipfstoIO = (uri: string) =>
+  uri.replace("ipfs://", `${IPFS_IO}/ipfs/`);
+
 export const isIpfs = (uri: string) => {
   return uri.slice(0, 7) === "ipfs://";
 };
