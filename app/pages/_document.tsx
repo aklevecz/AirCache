@@ -9,6 +9,7 @@ class Document extends NextDocument<Props> {
         <Head>
           <link rel="icon" type="image/x-icon" href="/egg.png" />
           <link href="https://use.typekit.net/lfx3jsx.css" rel="stylesheet" />
+          <script src="twitter.js" />
         </Head>
         <body>
           <Main />
