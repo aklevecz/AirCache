@@ -28,9 +28,9 @@ export const getUser = async () => {
     const response = await api.get(endpoints.user);
     return response.data.user;
   } catch (e) {
-    const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!);
-    magic.user.logout();
-    storage.deleteItem(storage.keys.token);
+    // const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!);
+    // magic.user.logout();
+    // storage.deleteItem(storage.keys.token);
     return null;
   }
 };
