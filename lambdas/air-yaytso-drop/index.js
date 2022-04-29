@@ -31,13 +31,13 @@ exports.handler = async (event) => {
       masterWallet.provider
     );
     const signer = contract.connect(masterWallet);
-    try {
-      signer.estimateGas
-        .dropNFT(cacheId, winner)
-        .then((b) => console.log(b.toString()));
-    } catch (e) {
-      console.log(e);
-    }
+    // try {
+    //   signer.estimateGas
+    //     .dropNFT(cacheId, winner)
+    //     .then((b) => console.log(b.toString()));
+    // } catch (e) {
+    //   console.log(e);
+    // }
     // console.log("HELLO");
     // res.status(200).end();
     // return;
@@ -49,7 +49,7 @@ exports.handler = async (event) => {
     );
     const tx = await signer.dropNFT(cacheId, winner, {
       gasPrice: fee,
-      gasLimit: 58453,
+      gasLimit: 89663,
     });
     console.log(tx);
     const receipt = await tx.wait();

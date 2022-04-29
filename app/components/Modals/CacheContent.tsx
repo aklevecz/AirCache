@@ -162,9 +162,7 @@ export default function CacheContentModal({
   if (empty) {
     return (
       <Container open={open} toggleModal={toggleModal}>
-        <div className="text-3xl font-bold text-center pb-5">
-          Egg is empty! {!loading && data.cache.id}
-        </div>
+        <div className="text-3xl font-bold text-center pb-5">Egg is empty!</div>
         <div className="w-3/4 m-auto p-10">
           <Sad />
         </div>
