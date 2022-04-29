@@ -14,9 +14,6 @@ export default function Login({
   const [email, setEmail] = useState("");
   const onChange = (e: FormEvent<HTMLInputElement>) =>
     setEmail(e.currentTarget.value);
-  useEffect(() => {
-    logout();
-  }, []);
 
   return (
     <div className="flex flex-col justify-center items-center">
