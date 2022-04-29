@@ -51,6 +51,9 @@ export default function useWallet(address: string) {
   }, [address]);
 
   useEffect(() => {
+    if (!nfts) {
+      setMetadatas([]);
+    }
     if (nfts) {
       const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!, {
         network:
