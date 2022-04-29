@@ -20,7 +20,9 @@ const fetcher = async (address: string) => {
       process.env.NODE_ENV === "development" ? "-testnet" : ""
     }.polygonscan.com/api?module=account&action=tokennfttx&address=${address}&page=1&startblock=0&sort=asc&apikey=SZT746XM864NP7Y7WQ5HXQ6T4YJV7ZWHR4`
   );
-
+  if (res.data.result.length === 0) {
+    return null;
+  }
   return res.data.result.filter(
     (tx: any) =>
       ethers.utils.getAddress(tx.from) ===
