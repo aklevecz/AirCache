@@ -38,7 +38,7 @@ export default function Wallet() {
           <NFT nft={nft} key={nft.name + i} />
         ))}
         {wallet.metadatas.length === 0 && <Spinner />}
-        {!wallet.nfts && wallet.metadatas.length === 0 && (
+        {wallet.nfts.length === 0 && wallet.metadatas.length === 0 && (
           <div className="text-3xl font-bold w-3/4 text-center">
             You haven't found any NFTs!
           </div>
