@@ -64,7 +64,9 @@ export default async function handler(
         },
       },
       MessageBody: `Dropping Egg from ${cacheId} to ${user.publicAddress}`,
-      MessageDeduplicationId: `${user.publicAddress}-${cacheId}`, // Required for FIFO queues
+      MessageDeduplicationId: `${user.publicAddress}-${cacheId}-${
+        Math.random() * 100
+      }`, // Required for FIFO queues
       MessageGroupId: "yaytso-air-drop", // Required for FIFO queues
       QueueUrl: sqsUrl,
     };

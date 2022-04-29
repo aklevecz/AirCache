@@ -1,4 +1,5 @@
 const { ethers } = require("ethers");
+const fetch = require("node-fetch");
 const ContractInterface = require("./AirYaytso.json");
 
 const LIVE = process.env.LIVE === "LIVE";
@@ -9,7 +10,7 @@ const ALCHEMY_KEY = LIVE
   : process.env.ALCHEMY_KEY_MUMBAI;
 
 const AIRYAYTSO_ADDRESS = LIVE
-  ? process.AIRYAYTSO_ADDRESS_MATIC
+  ? process.env.AIRYAYTSO_ADDRESS_MATIC
   : process.env.AIRYAYTSO_ADDRESS_MUMBAI;
 
 const network = LIVE ? "matic" : "maticmum";
@@ -30,13 +31,26 @@ exports.handler = async (event) => {
       masterWallet.provider
     );
     const signer = contract.connect(masterWallet);
-    // signer.estimateGas
-    //   .dropNFT(cacheId, user.publicAddresss)
-    //   .then((b) => console.log(b.toString()));
+    try {
+      signer.estimateGas
+        .dropNFT(cacheId, winner)
+        .then((b) => console.log(b.toString()));
+    } catch (e) {
+      console.log(e);
+    }
     // console.log("HELLO");
     // res.status(200).end();
     // return;
-    const tx = await signer.dropNFT(cacheId, winner);
+    const fees = await fetch(
+      "https://gasstation-mainnet.matic.network/v2"
+    ).then((response) => response.json());
+    const fee = ethers.BigNumber.from(
+      Math.floor(fees.standard.maxFee * 10 ** 9)
+    );
+    const tx = await signer.dropNFT(cacheId, winner, {
+      gasPrice: fee,
+      gasLimit: 58453,
+    });
     console.log(tx);
     const receipt = await tx.wait();
     for (const event of receipt.events) {
