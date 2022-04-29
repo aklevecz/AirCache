@@ -17,6 +17,8 @@ export default function Login() {
     if (auth.user) {
       //   alert(auth.user.email);
       goHome();
+    } else {
+      auth.logout();
     }
   }, [auth.user]);
 

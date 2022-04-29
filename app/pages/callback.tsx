@@ -2,7 +2,8 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { Magic } from "magic-sdk";
 import { mutate } from "swr";
-import { endpoints } from "../libs/api";
+import api, { endpoints } from "../libs/api";
+import storage from "../libs/storage";
 
 export default function Callback() {
   const router = useRouter();
@@ -12,15 +13,15 @@ export default function Callback() {
       process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!
     ).auth.loginWithCredential(cred);
 
-    const authRequest = await fetch("/api/login", {
-      method: "POST",
+    const authRequest = await api.post(endpoints.login, null, {
       headers: { Authorization: `Bearer ${did}` },
     });
-
-    if (authRequest.ok) {
+    if (authRequest.status === 200) {
       console.log("great job");
-      router.push("/");
+      const { token } = authRequest.data;
+      storage.setItem(storage.keys.token, token);
       mutate(endpoints.user);
+      router.push("/");
     }
   };
 
