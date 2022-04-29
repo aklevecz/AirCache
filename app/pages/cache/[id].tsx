@@ -24,7 +24,7 @@ const Cache: NextPage = (props: any) => {
 
   useEffect(() => {
     if (auth.user === null) {
-      router.push("/login");
+      router.push({ pathname: "/login", query: { cache } });
     }
   }, [auth.user]);
 
@@ -33,10 +33,23 @@ const Cache: NextPage = (props: any) => {
       airCache.collectCacheMeta();
     }
   }, [airCache.web3Ready]);
-  console.log(airCache.caches);
+
   if (auth.user === undefined) {
     return (
       <FullCenter>
+        <Head>
+          <title>
+            {props.id} - {props.NFT && props.NFT.name}
+          </title>
+          <meta
+            property="og:description"
+            content={`An egg with ${props.NFT && props.NFT.name} inside!`}
+          />
+          <meta
+            property="og:image"
+            content={`${props.NFT ? ipfsToPinata(props.NFT.image) : ""}`}
+          />
+        </Head>
         <div className="text-4xl">Loading...</div>
       </FullCenter>
     );

@@ -10,7 +10,7 @@ export default function useAuth() {
   const { data: user, error, mutate } = useSWR(endpoints.user, getUser);
   const [fetching, setFetching] = useState(false);
   const router = useRouter();
-  const login = async (email: string) => {
+  const login = async (email: string, destination = "/") => {
     // if (typeof window === "undefined") {
     //   return console.error("No Window");
     // }
@@ -33,7 +33,8 @@ export default function useAuth() {
       storage.setItem(storage.keys.token, token);
       mutate();
       setTimeout(() => {
-        router.push("/");
+        console.log(destination);
+        router.push(destination);
         // window.location.reload();
         setFetching(false);
       }, 1000);

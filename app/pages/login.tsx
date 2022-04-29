@@ -7,7 +7,7 @@ import { FormEvent, useEffect, useState } from "react";
 export default function Login() {
   const auth = useAuth();
   const router = useRouter();
-
+  console.log(router.query);
   const goHome = () => {
     console.log("going home");
     router.push("/");
@@ -30,6 +30,7 @@ export default function Login() {
         mutate={auth.mutate}
         fetching={auth.fetching}
         goHome={goHome}
+        cacheId={router.query.cache}
       />
     </div>
   );

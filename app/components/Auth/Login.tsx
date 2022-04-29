@@ -10,6 +10,7 @@ export default function Login({
   mutate,
   goHome,
   fetching,
+  cacheId,
 }: any) {
   const [email, setEmail] = useState("");
   const onChange = (e: FormEvent<HTMLInputElement>) =>
@@ -39,7 +40,9 @@ export default function Login({
       <Button
         className="w-32 mt-4 font-bold"
         onClick={() => {
-          login(email);
+          const destination = cacheId ? `/cache/${cacheId}` : "/";
+          console.log(destination);
+          login(email, destination);
         }}
       >
         {fetching ? (
