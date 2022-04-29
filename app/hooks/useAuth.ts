@@ -46,6 +46,7 @@ export default function useAuth() {
     const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!);
     magic.user.logout();
     storage.deleteItem(storage.keys.token);
+    localStorage.clear();
     mutate();
     // }
     // return logoutReq.ok;
