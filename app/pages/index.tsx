@@ -10,6 +10,7 @@ import useAuth from "../hooks/useAuth";
 import useModal from "../hooks/useModal";
 import LoginComponent from "../components/Auth/Login";
 import Link from "next/link";
+import Head from "next/head";
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -37,6 +38,11 @@ const Home: NextPage = () => {
   if (auth.user === undefined) {
     return (
       <FullCenter>
+        <Head>
+          <title>AIR YAYTSO</title>
+          <meta property="og:description" content={`Find eggs!`} />
+          <meta property="og:image" content="/egg.png" />
+        </Head>
         <div className="text-4xl">Loading...</div>
       </FullCenter>
     );
