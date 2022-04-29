@@ -1,9 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import AirCacheInterface from "./AirCache.json";
 import { ethers } from "ethers";
 import { haversineDistance } from "../../libs/utils";
-import { AIRCACHE_ADDRESS } from "../../libs/constants";
 import AWS from "aws-sdk";
 
 const ALCHEMY_KEY = process.env.ALCHEMY_KEY_MUMBAI;
@@ -15,7 +13,7 @@ const defaultProvider = new ethers.providers.AlchemyProvider(
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
 type Data = {
-  tx: ethers.Transaction | null;
+  tx: ethers.Transaction | null | any;
   message: string;
 };
 
@@ -32,28 +30,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const mintParams = {
-    MessageAttributes: {
-      address: { DataType: "String", StringValue: " user.publicAddress" },
-      email: { DataType: "String", StringValue: "user.email" },
-      tokenId: {
-        DataType: "Number",
-        StringValue: "1",
-      },
-    },
-    MessageBody: `Printing `,
-    MessageDeduplicationId: "TheWhistler", // Required for FIFO queues
-    MessageGroupId: "Group1", // Required for FIFO queues
-    QueueUrl: sqsUrl,
-  };
-  console.log("SENDING MESSAGE");
-  sqs.sendMessage(mintParams, function (err, data) {
-    if (err) {
-      console.log("Error", err);
-    } else {
-      console.log("Success", data.MessageId);
-    }
-  });
   if (!req.headers.authorization) return res.status(405).end();
   try {
     const user = (await jwt.verify(
@@ -73,30 +49,56 @@ export default async function handler(
     const { cacheId, userLocation, cacheLocation, navigator } = req.body;
 
     const distance = haversineDistance(userLocation, cacheLocation);
-    if (distance > 100) {
+    if (distance > 10000) {
       return res.json({ tx: null, message: "TOO_FAR" });
     }
-    const masterWallet = new ethers.Wallet(PP2, defaultProvider);
-    const contract = new ethers.Contract(
-      AIRCACHE_ADDRESS,
-      AirCacheInterface.abi,
-      masterWallet.provider
-    );
-    const signer = contract.connect(masterWallet);
-    // signer.estimateGas
-    //   .dropNFT(cacheId, user.publicAddresss)
-    //   .then((b) => console.log(b.toString()));
-    // console.log("HELLO");
-    // res.status(200).end();
-    // return;
-    const tx = await signer.dropNFT(cacheId, user.publicAddress);
-    console.log(tx);
-    // const receipt = await tx.wait();
-    // for (const event of receipt.events) {
-    //   console.log(event.event);
-    // }
+    const mintParams = {
+      MessageAttributes: {
+        address: {
+          DataType: "String",
+          StringValue: user.publicAddress,
+        },
+        cacheId: {
+          DataType: "Number",
+          StringValue: cacheId.toString(),
+        },
+      },
+      MessageBody: `Dropping Egg from ${cacheId} to ${user.publicAddress}`,
+      MessageDeduplicationId: `${user.publicAddress}-${cacheId}`, // Required for FIFO queues
+      MessageGroupId: "yaytso-air-drop", // Required for FIFO queues
+      QueueUrl: sqsUrl,
+    };
+    console.log("SENDING MESSAGE");
+    sqs.sendMessage(mintParams, function (err, data) {
+      if (err) {
+        console.log("Error", err);
+      } else {
+        console.log("Success", data.MessageId);
+      }
+    });
+    res.status(200).json({ tx: "tx", message: "SUCCESS" });
 
-    res.status(200).json({ tx, message: "SUCCESS" });
+    // const masterWallet = new ethers.Wallet(PP2, defaultProvider);
+    // const contract = new ethers.Contract(
+    //   AIRCACHE_ADDRESS,
+    //   AirCacheInterface.abi,
+    //   masterWallet.provider
+    // );
+    // const signer = contract.connect(masterWallet);
+    // // signer.estimateGas
+    // //   .dropNFT(cacheId, user.publicAddresss)
+    // //   .then((b) => console.log(b.toString()));
+    // // console.log("HELLO");
+    // // res.status(200).end();
+    // // return;
+    // const tx = await signer.dropNFT(cacheId, user.publicAddress);
+    // console.log(tx);
+    // // const receipt = await tx.wait();
+    // // for (const event of receipt.events) {
+    // //   console.log(event.event);
+    // // }
+
+    // res.status(200).json({ tx, message: "SUCCESS" });
   } catch (e) {
     console.log(e);
     res.status(405).end();

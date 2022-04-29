@@ -1,0 +1,17 @@
+{
+  "name": "air-yaytso-drop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "predeploy": "rm -rf air-yaytso-drop.zip && zip -r air-yaytso-drop.zip .",
+    "deploy": "aws lambda update-function-code --function-name air-yaytso-drop --zip-file fileb://air-yaytso-drop.zip"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ethers": "^5.6.4"
+  }
+}

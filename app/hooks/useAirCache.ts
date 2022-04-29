@@ -5,17 +5,17 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { abis, AIRCACHE_ADDRESS } from "../libs/constants";
 import storage from "../libs/storage";
-import { ipfsToPinata, isIpfs } from "../libs/utils";
+import {
+  ipfsToPinata,
+  isIpfs,
+  maticMumBaiNodeOptions,
+  maticNodeOptions,
+} from "../libs/utils";
 
-import AirCacheInterface from "./AirCache.json";
+import AirCacheInterface from "./AirYaytso.json";
 
 // const AIRCACHE_ADDRESS = "0xAa9BF9F9AAc188De33c8D3820A4242272507aDe3"; 0x83a3d9bE1F032C1f1eC28F9Fa95B7bf2cC3f36B4
 // const FAKE_NFT_ADDRESS = "0xf4822e9fC423c56CB502D8515e356023c06cf643";
-
-export const maticMumBaiNodeOptions = {
-  rpcUrl: "https://rpc-mumbai.maticvigil.com/", // Polygon RPC URL
-  chainId: 80001, // Polygon chain id
-};
 
 export default function useAirCache(cacheId: string | null) {
   const [contract, setContract] = useState<ethers.Contract | null>(null);
@@ -30,7 +30,10 @@ export default function useAirCache(cacheId: string | null) {
   useEffect(() => {
     console.log("air cache init");
     const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!, {
-      network: maticMumBaiNodeOptions,
+      network:
+        process.env.NODE_ENV === "development"
+          ? maticMumBaiNodeOptions
+          : maticNodeOptions,
     });
     const provider = new ethers.providers.Web3Provider(
       magic.rpcProvider as any

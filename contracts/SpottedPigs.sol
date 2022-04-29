@@ -5,12 +5,12 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract SpottedPigs is ERC721 {
     constructor(address wallet) ERC721("Spotted Pigs", "SPIGS") {
-        for (uint256 i = 1; i <= 20; i++) {
+        for (uint256 i = 1; i <= 100; i++) {
             _mint(wallet, i);
         }
     }
 
     function _baseURI() internal view virtual override returns (string memory) {
-        return "ipfs://QmVcknGxDgnAjL1LH8x12ZNT5piFrre5BwEjVo1KeqkDjq/";
+        return "ipfs://QmPqK1VGjTQNv89uyGYyP4kuyogJDq6Dt5qw84MQtqcyoX/";
     }
 }

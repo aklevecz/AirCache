@@ -3,7 +3,7 @@ const { ethers } = require("hardhat");
 
 describe("AirCache", function () {
   beforeEach(async function () {
-    this.AirCache = await ethers.getContractFactory("AirCache");
+    this.AirCache = await ethers.getContractFactory("AirYaytso");
     this.airCache = await this.AirCache.deploy();
     await this.airCache.deployed();
 
@@ -44,6 +44,35 @@ describe("AirCache", function () {
     await this.airCache.dropNFT(1, this.notOwner.address);
     const newOwner = await this.fakeNFT.ownerOf(1);
     expect(newOwner).to.equal(this.notOwner.address);
+  });
+
+  it("Can't fill a non-existent cache", async function () {
+    await expect(
+      this.airCache.holdNFT(this.fakeNFT.address, 1, 1)
+    ).to.be.revertedWith("Cache does not exist");
+  });
+
+  it("Can't fill a full cache", async function () {
+    var lat = ethers.utils.formatBytes32String("100");
+    var lng = ethers.utils.formatBytes32String("100");
+    await this.fakeNFT.approve(this.airCache.address, 1);
+    await this.fakeNFT.approve(this.airCache.address, 2);
+
+    await this.airCache.createCache(lat, lng);
+    await this.airCache.holdNFT(this.fakeNFT.address, 1, 1);
+    await expect(
+      this.airCache.holdNFT(this.fakeNFT.address, 2, 1)
+    ).to.be.revertedWith("Cache is being used");
+  });
+
+  it("Can't fill cache without token approval", async function () {
+    var lat = ethers.utils.formatBytes32String("100");
+    var lng = ethers.utils.formatBytes32String("100");
+
+    await this.airCache.createCache(lat, lng);
+    await expect(
+      this.airCache.holdNFT(this.fakeNFT.address, 1, 1)
+    ).to.be.revertedWith("Token transfer failed");
   });
 
   it("Fake has URI", async function () {

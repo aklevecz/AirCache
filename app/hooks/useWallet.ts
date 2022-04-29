@@ -5,12 +5,20 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { AIRCACHE_ADDRESS } from "../libs/constants";
 import storage from "../libs/storage";
-import { delay, getTokenURI, ipfsToPinata, isIpfs } from "../libs/utils";
+import {
+  delay,
+  getTokenURI,
+  ipfsToPinata,
+  isIpfs,
+  maticNodeOptions,
+} from "../libs/utils";
 import { maticMumBaiNodeOptions } from "../libs/utils";
 
 const fetcher = async (address: string) => {
   const res = await axios.get(
-    `https://api-testnet.polygonscan.com/api?module=account&action=tokennfttx&address=${address}&page=1&startblock=0&sort=asc&apikey=SZT746XM864NP7Y7WQ5HXQ6T4YJV7ZWHR4`
+    `https://api${
+      process.env.NODE_ENV === "development" ? "-testnet" : ""
+    }.polygonscan.com/api?module=account&action=tokennfttx&address=${address}&page=1&startblock=0&sort=asc&apikey=SZT746XM864NP7Y7WQ5HXQ6T4YJV7ZWHR4`
   );
 
   return res.data.result.filter(
@@ -43,7 +51,10 @@ export default function useWallet(address: string) {
   useEffect(() => {
     if (nfts) {
       const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!, {
-        network: maticMumBaiNodeOptions,
+        network:
+          process.env.NODE_ENV === "development"
+            ? maticMumBaiNodeOptions
+            : maticNodeOptions,
       });
       const provider = new ethers.providers.Web3Provider(
         magic.rpcProvider as any

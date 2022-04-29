@@ -36,5 +36,9 @@ const Error = () => (
     <div className="text-3xl font-bold text-center pb-5 text-red-500">
       Something went wrong...
     </div>
+    <div className="text-white">
+      You may need to log out and back in to fix this (better error messages
+      coming soon!)
+    </div>
   </div>
 );

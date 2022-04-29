@@ -3,7 +3,11 @@ import { useState } from "react";
 import Spinner from "../components/Loading/Spinner";
 import useAirCache from "../hooks/useAirCache";
 import { SPOTTED_PIGS_ADDRESS } from "../libs/constants";
-import { approveToken, getMumbaiProvider } from "../libs/utils";
+import {
+  approveToken,
+  getMaticProvider,
+  getMumbaiProvider,
+} from "../libs/utils";
 
 export default function Fill() {
   const [submitting, setSubmitting] = useState(false);
@@ -33,7 +37,9 @@ const ApproveForm = ({ setSubmitting, submitting }: any) => (
         approveToken(
           values.tokenId,
           values.tokenAddress,
-          getMumbaiProvider().getSigner()
+          process.env.NODE_ENV === "development"
+            ? getMumbaiProvider().getSigner()
+            : getMaticProvider().getSigner()
         );
       }, 1000);
     }}

@@ -1,7 +1,7 @@
 const hre = require("hardhat");
 
 async function main() {
-  const AirCache = await hre.ethers.getContractFactory("AirCache");
+  const AirCache = await hre.ethers.getContractFactory("AirYaytso");
   const airCache = await AirCache.deploy();
   await airCache.deployed();
 

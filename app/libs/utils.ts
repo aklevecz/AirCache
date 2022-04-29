@@ -35,9 +35,22 @@ export const maticMumBaiNodeOptions = {
   chainId: 80001, // Polygon chain id
 };
 
+export const maticNodeOptions = {
+  rpcUrl: "https://rpc-mainnet.maticvigil.com/", // Polygon RPC URL
+  chainId: 137, // Polygon chain id
+};
+
 export const getMumbaiProvider = () => {
   const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!, {
     network: maticMumBaiNodeOptions,
+  });
+  const provider = new ethers.providers.Web3Provider(magic.rpcProvider as any);
+  return provider;
+};
+
+export const getMaticProvider = () => {
+  const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!, {
+    network: maticNodeOptions,
   });
   const provider = new ethers.providers.Web3Provider(magic.rpcProvider as any);
   return provider;
