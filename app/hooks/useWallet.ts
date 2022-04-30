@@ -86,7 +86,11 @@ export default function useWallet(address: string) {
             uris.push(uri);
           }
         }
-        setUris(uris);
+        if (uris.length > 0) {
+          setUris(uris);
+        } else {
+          setFetching(false);
+        }
       })();
     }
   }, [nfts]);
@@ -130,7 +134,11 @@ export default function useWallet(address: string) {
             }
           }
         }
-        setMetadatas(metadatas);
+        if (metadatas.length > 0) {
+          setMetadatas(metadatas);
+        } else {
+          setFetching(false);
+        }
       })();
     }
   }, [uris]);
