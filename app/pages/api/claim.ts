@@ -25,7 +25,7 @@ AWS.config.update({
 const sqsUrl =
   "https://sqs.us-west-1.amazonaws.com/669844428319/air-yaytso.fifo";
 var sqs = new AWS.SQS({ apiVersion: "2012-11-05" });
-
+var db = new AWS.DynamoDB.DocumentClient({ apiVersion: "2012-08-10" });
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data | any>
@@ -47,8 +47,8 @@ export default async function handler(
     }
 
     // More checks
-    // Check the lat / lng to the cache on chain
-    // Figure out way to avoid faking location
+    // Check if their magic link is valid
+    // Check if the cache actually has a token
 
     // The reference from cacheId to location or vice versa should be in a db or something
     const { cacheId, userLocation, cacheLocation, navigator } = req.body;
@@ -86,6 +86,16 @@ export default async function handler(
         res.status(400).json({ tx: data.MessageId, message: "FAIL" });
       } else {
         console.log("Success", data.MessageId);
+
+        var params = {
+          TableName: "air-yaytso-claims",
+          Item: {
+            email: user.email,
+            wallet: user.publicAddress,
+            cacheId,
+          },
+        };
+        db.put(params).promise();
         res.status(200).json({ tx: data.MessageId, message: "SUCCESS" });
       }
     });
