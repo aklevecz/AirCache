@@ -259,7 +259,7 @@ export default function CacheContentModal({
             {error.error === "TOO_FAR" && (
               <Button
                 onClick={toggleModal}
-                className="w-20 font-bold m-auto block text-2xl"
+                className="w-20 font-bold m-auto block text-2xl mt-10"
               >
                 Ok
               </Button>
