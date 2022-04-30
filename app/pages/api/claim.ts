@@ -31,12 +31,10 @@ export default async function handler(
   res: NextApiResponse<Data | any>
 ) {
   if (!req.headers.authorization) {
-    return res
-      .status(405)
-      .json({
-        error: "NO_AUTH",
-        message: "You must login to claim NFTs to your wallet!",
-      });
+    return res.status(405).json({
+      error: "NO_AUTH",
+      message: "You must login to claim NFTs!",
+    });
   }
   try {
     const user = (await jwt.verify(
