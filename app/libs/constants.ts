@@ -22,3 +22,8 @@ export const abis = {
   tokenURI: "function tokenURI(uint256) public view returns (string memory)",
   approve: "function approve(address to, uint256 tokenId) public",
 };
+
+export const BAHAMA_COORDS = {
+  lat: 25.07010571575544,
+  lng: -77.39747572524674,
+};

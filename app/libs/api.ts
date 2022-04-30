@@ -42,14 +42,22 @@ export const claimCache = async (
   navigator: any
 ) => {
   try {
-    const response = await api.post(endpoints.claim, {
-      cacheId,
-      cacheLocation,
-      userLocation,
-      navigator,
-    });
-    return response.data;
+    const response = await api
+      .post(endpoints.claim, {
+        cacheId,
+        cacheLocation,
+        userLocation,
+        navigator,
+      })
+      .catch((error) => {
+        if (error.response) {
+          const err = error.response.data;
+          return { data: { tx: null, message: err.message, error: err.error } };
+        }
+      });
+    if (response) return response.data;
   } catch (e) {
+    console.log(e);
     console.error(e);
     return null;
   }

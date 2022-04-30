@@ -20,7 +20,7 @@ const Home: NextPage = () => {
   const auth = useAuth();
   const airCache = useAirCache(null);
   const modal = useModal();
-
+  console.log(auth.user);
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
@@ -29,11 +29,11 @@ const Home: NextPage = () => {
     }
   }, [airCache.web3Ready]);
 
-  useEffect(() => {
-    if (auth.user === null) {
-      router.push("/login");
-    }
-  }, [auth.user]);
+  // useEffect(() => {
+  //   if (auth.user === null) {
+  //     router.push("/login");
+  //   }
+  // }, [auth.user]);
 
   if (auth.user === undefined) {
     return (
@@ -65,12 +65,14 @@ const Home: NextPage = () => {
         markerPosition={markerPosition}
         toggleModal={modal.toggleModal}
         showEmpty={false}
+        user={auth.user}
       />
       {airCache.loading && <FullScreenSpinner />}
     </div>;
   }
   // const cacheInfo = airCache.caches[0];
   // const emptyCache = cacheInfo && cacheInfo.tokenId === 0;
+  console.log(auth.user);
   return (
     <div className="relative" style={{ height: "100%", paddingBottom: 50 }}>
       {/* <div className="absolute w-full z-10">
@@ -92,6 +94,7 @@ const Home: NextPage = () => {
         markerPosition={markerPosition}
         toggleModal={modal.toggleModal}
         showEmpty={checked}
+        user={auth.user}
       />
       {!airCache.loading && (
         <CacheContentModal

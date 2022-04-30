@@ -11,6 +11,7 @@ import Sad from "../Icons/Sad";
 import AxeAnimation from "../Animations/Axe";
 import { haversineDistance, ipfsToPinata, isIpfs } from "../../libs/utils";
 import MapIcon from "../Icons/Map";
+import { useRouter } from "next/router";
 
 enum TxState {
   Idle,
@@ -39,10 +40,11 @@ export default function CacheContentModal({
   auth,
   data,
 }: Props) {
+  const router = useRouter();
   const [NFT, setNFT] = useState<any>(null);
   const [txState, setTxState] = useState<TxState>(TxState.Idle);
   const [txHash, setTxHash] = useState("");
-  const [message, setMessage] = useState("");
+  const [error, setError] = useState({ error: "", message: "" });
   const [fetchingLocation, setFetchingLocation] = useState(false);
   const [fetchingMeta, setFetchingMeta] = useState(false);
   const fetchCache = async (cacheId: number) => {
@@ -62,7 +64,7 @@ export default function CacheContentModal({
 
   useEffect(() => {
     if (!open) {
-      setMessage("");
+      setError({ error: "", message: "" });
       setTxState(TxState.Idle);
       setNFT(null);
     } else {
@@ -117,7 +119,7 @@ export default function CacheContentModal({
         setTxHash(res.tx.hash);
       } else {
         setTxState(TxState.Error);
-        setMessage(res.message);
+        setError({ message: res.message, error: res.error });
       }
     });
   };
@@ -250,17 +252,29 @@ export default function CacheContentModal({
       {txState === TxState.Error ? (
         <>
           <div className="text-3xl font-bold text-center pb-5">
-            {message === "TOO_FAR" && "You must get closer to claim!"}
+            {error.message}
           </div>
           <div className="max-w-xs p-14 m-auto">
-            {message === "TOO_FAR" && <MapIcon />}
+            {error.error === "TOO_FAR" && <MapIcon />}
+            {error.error === "TOO_FAR" && (
+              <Button
+                onClick={toggleModal}
+                className="w-20 font-bold m-auto block text-2xl"
+              >
+                Ok
+              </Button>
+            )}
+            {error.error === "NO_AUTH" && (
+              <Button
+                className="m-auto w-28 block mt-0 py-3 font-bold text-2xl"
+                onClick={() => {
+                  router.push("/login");
+                }}
+              >
+                Login
+              </Button>
+            )}
           </div>
-          <Button
-            onClick={toggleModal}
-            className="w-20 font-bold m-auto block text-2xl"
-          >
-            Ok
-          </Button>
         </>
       ) : (
         <></>

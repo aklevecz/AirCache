@@ -19,7 +19,7 @@ export default function Login({
   return (
     <div className="flex flex-col justify-center items-center">
       <img src={eggImg.src} />
-      <div className="text-3xl font-bold w-3/4 text-center mb-10">Login</div>
+      <div className="text-4xl font-bold w-3/4 text-center mb-10">Sign in</div>
 
       <input
         autoComplete="email"
@@ -50,7 +50,7 @@ export default function Login({
             <Spinner />
           </div>
         ) : (
-          "Login"
+          "Begin"
         )}
       </Button>
 

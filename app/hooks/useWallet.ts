@@ -35,6 +35,7 @@ export default function useWallet(address: string) {
   //     mutate,
   //   } = useSWR(address && "/nfts", () => fetcher(address));
 
+  const [fetching, setFetching] = useState(true);
   const [nfts, setNfts] = useState<any[] | null>([]);
   const [uris, setUris] = useState<string[]>([]);
   const [metadatas, setMetadatas] = useState<any[]>([]);
@@ -42,8 +43,12 @@ export default function useWallet(address: string) {
   useEffect(() => {
     if (address) {
       fetcher(address).then((data) => {
-        console.log(data);
-        setNfts(data);
+        if (data.length === 0) {
+          console.log("no txs");
+          setFetching(false);
+        } else {
+          setNfts(data);
+        }
       });
     }
   }, [address]);
@@ -130,5 +135,5 @@ export default function useWallet(address: string) {
     }
   }, [uris]);
 
-  return { nfts, uris, metadatas };
+  return { fetching, nfts, uris, metadatas };
 }

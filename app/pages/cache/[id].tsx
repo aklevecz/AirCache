@@ -22,11 +22,11 @@ const Cache: NextPage = (props: any) => {
   const airCache = useAirCache(cache as string);
   const modal = useModal();
 
-  useEffect(() => {
-    if (auth.user === null) {
-      router.push({ pathname: "/login", query: { cache } });
-    }
-  }, [auth.user]);
+  // useEffect(() => {
+  //   if (auth.user === null) {
+  //     router.push({ pathname: "/login", query: { cache } });
+  //   }
+  // }, [auth.user]);
 
   useEffect(() => {
     if (airCache.web3Ready) {
@@ -74,6 +74,7 @@ const Cache: NextPage = (props: any) => {
         markerPosition={markerPosition}
         toggleModal={modal.toggleModal}
         showEmpty={false}
+        user={auth.user}
       />
       {airCache.loading && <FullScreenSpinner />}
     </div>;
@@ -103,6 +104,7 @@ const Cache: NextPage = (props: any) => {
       </div> */}
       <Map
         // caches={airCache.caches}
+        user={auth.user}
         caches={[props]}
         markerPosition={markerPosition}
         toggleModal={modal.toggleModal}

@@ -28,9 +28,16 @@ var sqs = new AWS.SQS({ apiVersion: "2012-11-05" });
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<Data | any>
 ) {
-  if (!req.headers.authorization) return res.status(405).end();
+  if (!req.headers.authorization) {
+    return res
+      .status(405)
+      .json({
+        error: "NO_AUTH",
+        message: "You must login to claim NFTs to your wallet!",
+      });
+  }
   try {
     const user = (await jwt.verify(
       req.headers.authorization as string,
@@ -50,7 +57,11 @@ export default async function handler(
 
     const distance = haversineDistance(userLocation, cacheLocation);
     if (distance > 100) {
-      return res.json({ tx: null, message: "TOO_FAR" });
+      return res.json({
+        tx: null,
+        message: "You must get closer to claim!",
+        error: "TOO_FAR",
+      });
     }
     const mintParams = {
       MessageAttributes: {
