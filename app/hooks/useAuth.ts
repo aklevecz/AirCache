@@ -23,7 +23,7 @@ export default function useAuth() {
     const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!);
     const did = await magic.auth.loginWithMagicLink({
       email,
-      // redirectURI,
+      redirectURI,
     });
     const authRequest = await api.post(endpoints.login, null, {
       headers: { Authorization: `Bearer ${did}` },
