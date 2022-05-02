@@ -27,3 +27,13 @@ export const BAHAMA_COORDS = {
   lat: 25.07010571575544,
   lng: -77.39747572524674,
 };
+
+export const LA_COORDS = {
+  lat: 34.096411938369044,
+  lng: -118.24104672954115,
+};
+
+export const SF_COORDS = {
+  lat: 37.7664967,
+  lng: -122.4293212,
+};

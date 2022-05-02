@@ -2,17 +2,12 @@ import { forwardRef, useEffect, useRef } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 import silverMap from "../../assets/map-style/silver-map.json";
 import storage from "../../libs/storage";
-import { BAHAMA_COORDS } from "../../libs/constants";
+import { BAHAMA_COORDS, LA_COORDS } from "../../libs/constants";
 
 const loader = new Loader({
   apiKey: process.env.NEXT_PUBLIC_GMAP_KEY as string,
   version: "weekly",
 });
-
-const LA_COORDS = {
-  lat: 37.7664967,
-  lng: -122.4293212,
-};
 
 type Props = {
   initMap: (map: google.maps.Map) => void;

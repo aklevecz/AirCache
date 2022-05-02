@@ -7,17 +7,12 @@ import eggIcon from "../assets/icons/egg2.png";
 import { ethers } from "ethers";
 import storage from "../libs/storage";
 import { Latlng } from "../libs/types";
-import { BAHAMA_COORDS } from "../libs/constants";
+import { BAHAMA_COORDS, LA_COORDS } from "../libs/constants";
 
 const loader = new Loader({
   apiKey: process.env.NEXT_PUBLIC_GMAP_KEY as string,
   version: "weekly",
 });
-
-const LA_COORDS = {
-  lat: 37.7664967,
-  lng: -122.4293212,
-};
 
 type Props = {
   markerPosition: any;
