@@ -2,7 +2,7 @@ import axios from "axios";
 import { ethers } from "ethers";
 import AirYaytsoInterface from "../hooks/AirYaytso.json";
 import { abis, AIRCACHE_ADDRESS_MATIC } from "./constants";
-import { delay, ipfsToPinata, isIpfs } from "./utils";
+import { delay, ipfstoIO, ipfsToPinata, isIpfs } from "./utils";
 
 const ALCHEMY_KEY = process.env.ALCHEMY_KEY;
 const provider = new ethers.providers.AlchemyProvider("matic", ALCHEMY_KEY);
@@ -48,7 +48,7 @@ const getNFTMeta = async (tokenId: number, tokenAddress: string) => {
   // const baseUrl = "https://gateway.pinata.cloud/ipfs/";
   // let metaurl = `${uri.replace("ipfs://", baseUrl)}`;
 
-  const metaurl = ipfsToPinata(uri);
+  const metaurl = ipfstoIO(uri);
   await delay(1000);
   const response = await axios.get(metaurl);
   const metadata = response.data;
