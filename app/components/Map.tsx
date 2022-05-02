@@ -102,7 +102,7 @@ export default function Map({
         const last_location = storage.getItem(storage.keys.user_location);
         const center = last_location
           ? JSON.parse(last_location)
-          : { lat: BAHAMA_COORDS.lat, lng: BAHAMA_COORDS.lng };
+          : { lat: LA_COORDS.lat, lng: LA_COORDS.lng };
         const map = new google.maps.Map(mapContainer.current, {
           zoom: 15,
           styles: silverMap,
