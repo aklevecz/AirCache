@@ -34,7 +34,8 @@ const Cache: NextPage = (props: any) => {
       airCache.collectCacheMeta();
     }
   }, [airCache.web3Ready]);
-  const title = props.id - props.NFT ? props.NFT.name : "empty egg";
+
+  const title = `${props.id} - ${props.NFT ? props.NFT.name : "empty egg"}`;
   const description = `An egg with ${
     props.NFT ? props.NFT.name : "nothing"
   } inside!`;
