@@ -33,7 +33,7 @@ export default async function handler(
   if (!req.headers.authorization) {
     return res.status(405).json({
       error: "NO_AUTH",
-      message: "You must login to claim NFTs!",
+      message: "You must login to claim eggs!",
     });
   }
   try {

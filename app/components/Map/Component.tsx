@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useRef } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 import silverMap from "../../assets/map-style/silver-map.json";
+import darkMap from "../../assets/map-style/dark-map.json";
 import storage from "../../libs/storage";
 import { BAHAMA_COORDS, LA_COORDS } from "../../libs/constants";
 
@@ -30,7 +31,7 @@ export const Map = forwardRef<Ref, Props>(({ initMap, map }, ref) => {
           : { lat: LA_COORDS.lat, lng: LA_COORDS.lng };
         const map = new google.maps.Map(mapContainer.current, {
           zoom: 15,
-          styles: silverMap,
+          styles: darkMap,
           center,
         });
         initMap(map);

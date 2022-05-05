@@ -132,3 +132,7 @@ a {
     transform: rotate(360deg);
   }
 }
+
+.gmnoprint {
+  display: none;
+}

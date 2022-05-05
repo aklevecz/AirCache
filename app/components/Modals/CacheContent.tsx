@@ -187,7 +187,7 @@ export default function CacheContentModal({
           <div className="text-3xl font-bold text-center pb-5">{NFT.name}</div>
           <div className="p-5">
             <img
-              className="m-auto p-4"
+              className="m-auto"
               src={isIpfs(NFT.image) ? ipfsToPinata(NFT.image) : NFT.image}
             />
           </div>

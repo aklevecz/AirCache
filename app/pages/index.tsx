@@ -37,7 +37,7 @@ const Home: NextPage = () => {
     return (
       <FullCenter>
         <Head>
-          <title>AIR YAYTSO</title>
+          <title>EGGS</title>
           <meta property="og:description" content={`Find eggs!`} />
           <meta property="og:image" content="/egg.png" />
         </Head>
@@ -56,7 +56,7 @@ const Home: NextPage = () => {
   if (!cache) {
     <div className="relative">
       <Head>
-        <title>AIR YAYTSO</title>
+        <title>EGGS</title>
         <meta property="og:description" content={`Find eggs!`} />
         <meta property="og:image" content="/egg.png" />
       </Head>
@@ -78,7 +78,7 @@ const Home: NextPage = () => {
   return (
     <div className="relative" style={{ height: "100%", paddingBottom: 50 }}>
       <Head>
-        <title>AIR YAYTSO</title>
+        <title>EGGS</title>
         <meta property="og:description" content={`Find eggs!`} />
         <meta property="og:image" content="/egg.png" />
       </Head>

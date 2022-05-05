@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 import silverMap from "../assets/map-style/silver-map.json";
+import darkMap from "../assets/map-style/dark-map.json";
 import smiler from "../assets/icons/smiler.svg";
 import eggIcon from "../assets/icons/egg2.png";
 import storage from "../libs/storage";
@@ -86,6 +87,13 @@ export default function Map({
         const lat = caches[i].lat;
         const lng = caches[i].lng;
         createCacheMarker(parseFloat(lat), parseFloat(lng), id, caches[i].NFT);
+        if (singleCache) {
+          console.log("SETTING CACHE CENTER");
+          map.setCenter({
+            lat: caches[0].lat,
+            lng: caches[0].lng,
+          });
+        }
       }
       // }
     }
@@ -100,7 +108,7 @@ export default function Map({
           : { lat: SF_COORDS.lat, lng: SF_COORDS.lng };
         const map = new google.maps.Map(mapContainer.current, {
           zoom: 15,
-          styles: silverMap,
+          styles: darkMap,
           center,
         });
         setMap(map);
@@ -166,7 +174,7 @@ export default function Map({
               lng: pos.longitude,
             });
           } else {
-            console.log(caches);
+            console.log("SETTING CACHE CENTER");
             map.setCenter({
               lat: caches[0].lat,
               lng: caches[0].lng,
