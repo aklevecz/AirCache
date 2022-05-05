@@ -34,28 +34,22 @@ const Cache: NextPage = (props: any) => {
       airCache.collectCacheMeta();
     }
   }, [airCache.web3Ready]);
-
+  const title = props.id - props.NFT ? props.NFT.name : "empty egg";
+  const description = `An egg with ${
+    props.NFT ? props.NFT.name : "nothing"
+  } inside!`;
+  const metaimg = `${
+    props.NFT
+      ? ipfsToPinata(props.NFT.image)
+      : "https://eggs.raptor.pizza/egg.png"
+  }`;
   if (auth.user === undefined) {
     return (
       <FullCenter>
         <Head>
-          <title>
-            {props.id} - {props.NFT ? props.NFT.name : "empty egg"}
-          </title>
-          <meta
-            property="og:description"
-            content={`An egg with ${
-              props.NFT ? props.NFT.name : "nothing"
-            } inside!`}
-          />
-          <meta
-            property="og:image"
-            content={`${
-              props.NFT
-                ? ipfsToPinata(props.NFT.image)
-                : "https://eggs.raptor.pizza/egg.png"
-            }`}
-          />
+          <title>{title}</title>
+          <meta property="og:description" content={description} />
+          <meta property="og:image" content={metaimg} />
         </Head>
         <div className="text-4xl">Loading...</div>
         <FullScreenSpinner />
@@ -96,23 +90,9 @@ const Cache: NextPage = (props: any) => {
   return (
     <div className="relative h-full">
       <Head>
-        <title>
-          {props.id} - {props.NFT ? props.NFT.name : "empty egg"}
-        </title>
-        <meta
-          property="og:description"
-          content={`An egg with ${
-            props.NFT ? props.NFT.name : "nothing"
-          } inside!`}
-        />
-        <meta
-          property="og:image"
-          content={`${
-            props.NFT
-              ? ipfsToPinata(props.NFT.image)
-              : "https://eggs.raptor.pizza/egg.png"
-          }`}
-        />
+        <title>{title}</title>
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={metaimg} />
       </Head>
       {/* <div className="absolute w-full bg-black z-10">
         <div className="overflow-hidden">{auth.user.publicAddress}</div>
