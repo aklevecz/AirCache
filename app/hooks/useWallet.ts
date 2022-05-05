@@ -13,13 +13,14 @@ import {
   maticNodeOptions,
 } from "../libs/utils";
 import { maticMumBaiNodeOptions } from "../libs/utils";
+import web3Api from "../libs/web3Api";
 
 const fetcher = async (address: string) => {
-  const res = await axios.get(
-    `https://api${
-      process.env.NODE_ENV === "development" ? "-testnet" : ""
-    }.polygonscan.com/api?module=account&action=tokennfttx&address=${address}&page=1&startblock=0&sort=asc&apikey=SZT746XM864NP7Y7WQ5HXQ6T4YJV7ZWHR4`
-  );
+  const url = `https://api${
+    process.env.NODE_ENV === "development" ? "-testnet" : ""
+  }.polygonscan.com/api?module=account&action=tokennfttx&address=${address}&page=1&startblock=0&sort=asc&apikey=SZT746XM864NP7Y7WQ5HXQ6T4YJV7ZWHR4`;
+  console.log(url);
+  const res = await axios.get(url);
 
   return res.data.result.filter(
     (tx: any) =>
@@ -42,7 +43,8 @@ export default function useWallet(address: string) {
 
   useEffect(() => {
     if (address) {
-      fetcher(address).then((data) => {
+      web3Api.getPolyaytsoBalance(address).then((data) => {
+        // fetcher(address).then((data) => {
         if (data.length === 0) {
           console.log("no txs");
           setFetching(false);
@@ -69,6 +71,7 @@ export default function useWallet(address: string) {
         for (let i = 0; i < nfts.length; i++) {
           const nft = nfts[i];
           const storageKey = `${nft.tokenID}-${nft.contractAddress}`;
+          console.log(nft);
           let uri = await storage.getItem(storageKey);
           if (!uri) {
             uri = await getTokenURI(
@@ -76,6 +79,7 @@ export default function useWallet(address: string) {
               nft.contractAddress,
               provider
             );
+            console.log(uri);
             if (uri) {
               await storage.setItem(storageKey, uri);
             } else {
@@ -89,7 +93,7 @@ export default function useWallet(address: string) {
         if (uris.length > 0) {
           setUris(uris);
         } else {
-          setFetching(false);
+          nfts.length > 0 && setFetching(false);
         }
       })();
     }
@@ -117,28 +121,17 @@ export default function useWallet(address: string) {
                 console.log(e);
               }
             } else {
-              // shim -- probably take this out
-              const split = uri.split(`https://cdn.yaytso.art/`);
-              const baseURI = `https://cdn.yaytso.art`;
-              const tokenId = parseInt(split[1]);
-              if (!isNaN(tokenId)) {
-                let metaurl = `${baseURI}/metadata/${tokenId
-                  .toString(16)
-                  .padStart(64, "0")}.json`;
-                try {
-                  const res = await axios.get(metaurl);
-                  storage.setItem(uri, JSON.stringify(res.data));
-                  metadatas.push(res.data);
-                } catch (e) {}
-              }
+              const res = await axios.get(uri);
+              storage.setItem(uri, JSON.stringify(res.data));
+              metadatas.push(res.data);
             }
           }
         }
         if (metadatas.length > 0) {
           setMetadatas(metadatas);
         } else {
-          setFetching(false);
         }
+        setFetching(false);
       })();
     }
   }, [uris]);

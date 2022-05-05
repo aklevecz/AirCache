@@ -65,10 +65,16 @@ export const getTokenURI = async (
 ): Promise<string> => {
   const tokenContract = new ethers.Contract(
     tokenAddress,
-    [abis.tokenURI],
+    [abis.tokenURI, abis.uri],
     provider
   );
-  const uri = await tokenContract.tokenURI(tokenId);
+  let uri;
+  try {
+    uri = await tokenContract.tokenURI(tokenId);
+  } catch (e) {
+    uri = await tokenContract.uri(tokenId);
+    uri = uri.replace("{id}", tokenId);
+  }
   return uri;
 };
 

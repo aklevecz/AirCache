@@ -215,7 +215,7 @@ export default function CacheContentModal({
       {txState === TxState.Mining ? (
         <>
           <div className="text-3xl font-bold text-center pb-5">
-            The NFT is being sent to you...
+            The item is being sent to you...
           </div>
           <AxeAnimation />
           {/* <div className="text-center">
@@ -234,7 +234,7 @@ export default function CacheContentModal({
       {txState === TxState.Complete ? (
         <>
           <div className="text-4xl font-bold text-center pb-5">
-            Your new NFT!
+            Your new item!
           </div>
 
           <div className="text-3xl font-bold text-center pb-5">{NFT.name}</div>

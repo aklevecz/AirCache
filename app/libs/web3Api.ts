@@ -1,11 +1,14 @@
 import { AlchemyProvider } from "@ethersproject/providers";
 import axios from "axios";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import AirYaytsoInterface from "../hooks/AirYaytso.json";
+import PolyaytsoInterface from "./Polyaytso.json";
 import {
   abis,
   AIRCACHE_ADDRESS_MATIC,
   AIRCACHE_ADDRESS_MUMBAI,
+  POLYAYTSO_ADDRESS_MATIC,
+  POLYAYTSO_ADDRESS_MUMBAI,
 } from "./constants";
 import { delay, ipfstoIO, ipfsToPinata, isIpfs } from "./utils";
 
@@ -79,4 +82,25 @@ const getNFTMeta = async (tokenId: number, tokenAddress: string) => {
   return metadata;
 };
 
-export default { getCache, getAllCaches, getNFTMeta };
+const polyaytsoAddress = prod
+  ? POLYAYTSO_ADDRESS_MATIC
+  : POLYAYTSO_ADDRESS_MUMBAI;
+const polyaytsoContract = new ethers.Contract(
+  polyaytsoAddress,
+  PolyaytsoInterface.abi,
+  provider
+);
+
+const getPolyaytsoBalance = async (address: string) => {
+  const balances = await polyaytsoContract.getYaytsosOfAccount(address);
+  const tokens = balances
+    .map((token: BigNumber, i: number) => token.toNumber() && i)
+    .filter((token: number) => token)
+    .map((tokenID: number) => ({
+      tokenID,
+      contractAddress: polyaytsoContract.address,
+    }));
+  return tokens;
+};
+
+export default { getCache, getAllCaches, getNFTMeta, getPolyaytsoBalance };
