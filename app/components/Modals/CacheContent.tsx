@@ -51,6 +51,7 @@ export default function CacheContentModal({
     setFetchingMeta(true);
     const cache = await airCache.getCache(data.cache.id);
     const tokenId = cache.tokenId;
+    console.log(tokenId);
     if (!tokenId) {
       setFetchingMeta(false);
       console.log("cache is empty");
@@ -164,7 +165,9 @@ export default function CacheContentModal({
   if (empty) {
     return (
       <Container open={open} toggleModal={toggleModal}>
-        <div className="text-3xl font-bold text-center pb-5">Egg is empty!</div>
+        <div className="text-3xl font-bold text-center pb-5">
+          Egg is empty! {data.cache.id}
+        </div>
         <div className="w-3/4 m-auto p-10">
           <Sad />
         </div>
@@ -254,7 +257,7 @@ export default function CacheContentModal({
           <div className="text-3xl font-bold text-center pb-5">
             {error.message}
           </div>
-          <div className="max-w-xs p-14 m-auto">
+          <div className="max-w-xs px-14 m-auto">
             {error.error === "TOO_FAR" && <MapIcon />}
             {error.error === "TOO_FAR" && (
               <Button

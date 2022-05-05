@@ -20,7 +20,7 @@ export default function Container({ children, open, toggleModal }: Props) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="bg-black p-10 pb-5 w-4/5 z-10 max-w-lg rounded-3xl"
+            className="bg-black p-10 pb-10 w-4/5 z-10 max-w-lg rounded-3xl"
           >
             {children}
           </motion.div>

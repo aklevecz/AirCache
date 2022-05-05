@@ -1,16 +1,28 @@
+import { AlchemyProvider } from "@ethersproject/providers";
 import axios from "axios";
 import { ethers } from "ethers";
 import AirYaytsoInterface from "../hooks/AirYaytso.json";
-import { abis, AIRCACHE_ADDRESS_MATIC } from "./constants";
+import {
+  abis,
+  AIRCACHE_ADDRESS_MATIC,
+  AIRCACHE_ADDRESS_MUMBAI,
+} from "./constants";
 import { delay, ipfstoIO, ipfsToPinata, isIpfs } from "./utils";
 
-const ALCHEMY_KEY = process.env.ALCHEMY_KEY;
-const provider = new ethers.providers.AlchemyProvider("matic", ALCHEMY_KEY);
+const prod = process.env.NODE_ENV !== "development";
+const ALCHEMY_KEY = prod
+  ? process.env.ALCHEMY_KEY
+  : process.env.ALCHEMY_KEY_MUMBAI;
+const network = prod ? "matic" : "maticmum";
+const provider = new ethers.providers.AlchemyProvider(network, ALCHEMY_KEY);
+const contractAddress = prod ? AIRCACHE_ADDRESS_MATIC : AIRCACHE_ADDRESS_MUMBAI;
 const contract = new ethers.Contract(
-  AIRCACHE_ADDRESS_MATIC,
+  contractAddress,
   AirYaytsoInterface.abi,
   provider
 );
+
+export { provider as AlchemyProvider };
 
 const getCache = async (id: number) => {
   const cache = await contract.caches(id);
@@ -30,11 +42,15 @@ const getAllCaches = async () => {
 const getNFTMeta = async (tokenId: number, tokenAddress: string) => {
   const tokenContract = new ethers.Contract(
     tokenAddress,
-    [abis.tokenURI],
+    [abis.tokenURI, abis.uri],
     provider
   );
-
-  const uri = await tokenContract.tokenURI(tokenId);
+  let uri = "";
+  try {
+    uri = await tokenContract.tokenURI(tokenId);
+  } catch (e) {
+    uri = await tokenContract.uri(tokenId);
+  }
 
   if (!uri) {
     console.error("something wrong");
@@ -43,7 +59,14 @@ const getNFTMeta = async (tokenId: number, tokenAddress: string) => {
 
   if (!isIpfs(uri)) {
     // This should just return the uri
-    return uri;
+    // If it has id replacement
+    let url = "";
+    if (uri.includes("{id}")) {
+      url = uri.replace("{id}", tokenId.toString());
+    }
+    const response = await axios.get(url);
+    const metadata = response.data;
+    return metadata;
   }
   // const baseUrl = "https://gateway.pinata.cloud/ipfs/";
   // let metaurl = `${uri.replace("ipfs://", baseUrl)}`;

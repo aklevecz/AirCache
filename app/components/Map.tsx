@@ -2,12 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 import silverMap from "../assets/map-style/silver-map.json";
 import smiler from "../assets/icons/smiler.svg";
-import cacheIcon from "../assets/icons/cache.png";
 import eggIcon from "../assets/icons/egg2.png";
-import { ethers } from "ethers";
 import storage from "../libs/storage";
 import { Latlng } from "../libs/types";
-import { BAHAMA_COORDS, LA_COORDS } from "../libs/constants";
+import { LA_COORDS, SF_COORDS } from "../libs/constants";
 
 const loader = new Loader({
   apiKey: process.env.NEXT_PUBLIC_GMAP_KEY as string,
@@ -20,6 +18,7 @@ type Props = {
   toggleModal: (data: any) => void;
   showEmpty: boolean;
   user: any;
+  singleCache?: boolean;
 };
 
 export default function Map({
@@ -28,6 +27,7 @@ export default function Map({
   toggleModal,
   showEmpty,
   user,
+  singleCache = false,
 }: Props) {
   const [map, setMap] = useState<google.maps.Map>();
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -64,7 +64,7 @@ export default function Map({
 
   useEffect(() => {
     markerRefs.current.forEach((marker: any) => {
-      if (marker.NFT.name || showEmpty) {
+      if ((marker.NFT && marker.NFT.name) || showEmpty) {
         marker.marker.setMap(map);
       } else {
         marker.marker.setMap(null);
@@ -97,7 +97,7 @@ export default function Map({
         const last_location = storage.getItem(storage.keys.user_location);
         const center = last_location
           ? JSON.parse(last_location)
-          : { lat: LA_COORDS.lat, lng: LA_COORDS.lng };
+          : { lat: SF_COORDS.lat, lng: SF_COORDS.lng };
         const map = new google.maps.Map(mapContainer.current, {
           zoom: 15,
           styles: silverMap,
@@ -136,9 +136,11 @@ export default function Map({
   };
 
   const updateUserMarker = async () => {
-    const position = await getUserLocation();
-    if (position && userMarkerRef.current) {
-      userMarkerRef.current.setPosition(position as Latlng);
+    if (userRef.current) {
+      const position = await getUserLocation();
+      if (position && userMarkerRef.current) {
+        userMarkerRef.current.setPosition(position as Latlng);
+      }
     }
   };
 
@@ -152,17 +154,24 @@ export default function Map({
       clearInterval(interval);
     };
   }, [user]);
-  console.log(user);
+
   useEffect(() => {
     if (map && navigator.geolocation && typeof window !== "undefined" && user) {
       try {
         navigator.geolocation.getCurrentPosition((position) => {
-          console.log("getting loc");
           const pos = position.coords;
-          map.setCenter({
-            lat: pos.latitude,
-            lng: pos.longitude,
-          });
+          if (!singleCache) {
+            map.setCenter({
+              lat: pos.latitude,
+              lng: pos.longitude,
+            });
+          } else {
+            console.log(caches);
+            map.setCenter({
+              lat: caches[0].lat,
+              lng: caches[0].lng,
+            });
+          }
           const icon = {
             url: smiler.src,
             scaledSize: new google.maps.Size(20, 20),

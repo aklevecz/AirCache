@@ -11,6 +11,7 @@ import {
   maticMumBaiNodeOptions,
   maticNodeOptions,
 } from "../libs/utils";
+import { AlchemyProvider } from "../libs/web3Api";
 
 import AirCacheInterface from "./AirYaytso.json";
 
@@ -44,8 +45,26 @@ export default function useAirCache(cacheId: string | null) {
     const contract = new ethers.Contract(
       AIRCACHE_ADDRESS,
       AirCacheInterface.abi,
-      provider
+      AlchemyProvider
     );
+    console.log("hi");
+    const activeCacheContract = storage.getItem(
+      storage.keys.active_cache_contract_address
+    );
+    if (!activeCacheContract) {
+      storage.setItem(
+        storage.keys.active_cache_contract_address,
+        AIRCACHE_ADDRESS
+      );
+    } else if (activeCacheContract !== AIRCACHE_ADDRESS) {
+      // Could just clear the cache keys
+      localStorage.clear();
+      storage.setItem(
+        storage.keys.active_cache_contract_address,
+        AIRCACHE_ADDRESS
+      );
+    }
+
     setContract(contract);
   }, []);
 
@@ -111,15 +130,23 @@ export default function useAirCache(cacheId: string | null) {
   ) => {
     const tokenContract = new ethers.Contract(
       tokenAddress,
-      [abis.tokenURI],
-      provider!
+      [abis.tokenURI, abis.uri],
+      AlchemyProvider
     );
     console.log("getting nft meta");
     const uriKey = `${tokenId}-${tokenAddress}`;
     let uri = await storage.getItem(uriKey);
     console.log(uri);
     if (!uri) {
-      uri = await tokenContract.tokenURI(tokenId);
+      try {
+        // erc 721
+        uri = await tokenContract.tokenURI(tokenId);
+        console.log(uri);
+      } catch (e) {
+        console.log(e);
+        uri = await tokenContract.uri(tokenId);
+        console.log(uri);
+      }
       await storage.setItem(uriKey, uri ? uri : "null");
     }
     if (!uri) {
@@ -131,14 +158,29 @@ export default function useAirCache(cacheId: string | null) {
     // let metaurl = `${baseURI}/metadata/${tid
     //   .toString(16)
     //   .padStart(64, "0")}.json`;
+    let metadata = await storage.getItem(uri);
+
+    // if not IPFS
     if (!isIpfs(uri)) {
-      // This should just return the uri
-      return uri;
+      // If it has id replacement
+      let url = "";
+      if (uri.includes("{id}")) {
+        url = uri.replace("{id}", tokenId.toString());
+      }
+      if (!metadata) {
+        const response = await axios.get(url);
+        metadata = response.data;
+        await storage.setItem(uri, JSON.stringify(metadata));
+      } else {
+        console.log("from storage");
+        metadata = JSON.parse(metadata);
+      }
+      return metadata;
     }
     // const baseUrl = "https://gateway.pinata.cloud/ipfs/";
     // let metaurl = `${uri.replace("ipfs://", baseUrl)}`;
 
-    let metadata = await storage.getItem(uri);
+    // let metadata = await storage.getItem(uri);
 
     if (!metadata) {
       const metaurl = ipfsToPinata(uri);
@@ -158,7 +200,6 @@ export default function useAirCache(cacheId: string | null) {
       console.log("collecting meta");
 
       const contractSigner = contract.connect(signer);
-
       // IF SINGLE CACHEE
       if (contract && signer && cacheId) {
         const cache = await getCache(parseInt(cacheId), contractSigner);
@@ -174,7 +215,10 @@ export default function useAirCache(cacheId: string | null) {
 
         // IF ALL CACHE
       } else if (cacheId === null) {
+        console.log("looking for caches");
+        console.log(contract, signer);
         const numOfCaches = (await contract.cacheId()).toNumber();
+        console.log(numOfCaches);
         const cachedData = await getCachedCaches(numOfCaches);
         const caches = [...cachedData.cached];
         for (let i = 0; i < cachedData.new.length; i++) {

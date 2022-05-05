@@ -14,12 +14,13 @@ import { ipfsToPinata } from "../../libs/utils";
 import web3Api from "../../libs/web3Api";
 
 const Cache: NextPage = (props: any) => {
-  console.log(props);
+  // console.log(props);
   const router = useRouter();
-  const { id: cache } = router.query;
+  // const { id: cache } = router.query;
+  const cache = props;
   const markerPosition = useRef<{ lat: number; lng: number }>(null);
   const auth = useAuth();
-  const airCache = useAirCache(cache as string);
+  const airCache = useAirCache(cache.id as string);
   const modal = useModal();
 
   // useEffect(() => {
@@ -51,6 +52,7 @@ const Cache: NextPage = (props: any) => {
           />
         </Head>
         <div className="text-4xl">Loading...</div>
+        <FullScreenSpinner />
       </FullCenter>
     );
   }
@@ -64,20 +66,21 @@ const Cache: NextPage = (props: any) => {
   //   }
 
   if (!cache) {
-    <div className="relative h-full">
-      {/* <div className="absolute w-full bg-black z-10">
-        <div className="overflow-hidden">{auth.user.publicAddress}</div>
-      </div> */}
-      <Map
-        // caches={airCache.caches}
-        caches={props}
-        markerPosition={markerPosition}
-        toggleModal={modal.toggleModal}
-        showEmpty={false}
-        user={auth.user}
-      />
-      {airCache.loading && <FullScreenSpinner />}
-    </div>;
+    return <div>loading...</div>;
+    //   <div className="relative h-full">
+    //     {/* <div className="absolute w-full bg-black z-10">
+    //       <div className="overflow-hidden">{auth.user.publicAddress}</div>
+    //     </div> */}
+    //     <Map
+    //       // caches={airCache.caches}
+    //       caches={props}
+    //       markerPosition={markerPosition}
+    //       toggleModal={modal.toggleModal}
+    //       showEmpty={false}
+    //       user={auth.user}
+    //     />
+    //     {airCache.loading && <FullScreenSpinner />}
+    //   </div>;
   }
 
   //   const cacheInfo = airCache.caches && airCache.caches[0];
@@ -88,11 +91,14 @@ const Cache: NextPage = (props: any) => {
     <div className="relative h-full">
       <Head>
         <title>
-          {props.id} - {props.NFT && props.NFT.name}
+          {props.id}
+          {props.NFT && ` - ${props.NFT.name}`}
         </title>
         <meta
           property="og:description"
-          content={`An egg with ${props.NFT && props.NFT.name} inside!`}
+          content={`An egg with ${
+            props.NFT ? props.NFT.name : "nothing"
+          } inside!`}
         />
         <meta
           property="og:image"
@@ -109,6 +115,7 @@ const Cache: NextPage = (props: any) => {
         markerPosition={markerPosition}
         toggleModal={modal.toggleModal}
         showEmpty={false}
+        singleCache={true}
       />
 
       {!airCache.loading && props && (

@@ -1,9 +1,10 @@
 import FullCenter from "../components/Layout/FullCenter";
 import useAuth from "../hooks/useAuth";
-import LoginComponent from "../components/Auth/Login";
+import LoginComponent from "../components/Auth/LoginRaptor";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import airYaytsoLogo from "../assets/icons/air-yaytso.svg";
+import Raptor from "../components/Icons/Raptor";
 
 export default function Login() {
   const auth = useAuth();
@@ -29,8 +30,9 @@ export default function Login() {
 
   return (
     <div>
-      <div className="w-3/4 m-auto mt-10">
-        <img src={airYaytsoLogo.src} />
+      <div className="m-auto mt-10" style={{ width: 300 }}>
+        {/* <img src={airYaytsoLogo.src} /> */}
+        <Raptor />
       </div>
       <LoginComponent
         login={auth.login}

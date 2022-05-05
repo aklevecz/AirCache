@@ -31,7 +31,7 @@ export default function Wallet() {
   return (
     <div className="pb-20">
       <div className="text-3xl text-center m-4 font-bold font-fatfrank tracking-wider bg-white text-black">
-        Your NFTs
+        Your Items
       </div>
       {auth.user && (
         <>
@@ -42,7 +42,7 @@ export default function Wallet() {
             {wallet.fetching && <Spinner />}
             {wallet.nfts.length === 0 && wallet.metadatas.length === 0 && (
               <div className="text-3xl font-bold w-3/4 text-center">
-                You haven't found any NFTs!
+                You haven't found any items!
               </div>
             )}
           </div>
@@ -54,7 +54,7 @@ export default function Wallet() {
       {!auth.user && (
         <>
           <div className="text-3xl font-bold w-3/4 my-10 m-auto text-center">
-            You must sign in to view your NFTs
+            You must sign in to view your items
           </div>
           <Button
             className="w-32 m-auto font-bold text-2xl block mt-8"

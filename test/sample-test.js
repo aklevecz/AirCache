@@ -11,6 +11,10 @@ describe("AirCache", function () {
     this.fakeNFT = await this.FakeNFT.deploy();
     await this.fakeNFT.deployed();
 
+    this.FakeNFT2 = await ethers.getContractFactory("FakeNFT2");
+    this.fakeNFT2 = await this.FakeNFT2.deploy();
+    await this.fakeNFT2.deployed();
+
     this.accounts = await ethers.getSigners();
     this.owner = this.accounts[0];
     this.notOwner = this.accounts[1];
@@ -26,10 +30,10 @@ describe("AirCache", function () {
     const lat = ethers.utils.formatBytes32String("100");
     const lng = ethers.utils.formatBytes32String("100");
     await this.airCache.createCache(lat, lng);
-    await this.fakeNFT.approve(this.airCache.address, 1);
-    await this.airCache.holdNFT(this.fakeNFT.address, 1, 1);
-    const owner = await this.fakeNFT.ownerOf(1);
-    expect(owner).to.equal(this.airCache.address);
+    await this.fakeNFT2.setApprovalForAll(this.airCache.address, true);
+    await this.airCache.holdNFT(this.fakeNFT2.address, 1, 1);
+    const tokenId = await this.fakeNFT2.balanceOf(this.airCache.address, 1);
+    expect(tokenId).to.equal(1);
   });
 
   it("AirCache drops a NFT", async function () {

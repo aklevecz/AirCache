@@ -44,11 +44,13 @@ export const getMumbaiProvider = () => {
   const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!, {
     network: maticMumBaiNodeOptions,
   });
+  console.log("mumbai");
   const provider = new ethers.providers.Web3Provider(magic.rpcProvider as any);
   return provider;
 };
 
 export const getMaticProvider = () => {
+  console.log("matic");
   const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!, {
     network: maticNodeOptions,
   });

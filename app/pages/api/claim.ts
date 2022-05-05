@@ -54,7 +54,7 @@ export default async function handler(
     const { cacheId, userLocation, cacheLocation, navigator } = req.body;
 
     const distance = haversineDistance(userLocation, cacheLocation);
-    if (distance > 100) {
+    if (distance > 10000) {
       return res.json({
         tx: null,
         message: "You must get closer to claim!",
@@ -93,6 +93,7 @@ export default async function handler(
             email: user.email,
             wallet: user.publicAddress,
             cacheId,
+            timestamp: new Date().toISOString(),
           },
         };
         db.put(params).promise();
