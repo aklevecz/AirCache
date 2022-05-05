@@ -40,8 +40,7 @@ export default function Login({
       <Button
         className="w-32 mt-4 font-bold"
         onClick={() => {
-          const destination = cacheId ? `/cache/${cacheId}` : "/";
-          console.log(destination);
+          const destination = cacheId ? `/${cacheId}` : "/";
           login(email, destination);
         }}
       >

@@ -16,15 +16,20 @@ export default function useAuth() {
     //   return console.error("No Window");
     // }
     setFetching(true);
-    let redirectURI = "https://air.yaytso.art/callback";
+    let redirectURI = "https://air.yaytso.art/callback" + destination;
     if (typeof window !== "undefined") {
-      redirectURI = `${window.location.protocol}//${window.location.host}/callback`;
+      redirectURI = `${window.location.protocol}//${window.location.host}/callback${destination}`;
     }
+    console.log(redirectURI);
     // const redirectURI = "https://air.yaytso.art/callback";
+    // const redirectDestination =
+    //   destination === "/"
+    //     ? `?${destination.split("/")[0]}=${destination.split("/")[1]}`
+    //     : "";
     const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!);
     const did = await magic.auth.loginWithMagicLink({
       email,
-      redirectURI,
+      redirectURI: redirectURI,
     });
     const authRequest = await api.post(endpoints.login, null, {
       headers: { Authorization: `Bearer ${did}` },
@@ -35,7 +40,7 @@ export default function useAuth() {
       mutate();
       setTimeout(() => {
         console.log(destination);
-        router.push(destination);
+        router.push(`/cache${destination}`);
         // window.location.reload();
         setFetching(false);
       }, 1000);

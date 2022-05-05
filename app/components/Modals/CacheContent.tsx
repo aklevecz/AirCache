@@ -172,7 +172,10 @@ export default function CacheContentModal({
           <Sad />
         </div>
         <Button
-          onClick={toggleModal}
+          onClick={() => {
+            // toggleModal()
+            router.push(`/login?cache=${data.cache.id}`);
+          }}
           className="m-auto w-28 block mt-5 py-3 font-bold text-2xl"
         >
           Ok
