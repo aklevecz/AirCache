@@ -39,9 +39,7 @@ export default function useAuth() {
       storage.setItem(storage.keys.token, token);
       mutate();
       setTimeout(() => {
-        console.log(destination);
-        router.push(`/cache${destination}`);
-        // window.location.reload();
+        router.push(destination === "/" ? destination : `/cache${destination}`);
         setFetching(false);
       }, 1000);
     }

@@ -173,8 +173,7 @@ export default function CacheContentModal({
         </div>
         <Button
           onClick={() => {
-            // toggleModal()
-            router.push(`/login?cache=${data.cache.id}`);
+            toggleModal();
           }}
           className="m-auto w-28 block mt-5 py-3 font-bold text-2xl"
         >
@@ -274,7 +273,8 @@ export default function CacheContentModal({
               <Button
                 className="m-auto w-28 block mt-0 py-3 font-bold text-2xl"
                 onClick={() => {
-                  router.push("/login");
+                  // router.push("/login");
+                  router.push(`/login?cache=${data.cache.id}`);
                 }}
               >
                 Login
