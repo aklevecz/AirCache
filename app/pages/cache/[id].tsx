@@ -40,15 +40,21 @@ const Cache: NextPage = (props: any) => {
       <FullCenter>
         <Head>
           <title>
-            {props.id} - {props.NFT && props.NFT.name}
+            {props.id} - {props.NFT ? props.NFT.name : "empty egg"}
           </title>
           <meta
             property="og:description"
-            content={`An egg with ${props.NFT && props.NFT.name} inside!`}
+            content={`An egg with ${
+              props.NFT ? props.NFT.name : "nothing"
+            } inside!`}
           />
           <meta
             property="og:image"
-            content={`${props.NFT ? ipfsToPinata(props.NFT.image) : ""}`}
+            content={`${
+              props.NFT
+                ? ipfsToPinata(props.NFT.image)
+                : "https://eggs.raptor.pizza/egg.png"
+            }`}
           />
         </Head>
         <div className="text-4xl">Loading...</div>
@@ -91,8 +97,7 @@ const Cache: NextPage = (props: any) => {
     <div className="relative h-full">
       <Head>
         <title>
-          {props.id}
-          {props.NFT && ` - ${props.NFT.name}`}
+          {props.id} - {props.NFT ? props.NFT.name : "empty egg"}
         </title>
         <meta
           property="og:description"
@@ -102,7 +107,11 @@ const Cache: NextPage = (props: any) => {
         />
         <meta
           property="og:image"
-          content={`${props.NFT ? ipfsToPinata(props.NFT.image) : ""}`}
+          content={`${
+            props.NFT
+              ? ipfsToPinata(props.NFT.image)
+              : "https://eggs.raptor.pizza/egg.png"
+          }`}
         />
       </Head>
       {/* <div className="absolute w-full bg-black z-10">
