@@ -8,8 +8,6 @@ import CacheContentModal from "../components/Modals/CacheContent";
 import useAirCache from "../hooks/useAirCache";
 import useAuth from "../hooks/useAuth";
 import useModal from "../hooks/useModal";
-import LoginComponent from "../components/Auth/Login";
-import Link from "next/link";
 import Head from "next/head";
 
 const Home: NextPage = () => {
@@ -57,6 +55,11 @@ const Home: NextPage = () => {
   // ????
   if (!cache) {
     <div className="relative">
+      <Head>
+        <title>AIR YAYTSO</title>
+        <meta property="og:description" content={`Find eggs!`} />
+        <meta property="og:image" content="/egg.png" />
+      </Head>
       {/* <div className="absolute w-full bg-black z-10">
         <div className="overflow-hidden">{auth.user.publicAddress}</div>
       </div> */}
@@ -72,9 +75,13 @@ const Home: NextPage = () => {
   }
   // const cacheInfo = airCache.caches[0];
   // const emptyCache = cacheInfo && cacheInfo.tokenId === 0;
-  console.log(auth.user);
   return (
     <div className="relative" style={{ height: "100%", paddingBottom: 50 }}>
+      <Head>
+        <title>AIR YAYTSO</title>
+        <meta property="og:description" content={`Find eggs!`} />
+        <meta property="og:image" content="/egg.png" />
+      </Head>
       {/* <div className="absolute w-full z-10">
         <div className="flex justify-center items-center">
           <label className="text-black" htmlFor="show-empty">
