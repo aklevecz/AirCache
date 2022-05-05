@@ -185,7 +185,7 @@ export default function CacheContentModal({
       {txState === TxState.Idle || txState === TxState.Fetching ? (
         <>
           <div className="text-3xl font-bold text-center pb-5">{NFT.name}</div>
-          <div>
+          <div className="p-5">
             <img
               className="m-auto p-4"
               src={isIpfs(NFT.image) ? ipfsToPinata(NFT.image) : NFT.image}
