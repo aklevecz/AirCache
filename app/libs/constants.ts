@@ -32,6 +32,8 @@ export const abis = {
   tokenURI: "function tokenURI(uint256) public view returns (string memory)",
   uri: "function uri(uint256) public view returns (string memory)",
   approve: "function approve(address to, uint256 tokenId) public",
+  setApprovalForAll:
+    "function setApprovalForAll(address operator, bool approved) public",
 };
 
 export const BAHAMA_COORDS = {
