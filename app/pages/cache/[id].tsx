@@ -52,7 +52,7 @@ const Cache: NextPage = (props: any) => {
           <meta property="og:title" content={title} />
           <meta property="og:description" content={description} />
           <meta property="og:image" content={metaimg} />
-          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:card" content="summary" />
           <meta name="twitter:image" content={metaimg} />
           <meta name="twitter:title" content={title} />
           <meta name="twitter:text:title" content={title} />
@@ -100,7 +100,7 @@ const Cache: NextPage = (props: any) => {
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:image" content={metaimg} />
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:card" content="summary" />
         <meta name="twitter:image" content={metaimg} />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:text:title" content={title} />
