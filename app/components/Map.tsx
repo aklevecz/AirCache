@@ -42,6 +42,7 @@ export default function Map({
     lat: number,
     lng: number,
     id: number,
+    contractAddress: string,
     NFT: any
   ) => {
     const icon = {
@@ -58,8 +59,12 @@ export default function Map({
     //   cacheMarker.setMap(null);
     // }
     markerRefs.current = [...markerRefs.current, { marker: cacheMarker, NFT }];
+    console.log(id);
     cacheMarker.addListener("click", () => {
-      toggleModal({ cache: { id, location: { lat, lng } }, NFT });
+      toggleModal({
+        cache: { id, contractAddress, location: { lat, lng } },
+        NFT,
+      });
     });
   };
 
@@ -86,7 +91,13 @@ export default function Map({
         // const lng = ethers.utils.parseBytes32String(caches[i].lng);
         const lat = caches[i].lat;
         const lng = caches[i].lng;
-        createCacheMarker(parseFloat(lat), parseFloat(lng), id, caches[i].NFT);
+        createCacheMarker(
+          parseFloat(lat),
+          parseFloat(lng),
+          id,
+          caches[i].contractAddress,
+          caches[i].NFT
+        );
         if (singleCache) {
           console.log("SETTING CACHE CENTER");
           map.setCenter({

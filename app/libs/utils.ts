@@ -41,6 +41,7 @@ export const maticNodeOptions = {
 };
 
 export const getMumbaiProvider = () => {
+  console.log("MUMBAI");
   const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!, {
     network: maticMumBaiNodeOptions,
   });
@@ -49,7 +50,6 @@ export const getMumbaiProvider = () => {
 };
 
 export const getMaticProvider = () => {
-  console.log("matic");
   const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!, {
     network: maticNodeOptions,
   });
@@ -69,7 +69,6 @@ export const getTokenURI = async (
     provider
   );
   let uri;
-  console.log(tokenId);
   try {
     uri = await tokenContract.tokenURI(tokenId);
   } catch (e) {

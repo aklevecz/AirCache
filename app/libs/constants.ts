@@ -1,3 +1,5 @@
+import { prod } from "./env";
+
 export const oldContracts = {
   airCacheMatic: ["0x66e0c85270A91F6d6c67c8768029106430C1f04e"],
 };
@@ -17,15 +19,13 @@ export const POLYAYTSO_ADDRESS_MUMBAI =
 export const POLYAYTSO_ADDRESS_MATIC =
   "0xf6E71735A2db00b7C515B3465cE533Bfc37C90Ae";
 
-export const AIRCACHE_ADDRESS =
-  process.env.NODE_ENV === "development"
-    ? AIRCACHE_ADDRESS_MUMBAI
-    : AIRCACHE_ADDRESS_MATIC;
+export const AIRCACHE_ADDRESS = !prod
+  ? AIRCACHE_ADDRESS_MUMBAI
+  : AIRCACHE_ADDRESS_MATIC;
 
-export const SPOTTED_PIGS_ADDRESS =
-  process.env.NODE_ENV === "development"
-    ? SPOTTED_PIGS_ADDRESS_MUMBAI
-    : SPOTTED_PIGS_ADDRESS_MATIC;
+export const SPOTTED_PIGS_ADDRESS = !prod
+  ? SPOTTED_PIGS_ADDRESS_MUMBAI
+  : SPOTTED_PIGS_ADDRESS_MATIC;
 
 export const abis = {
   tokenURI: "function tokenURI(uint256) public view returns (string memory)",

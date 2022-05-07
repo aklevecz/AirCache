@@ -18,7 +18,6 @@ const Home: NextPage = () => {
   const auth = useAuth();
   const airCache = useAirCache(null);
   const modal = useModal();
-  console.log(auth.user);
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {

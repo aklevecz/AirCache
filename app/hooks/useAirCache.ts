@@ -3,7 +3,8 @@ import { ethers } from "ethers";
 import { Magic } from "magic-sdk";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { abis, AIRCACHE_ADDRESS } from "../libs/constants";
+import { abis, AIRCACHE_ADDRESS, oldContracts } from "../libs/constants";
+import { prod } from "../libs/env";
 import storage from "../libs/storage";
 import {
   ipfsToPinata,
@@ -19,6 +20,7 @@ import AirCacheInterface from "./AirYaytso.json";
 // const FAKE_NFT_ADDRESS = "0xf4822e9fC423c56CB502D8515e356023c06cf643";
 
 export default function useAirCache(cacheId: string | null) {
+  const [oldCaches, setOldCaches] = useState<ethers.Contract[]>([]);
   const [contract, setContract] = useState<ethers.Contract | null>(null);
   const [provider, setProvider] = useState<ethers.providers.Provider | null>(
     null
@@ -31,11 +33,9 @@ export default function useAirCache(cacheId: string | null) {
   useEffect(() => {
     console.log("air cache init");
     const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!, {
-      network:
-        process.env.NODE_ENV === "development"
-          ? maticMumBaiNodeOptions
-          : maticNodeOptions,
+      network: !prod ? maticMumBaiNodeOptions : maticNodeOptions,
     });
+    console.log(magic);
     const provider = new ethers.providers.Web3Provider(
       magic.rpcProvider as any
     );
@@ -47,6 +47,15 @@ export default function useAirCache(cacheId: string | null) {
       AirCacheInterface.abi,
       AlchemyProvider
     );
+
+    const oldCaches: ethers.Contract[] = [];
+    oldContracts.airCacheMatic.forEach((address: string) => {
+      oldCaches.push(
+        new ethers.Contract(address, AirCacheInterface.abi, AlchemyProvider)
+      );
+    });
+    setOldCaches(oldCaches);
+
     const activeCacheContract = storage.getItem(
       storage.keys.active_cache_contract_address
     );
@@ -68,10 +77,10 @@ export default function useAirCache(cacheId: string | null) {
     setContract(contract);
   }, []);
 
-  const getCachedCaches = async (numCaches: number) => {
+  const getCachedCaches = async (numCaches: number, address: string) => {
     const caches: any = { cached: [], new: [] };
     for (let i = 1; i <= numCaches; i++) {
-      const cacheKey = `cache_${i}`;
+      const cacheKey = `cache_${address}_${i}`;
       const cachedCache = storage.getItem(cacheKey);
       if (!cachedCache) {
         caches.new.push(i);
@@ -84,9 +93,10 @@ export default function useAirCache(cacheId: string | null) {
   };
 
   const getCache = async (cacheId: number, givenContract?: ethers.Contract) => {
-    if (contract) {
-      const cache = await contract.caches(cacheId);
-      const cacheKey = `cache_${cacheId}`;
+    const cacheContract = givenContract ? givenContract : contract;
+    if (cacheContract) {
+      const cache = await cacheContract.caches(cacheId);
+      const cacheKey = `cache_${cacheContract.address}_${cacheId}`;
       const cachedCache = storage.getItem(cacheKey);
       const lat = ethers.utils.parseBytes32String(cache.lat);
       const lng = ethers.utils.parseBytes32String(cache.lng);
@@ -94,6 +104,7 @@ export default function useAirCache(cacheId: string | null) {
         storage.setItem(
           cacheKey,
           JSON.stringify({
+            contractAddress: cacheContract.address,
             lat,
             lng,
           })
@@ -103,6 +114,7 @@ export default function useAirCache(cacheId: string | null) {
       const tokenId = cache.tokenId.toNumber();
       return {
         ...cache,
+        contractAddress: cacheContract.address,
         id: cache.id.toNumber(),
         lat,
         lng,
@@ -204,26 +216,25 @@ export default function useAirCache(cacheId: string | null) {
 
         // IF ALL CACHE
       } else if (cacheId === null) {
-        console.log("looking for caches");
-        console.log(contract, signer);
-        const numOfCaches = (await contract.cacheId()).toNumber();
-        console.log(numOfCaches);
-        const cachedData = await getCachedCaches(numOfCaches);
-        const caches = [...cachedData.cached];
-        for (let i = 0; i < cachedData.new.length; i++) {
-          const n = i + 1;
-          console.log("get cache from blockchain");
-          const cache = await getCache(cachedData.new[i], contractSigner);
-          let NFT: object | null = {};
-          // if (cache.tokenId) {
-          //   NFT = await getNFTMeta(
-          //     cache.tokenId,
-          //     cache.tokenAddress,
-          //     signer.provider!
-          //   );
-          // }
-          caches.push({ ...cache, NFT });
+        const allContracts = [...oldCaches, contract];
+        const caches = [];
+        for (let i = 0; i < allContracts.length; i++) {
+          const contract = allContracts[i];
+          const numOfCaches = (await contract.cacheId()).toNumber();
+          const cachedData = await getCachedCaches(
+            numOfCaches,
+            contract.address
+          );
+          caches.push(...cachedData.cached);
+          for (let i = 0; i < cachedData.new.length; i++) {
+            console.log("get cache from blockchain");
+            const cache = await getCache(cachedData.new[i], contract);
+            console.log(cache);
+            let NFT: object | null = {};
+            caches.push({ ...cache, NFT });
+          }
         }
+        console.log(caches);
         setCaches(caches);
       }
     }

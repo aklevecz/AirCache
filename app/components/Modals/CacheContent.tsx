@@ -12,6 +12,8 @@ import AxeAnimation from "../Animations/Axe";
 import { haversineDistance, ipfsToPinata, isIpfs } from "../../libs/utils";
 import MapIcon from "../Icons/Map";
 import { useRouter } from "next/router";
+import AirYaytsoInterface from "../../hooks/AirCache.json";
+import { provider } from "../../libs/web3Api";
 
 enum TxState {
   Idle,
@@ -27,7 +29,7 @@ type Props = {
   airCache: {
     contract: ethers.Contract | null;
     signer: ethers.Signer | null;
-    getCache: (cacheId: number) => any;
+    getCache: any;
     getNFTMeta: (tokenId: number, tokenAddress: string) => any;
   };
   auth: any;
@@ -49,7 +51,14 @@ export default function CacheContentModal({
   const [fetchingMeta, setFetchingMeta] = useState(false);
   const fetchCache = async (cacheId: number) => {
     setFetchingMeta(true);
-    const cache = await airCache.getCache(data.cache.id);
+    console.log(data.cache);
+    const contract = new ethers.Contract(
+      data.cache.contractAddress,
+      AirYaytsoInterface.abi,
+      provider
+    );
+    const cache = await airCache.getCache(data.cache.id, contract);
+    console.log(cache);
     const tokenId = cache.tokenId;
     console.log(tokenId);
     if (!tokenId) {
