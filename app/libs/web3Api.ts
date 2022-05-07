@@ -10,7 +10,7 @@ import {
   POLYAYTSO_ADDRESS_MATIC,
   POLYAYTSO_ADDRESS_MUMBAI,
 } from "./constants";
-import { delay, ipfstoIO, ipfsToPinata, isIpfs } from "./utils";
+import { delay, ipfstoIO, isIpfs } from "./utils";
 import { prod } from "./env";
 
 const ALCHEMY_KEY = prod
@@ -28,10 +28,16 @@ const contract = new ethers.Contract(
   provider
 );
 
-export const oldCaches = oldContracts.airCacheMatic.reduce((pv, cv) => {
-  const contract = new ethers.Contract(cv, AirYaytsoInterface.abi, provider);
-  return { ...pv, [cv]: contract };
-}, {});
+const oldCacheAddresses = prod ? oldContracts.matic : oldContracts.matic_mum;
+
+// export const oldCacheContracts = oldCacheAddresses.reduce((pv, cv) => {
+//   const contract = new ethers.Contract(cv, AirYaytsoInterface.abi, provider);
+//   return { ...pv, [cv]: contract };
+// }, {});
+
+export const oldCacheContracts = oldCacheAddresses.map((address: string) => {
+  return new ethers.Contract(address, AirYaytsoInterface.abi, provider);
+});
 
 export { provider as AlchemyProvider };
 

@@ -3,6 +3,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { AIRCACHE_ADDRESS_MATIC } from "../../libs/constants";
 import axios from "axios";
 import { ethers } from "ethers";
+import { prod } from "../../libs/env";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 const AIR_CACHE_FIRST_BLOCK = 27696596;
@@ -16,14 +17,19 @@ export default async function handler(
       req.headers.authorization as string,
       JWT_SECRET
     )) as JwtPayload;
-    const url = `https://polygon-mainnet.g.alchemyapi.io/v2/${process.env.ALCHEMY_KEY}`;
+    const maticurl = `https://polygon-mainnet.g.alchemyapi.io/v2/${process.env.ALCHEMY_KEY}`;
+    const mumurl =
+      "https://polygon-mumbai.g.alchemy.com/v2/" +
+      process.env.ALCHEMY_KEY_MUMBAI;
+    const url = prod ? maticurl : mumurl;
     var data = JSON.stringify({
       jsonrpc: "2.0",
       id: 0,
       method: "alchemy_getAssetTransfers",
       params: [
         {
-          fromBlock: ethers.utils.hexlify(AIR_CACHE_FIRST_BLOCK),
+          // fromBlock: ethers.utils.hexlify(AIR_CACHE_FIRST_BLOCK),
+          fromBlock: "0x0",
           // toBlock: "0xA97CAC",
           toAddress: user.publicAddress,
           // contractAddresses: ["0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9"],

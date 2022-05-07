@@ -12,7 +12,7 @@ import {
   maticMumBaiNodeOptions,
   maticNodeOptions,
 } from "../libs/utils";
-import { AlchemyProvider } from "../libs/web3Api";
+import { AlchemyProvider, oldCacheContracts } from "../libs/web3Api";
 
 import AirCacheInterface from "./AirYaytso.json";
 
@@ -32,10 +32,11 @@ export default function useAirCache(cacheId: string | null) {
   const [web3Ready, setWeb3Ready] = useState(false);
   useEffect(() => {
     console.log("air cache init");
+    console.log("MAGIC LINK IS ONLY MATIC RIGHT NOW");
     const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!, {
-      network: !prod ? maticMumBaiNodeOptions : maticNodeOptions,
+      // network: !prod ? maticMumBaiNodeOptions : maticNodeOptions,
+      network: maticNodeOptions,
     });
-    console.log(magic);
     const provider = new ethers.providers.Web3Provider(
       magic.rpcProvider as any
     );
@@ -48,13 +49,7 @@ export default function useAirCache(cacheId: string | null) {
       AlchemyProvider
     );
 
-    const oldCaches: ethers.Contract[] = [];
-    oldContracts.airCacheMatic.forEach((address: string) => {
-      oldCaches.push(
-        new ethers.Contract(address, AirCacheInterface.abi, AlchemyProvider)
-      );
-    });
-    setOldCaches(oldCaches);
+    setOldCaches(oldCacheContracts);
 
     const activeCacheContract = storage.getItem(
       storage.keys.active_cache_contract_address
@@ -195,7 +190,6 @@ export default function useAirCache(cacheId: string | null) {
 
     return metadata;
   };
-
   const collectCacheMeta = async () => {
     if (contract && signer) {
       console.log("collecting meta");
@@ -218,8 +212,10 @@ export default function useAirCache(cacheId: string | null) {
       } else if (cacheId === null) {
         const allContracts = [...oldCaches, contract];
         const caches = [];
+        console.log(allContracts);
         for (let i = 0; i < allContracts.length; i++) {
           const contract = allContracts[i];
+          console.log(contract);
           const numOfCaches = (await contract.cacheId()).toNumber();
           const cachedData = await getCachedCaches(
             numOfCaches,

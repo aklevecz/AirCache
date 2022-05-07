@@ -76,7 +76,7 @@ const Home: NextPage = () => {
   // const cacheInfo = airCache.caches[0];
   // const emptyCache = cacheInfo && cacheInfo.tokenId === 0;
   return (
-    <div className="relative" style={{ height: "100%", paddingBottom: 50 }}>
+    <div className="relative" style={{ height: "100%" }}>
       <Head>
         <title>EGGS</title>
         <meta property="og:description" content={`Find eggs!`} />

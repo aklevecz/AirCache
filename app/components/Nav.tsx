@@ -9,6 +9,7 @@ const links = [
   { name: "Wallet", path: "/wallet", icon: <EgglineIcon /> },
 ];
 
+const ICON_DIMS = 60;
 export default function Nav() {
   const router = useRouter();
 
@@ -16,20 +17,21 @@ export default function Nav() {
     <div
       style={{
         display: router.asPath === "/login" ? "none" : "flex",
-        height: 50,
+        height: 80,
       }}
-      className="fixed bottom-0 left-0 bg-black w-full justify-around"
+      className="fixed bottom-0 left-0 w-full justify-around"
     >
       {links.map((link) => (
         <Link key={link.name} href={`${link.path}`}>
           <div
             style={{
-              width: 50,
-              height: 50,
-              padding: 12,
+              width: ICON_DIMS,
+              height: ICON_DIMS,
+              padding: 17,
               boxSizing: "border-box",
+              backgroundColor: "#f97dff",
             }}
-            className="capitalize text-white font-bold text-2xl p-2 items-center justify-center flex"
+            className="capitalize text-white font-bold text-2xl p-2 items-center justify-center flex rounded-full"
           >
             {link.icon}
           </div>

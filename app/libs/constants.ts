@@ -1,7 +1,8 @@
 import { prod } from "./env";
 
 export const oldContracts = {
-  airCacheMatic: ["0x66e0c85270A91F6d6c67c8768029106430C1f04e"],
+  matic: ["0x66e0c85270A91F6d6c67c8768029106430C1f04e"],
+  matic_mum: [],
 };
 
 export const AIRCACHE_ADDRESS_MUMBAI =
