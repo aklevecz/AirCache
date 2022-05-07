@@ -12,7 +12,7 @@ import {
 } from "./constants";
 import { delay, ipfstoIO, ipfsToPinata, isIpfs } from "./utils";
 
-const prod = process.env.NODE_ENV === "development";
+const prod = process.env.NODE_ENV !== "development";
 const ALCHEMY_KEY = prod
   ? process.env.ALCHEMY_KEY
   : process.env.ALCHEMY_KEY_MUMBAI;
