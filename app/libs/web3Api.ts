@@ -43,7 +43,7 @@ export { provider as AlchemyProvider };
 
 const getCache = async (id: number) => {
   const cache = await contract.caches(id);
-  return cache;
+  return { ...cache, contractAddress: contract.address };
 };
 const getAllCaches = async () => {
   const numCaches = (await contract.cacheId()).toNumber();

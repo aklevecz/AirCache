@@ -137,7 +137,7 @@ type Params = {
 };
 export const getStaticProps = async ({ params }: Params) => {
   const cache = await web3Api.getCache(parseInt(params.id));
-  const { id, lat, lng, tokenId, tokenAddress } = cache;
+  const { id, lat, lng, tokenId, tokenAddress, contractAddress } = cache;
   const tokenIdNumber = tokenId.toNumber();
   let NFT = null;
   if (tokenIdNumber) {
@@ -150,6 +150,7 @@ export const getStaticProps = async ({ params }: Params) => {
       lng: parseFloat(ethers.utils.parseBytes32String(lng)),
       tokenId: tokenId.toNumber(),
       tokenAddress,
+      contractAddress,
       NFT,
     },
   };
