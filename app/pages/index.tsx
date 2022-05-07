@@ -40,7 +40,8 @@ const Home: NextPage = () => {
           <meta property="og:description" content={`Find eggs!`} />
           <meta property="og:image" content="/egg.png" />
         </Head>
-        <div className="text-4xl">Loading...</div>
+        {/* <div className="text-4xl">...</div> */}
+        <FullScreenSpinner />
       </FullCenter>
     );
   }
