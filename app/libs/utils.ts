@@ -44,7 +44,6 @@ export const getMumbaiProvider = () => {
   const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!, {
     network: maticMumBaiNodeOptions,
   });
-  console.log("mumbai");
   const provider = new ethers.providers.Web3Provider(magic.rpcProvider as any);
   return provider;
 };
@@ -63,12 +62,14 @@ export const getTokenURI = async (
   tokenAddress: string,
   provider: ethers.providers.Provider
 ): Promise<string> => {
+  console.log(provider);
   const tokenContract = new ethers.Contract(
     tokenAddress,
     [abis.tokenURI, abis.uri],
     provider
   );
   let uri;
+  console.log(tokenId);
   try {
     uri = await tokenContract.tokenURI(tokenId);
   } catch (e) {

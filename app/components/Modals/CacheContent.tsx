@@ -166,7 +166,8 @@ export default function CacheContentModal({
     return (
       <Container open={open} toggleModal={toggleModal}>
         <div className="text-3xl font-bold text-center pb-5">
-          Egg is empty! {data.cache.id}
+          Egg is empty!{" "}
+          {process.env.NODE_ENV === "development" ? data.cache.id : ""}
         </div>
         <div className="w-3/4 m-auto p-10">
           <Sad />

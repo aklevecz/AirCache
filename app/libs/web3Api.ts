@@ -12,12 +12,15 @@ import {
 } from "./constants";
 import { delay, ipfstoIO, ipfsToPinata, isIpfs } from "./utils";
 
-const prod = process.env.NODE_ENV !== "development";
+const prod = process.env.NODE_ENV === "development";
 const ALCHEMY_KEY = prod
   ? process.env.ALCHEMY_KEY
   : process.env.ALCHEMY_KEY_MUMBAI;
 const network = prod ? "matic" : "maticmum";
-const provider = new ethers.providers.AlchemyProvider(network, ALCHEMY_KEY);
+export const provider = new ethers.providers.AlchemyProvider(
+  network,
+  ALCHEMY_KEY
+);
 const contractAddress = prod ? AIRCACHE_ADDRESS_MATIC : AIRCACHE_ADDRESS_MUMBAI;
 const contract = new ethers.Contract(
   contractAddress,
@@ -49,6 +52,7 @@ const getNFTMeta = async (tokenId: number, tokenAddress: string) => {
     provider
   );
   let uri = "";
+  console.log(tokenId, tokenAddress);
   try {
     uri = await tokenContract.tokenURI(tokenId);
   } catch (e) {
@@ -67,9 +71,14 @@ const getNFTMeta = async (tokenId: number, tokenAddress: string) => {
     if (uri.includes("{id}")) {
       url = uri.replace("{id}", tokenId.toString());
     }
-    const response = await axios.get(url);
-    const metadata = response.data;
-    return metadata;
+    try {
+      console.log("hello");
+      const response = await axios.get(url);
+      const metadata = response.data;
+      return metadata;
+    } catch (e) {
+      return { name: "Broken NFT", image: "" };
+    }
   }
   // const baseUrl = "https://gateway.pinata.cloud/ipfs/";
   // let metaurl = `${uri.replace("ipfs://", baseUrl)}`;

@@ -47,7 +47,6 @@ export default function useAirCache(cacheId: string | null) {
       AirCacheInterface.abi,
       AlchemyProvider
     );
-    console.log("hi");
     const activeCacheContract = storage.getItem(
       storage.keys.active_cache_contract_address
     );
@@ -58,6 +57,7 @@ export default function useAirCache(cacheId: string | null) {
       );
     } else if (activeCacheContract !== AIRCACHE_ADDRESS) {
       // Could just clear the cache keys
+      // or pick up all caches historically depending...
       localStorage.clear();
       storage.setItem(
         storage.keys.active_cache_contract_address,
@@ -69,21 +69,12 @@ export default function useAirCache(cacheId: string | null) {
   }, []);
 
   const getCachedCaches = async (numCaches: number) => {
-    // const cache = await contract.caches(cacheId);
     const caches: any = { cached: [], new: [] };
     for (let i = 1; i <= numCaches; i++) {
       const cacheKey = `cache_${i}`;
       const cachedCache = storage.getItem(cacheKey);
       if (!cachedCache) {
-        // const cache = await contract.caches(cacheId);
         caches.new.push(i);
-        // storage.setItem(
-        //   cacheKey,
-        //   JSON.stringify({
-        //     lat: ethers.utils.parseBytes32String(cache.lat),
-        //     lng: ethers.utils.parseBytes32String(cache.lng),
-        //   })
-        // );
       } else {
         caches.cached.push({ ...JSON.parse(cachedCache), id: i, NFT: {} });
       }
@@ -93,9 +84,7 @@ export default function useAirCache(cacheId: string | null) {
   };
 
   const getCache = async (cacheId: number, givenContract?: ethers.Contract) => {
-    console.log(contract, cacheId);
     if (contract) {
-      console.log("getting a cache");
       const cache = await contract.caches(cacheId);
       const cacheKey = `cache_${cacheId}`;
       const cachedCache = storage.getItem(cacheKey);

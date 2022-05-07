@@ -28,7 +28,6 @@ export default function Wallet() {
       </div>
     );
   }
-  console.log(wallet.fetching, wallet.nfts);
   return (
     <div className="pb-20">
       <div className="text-3xl text-center m-4 font-bold font-fatfrank tracking-wider bg-white text-black">
