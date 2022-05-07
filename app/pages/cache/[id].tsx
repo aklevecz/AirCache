@@ -51,6 +51,8 @@ const Cache: NextPage = (props: any) => {
           <title>{title}</title>
           <meta property="og:description" content={description} />
           <meta property="og:image" content={metaimg} />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:image" content={metaimg} />
         </Head>
         <div className="text-4xl">Loading...</div>
         <FullScreenSpinner />
@@ -94,6 +96,8 @@ const Cache: NextPage = (props: any) => {
         <title>{title}</title>
         <meta property="og:description" content={description} />
         <meta property="og:image" content={metaimg} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content={metaimg} />
       </Head>
       {/* <div className="absolute w-full bg-black z-10">
         <div className="overflow-hidden">{auth.user.publicAddress}</div>
