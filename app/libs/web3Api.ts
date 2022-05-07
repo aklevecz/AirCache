@@ -11,8 +11,8 @@ import {
   POLYAYTSO_ADDRESS_MUMBAI,
 } from "./constants";
 import { delay, ipfstoIO, ipfsToPinata, isIpfs } from "./utils";
+import { prod } from "./env";
 
-const prod = process.env.NODE_ENV === "development";
 const ALCHEMY_KEY = prod
   ? process.env.ALCHEMY_KEY
   : process.env.ALCHEMY_KEY_MUMBAI;
