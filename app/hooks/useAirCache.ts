@@ -66,7 +66,9 @@ export default function useAirCache(cacheId: string | null) {
       invalidate = true;
     }
     if (invalidate) {
+      const token = storage.getItem(storage.keys.token);
       localStorage.clear();
+      if (token) storage.setItem(storage.keys.token, token);
       storage.setItem(
         storage.keys.active_cache_contract_address,
         AIRCACHE_ADDRESS
