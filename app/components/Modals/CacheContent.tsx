@@ -97,42 +97,48 @@ export default function CacheContentModal({
 
   const claim = () => {
     setFetchingLocation(true);
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      const timestamp = position.timestamp;
-      const coords = position.coords;
-      const o = {
-        accuracy: coords.accuracy,
-        altitude: coords.altitude,
-        altitudeAccuracy: coords.altitudeAccuracy,
-        heading: coords.heading,
-        latitude: coords.latitude,
-        longitude: coords.longitude,
-        speed: coords.speed,
-      };
-      const userLocation = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      };
-      console.log(haversineDistance(userLocation, data.cache.location));
+    if (navigator && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const timestamp = position.timestamp;
+        const coords = position.coords;
+        const o = {
+          accuracy: coords.accuracy,
+          altitude: coords.altitude,
+          altitudeAccuracy: coords.altitudeAccuracy,
+          heading: coords.heading,
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+          speed: coords.speed,
+        };
+        const userLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        console.log(haversineDistance(userLocation, data.cache.location));
 
-      const res = await claimCache(
-        data.cache.id,
-        data.cache.location,
-        userLocation,
-        {
-          timestamp,
-          o,
+        const res = await claimCache(
+          data.cache.id,
+          data.cache.location,
+          userLocation,
+          {
+            timestamp,
+            o,
+          }
+        );
+        setFetchingLocation(false);
+        setTxState(TxState.Mining);
+        if (res.tx) {
+          setTxHash(res.tx.hash);
+        } else {
+          setTxState(TxState.Error);
+          setError({ message: res.message, error: res.error });
         }
+      });
+    } else {
+      alert(
+        "This browser does not support location services, or you have turned them off"
       );
-      setFetchingLocation(false);
-      setTxState(TxState.Mining);
-      if (res.tx) {
-        setTxHash(res.tx.hash);
-      } else {
-        setTxState(TxState.Error);
-        setError({ message: res.message, error: res.error });
-      }
-    });
+    }
   };
 
   const detectWinner = (
