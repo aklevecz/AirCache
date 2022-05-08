@@ -138,12 +138,20 @@ export default function CacheContentModal({
             }
           } catch (e) {
             setTxState(TxState.Error);
-            alert(e);
-            // setError({ message: e, error: res.error });
+            setError({
+              message:
+                "Something weird happened while checking your location, maybe try logging in again?",
+              error: "NO_AUTH",
+            });
           }
         },
         (e) => {
-          alert(e);
+          setTxState(TxState.Error);
+          setError({
+            message:
+              "I don't think your browser supports geolocation. If you are using the shitty Facebook webview, then switch to Chrome or Safari!",
+            error: "NO_GEOLOCATION",
+          });
         }
       );
     } else {
