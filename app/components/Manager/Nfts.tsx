@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
-import { abis, AIRCACHE_ADDRESS_MATIC } from "../../libs/constants";
-import managerApi from "../../libs/managerApi";
 import { Web3Wallet } from "../../libs/types";
+import Big from "../Button/Big";
+import BlackWrappedSpinner from "../Loading/BlackWrappedSpinner";
 
 type Props = {
   onGetNfts: () => void;
@@ -9,6 +9,8 @@ type Props = {
   selectedNft: any;
   setSelectedNft: any;
   web3Wallet: Web3Wallet;
+  fetching: boolean;
+  approve: () => void;
 };
 
 export default function Nfts({
@@ -16,11 +18,23 @@ export default function Nfts({
   nfts,
   selectedNft,
   setSelectedNft,
-  web3Wallet,
+  fetching,
+  approve,
 }: Props) {
+  const noNfts = nfts.length === 0;
+  console.log(nfts);
   return (
-    <div className="my-10">
-      <button onClick={onGetNfts}>get NFTs</button>
+    <div className="flex flex-col items-center justify-center h-full">
+      {noNfts && (
+        <>
+          <div className="text-2xl text-center w-5/6 mb-5">
+            Get your available NFTs or input a token address
+          </div>
+          <Big onClick={onGetNfts}>
+            {fetching ? <BlackWrappedSpinner /> : "get NFTs"}
+          </Big>
+        </>
+      )}
       {nfts &&
         nfts.map((nft: any) => (
           <div
@@ -28,48 +42,23 @@ export default function Nfts({
             onClick={() => {
               setSelectedNft(nft);
             }}
+            className="mb-10 py-5"
             style={{
               backgroundColor:
                 selectedNft &&
                 selectedNft.contract.address + selectedNft.id.tokenId ===
                   nft.contract.address + nft.id.tokenId
                   ? "red"
-                  : "black",
+                  : "grey",
             }}
           >
-            <div>
-              {nft.contract.address} - {parseInt(nft.id.tokenId)}
+            <div className="text-center font-bold text-2xl">
+              {nft.metadata.name}
             </div>
+            <img className="w-52" src={nft.metadata.image} />
           </div>
         ))}
-      <button
-        onClick={() => {
-          const nftAddress = selectedNft.contract.address;
-          const tokenContract = new ethers.Contract(
-            nftAddress,
-            [abis.approve, abis.setApprovalForAll],
-            web3Wallet.metaMask.provider!
-          );
-          const signer = tokenContract.connect(
-            web3Wallet.metaMask.provider!.getSigner()
-          );
-          try {
-            const tokenContract = new ethers.Contract(
-              nftAddress,
-              [abis.setApprovalForAll],
-              web3Wallet.metaMask.provider!
-            );
-            const signer = tokenContract.connect(
-              web3Wallet.metaMask.provider!.getSigner()
-            );
-            signer.approve(AIRCACHE_ADDRESS_MATIC, selectedNft.id.tokenId);
-          } catch (e) {
-            signer.setApprovalForAll(AIRCACHE_ADDRESS_MATIC, true);
-          }
-        }}
-      >
-        APPROVE
-      </button>
+      {selectedNft && <Big onClick={approve}>APPROVE</Big>}
     </div>
   );
 }

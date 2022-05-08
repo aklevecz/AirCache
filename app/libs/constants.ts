@@ -34,6 +34,8 @@ export const abis = {
   approve: "function approve(address to, uint256 tokenId) public",
   setApprovalForAll:
     "function setApprovalForAll(address operator, bool approved) public",
+  isApprovedForAll:
+    "function isApprovedForAll(address account, address operator) public view returns (bool)",
 };
 
 export const BAHAMA_COORDS = {

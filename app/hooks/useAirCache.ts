@@ -19,6 +19,8 @@ import AirCacheInterface from "./AirYaytso.json";
 // const AIRCACHE_ADDRESS = "0xAa9BF9F9AAc188De33c8D3820A4242272507aDe3"; 0x83a3d9bE1F032C1f1eC28F9Fa95B7bf2cC3f36B4
 // const FAKE_NFT_ADDRESS = "0xf4822e9fC423c56CB502D8515e356023c06cf643";
 
+const CACHE_VERSION = "2";
+
 export default function useAirCache(cacheId: string | null) {
   const [oldCaches, setOldCaches] = useState<ethers.Contract[]>([]);
   const [contract, setContract] = useState<ethers.Contract | null>(null);
@@ -51,22 +53,25 @@ export default function useAirCache(cacheId: string | null) {
 
     setOldCaches(oldCacheContracts);
 
+    // Invalidations
+    let invalidate = false;
     const activeCacheContract = storage.getItem(
       storage.keys.active_cache_contract_address
     );
-    if (!activeCacheContract) {
-      storage.setItem(
-        storage.keys.active_cache_contract_address,
-        AIRCACHE_ADDRESS
-      );
-    } else if (activeCacheContract !== AIRCACHE_ADDRESS) {
-      // Could just clear the cache keys
-      // or pick up all caches historically depending...
+    const cacheVersion = storage.getItem(storage.keys.version);
+    if (cacheVersion !== CACHE_VERSION) {
+      invalidate = true;
+    }
+    if (activeCacheContract !== AIRCACHE_ADDRESS) {
+      invalidate = true;
+    }
+    if (invalidate) {
       localStorage.clear();
       storage.setItem(
         storage.keys.active_cache_contract_address,
         AIRCACHE_ADDRESS
       );
+      storage.setItem(storage.keys.version, CACHE_VERSION);
     }
 
     setContract(contract);
@@ -130,6 +135,7 @@ export default function useAirCache(cacheId: string | null) {
       AlchemyProvider
     );
     console.log("getting nft meta");
+    console.log(tokenId);
     const uriKey = `${tokenId}-${tokenAddress}`;
     let uri = await storage.getItem(uriKey);
     console.log(uri);
@@ -143,8 +149,11 @@ export default function useAirCache(cacheId: string | null) {
         uri = await tokenContract.uri(tokenId);
         console.log(uri);
       }
+      // this is the metadata url that might have token replacement
+      if (uri) uri = uri.replace("{id}", tokenId.toString());
       await storage.setItem(uriKey, uri ? uri : "null");
     }
+
     if (!uri) {
       console.error("something wrong");
       return {};
@@ -155,15 +164,17 @@ export default function useAirCache(cacheId: string | null) {
     //   .toString(16)
     //   .padStart(64, "0")}.json`;
     let metadata = await storage.getItem(uri);
-
+    console.log(metadata);
     // if not IPFS
     if (!isIpfs(uri)) {
       // If it has id replacement
-      let url = "";
-      if (uri.includes("{id}")) {
-        url = uri.replace("{id}", tokenId.toString());
-      }
+      // let url = "";
+      // if (uri.includes("{id}")) {
+      //   url = uri.replace("{id}", tokenId.toString());
+      // }
+      let url = uri;
       if (!metadata) {
+        console.log(url);
         const response = await axios.get(url);
         metadata = response.data;
         await storage.setItem(uri, JSON.stringify(metadata));

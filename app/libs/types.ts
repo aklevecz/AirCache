@@ -16,6 +16,7 @@ export type MetaMask = {
   available: boolean;
   accounts: string[];
   provider: ethers.providers.Web3Provider | null;
+  isConnecting: boolean;
 };
 
 export type Web3Wallet = {

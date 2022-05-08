@@ -1,5 +1,6 @@
 export default {
   keys: {
+    version: "version",
     token: "token",
     user_location: "user_location",
     active_cache_contract_address: "active_cache_contract_address",

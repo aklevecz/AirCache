@@ -67,6 +67,7 @@ export default function CacheContentModal({
     } else {
       console.log(tokenId, cache.tokenAddress);
       const nft = await airCache.getNFTMeta(tokenId, cache.tokenAddress);
+      console.log(nft);
       setFetchingMeta(false);
       setNFT(nft);
     }

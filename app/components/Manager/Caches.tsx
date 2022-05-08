@@ -1,30 +1,30 @@
 import { Web3Wallet } from "../../libs/types";
+import Big from "../Button/Big";
+import Spinner from "../Loading/Spinner";
 
 type Props = {
   web3Wallet: Web3Wallet;
+  getAvailableCaches: () => void;
   caches: any[];
   setCaches: any;
   selectedCache: any;
   setSelectedCache: any;
+  fetching: boolean;
 };
 
 export default function Caches({
   web3Wallet,
+  getAvailableCaches,
   caches,
-  setCaches,
   selectedCache,
   setSelectedCache,
+  fetching,
 }: Props) {
   return (
-    <div>
-      <button
-        onClick={async () => {
-          const numCaches = web3Wallet.contract!.cacheId();
-          setCaches(new Array(numCaches));
-        }}
-      >
-        Caches
-      </button>
+    <div className="h-full w-full items-center justify-center flex flex-col">
+      <Big onClick={getAvailableCaches}>
+        {fetching ? <Spinner /> : "Get Caches"}
+      </Big>
       {caches.map((cache, i) => {
         return (
           <div

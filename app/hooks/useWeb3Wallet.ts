@@ -14,6 +14,7 @@ const defaultMetaMask = {
   available: false,
   accounts: [],
   provider: null,
+  isConnecting: false,
 };
 
 export default function useWeb3Wallet(): Web3Wallet {
@@ -26,7 +27,6 @@ export default function useWeb3Wallet(): Web3Wallet {
       AirYaytsoInterface.abi,
       metaMask.provider!
     );
-    console.log(contract);
     setContract(contract);
   };
 
@@ -39,17 +39,20 @@ export default function useWeb3Wallet(): Web3Wallet {
 
   const connectMetaMask = async () => {
     try {
-      await window.ethereum.request({ method: "eth_requestAccounts" });
+      setMetaMask({ ...metaMask, isConnecting: true });
+      await window.ethereum
+        .request({ method: "eth_requestAccounts" })
+        .catch(console.log);
       const accounts = await getAccountsMetaMask();
       const provider =
         accounts.length > 0
           ? new ethers.providers.Web3Provider(window.ethereum)
           : null;
-      setMetaMask({ ...metaMask, accounts, provider });
+      setMetaMask({ ...metaMask, accounts, provider, isConnecting: false });
       return true;
-    } catch (e) {
-      return false;
-    }
+    } catch (e) {}
+    setMetaMask({ ...metaMask, isConnecting: false });
+    return false;
   };
 
   useEffect(() => {
@@ -60,12 +63,18 @@ export default function useWeb3Wallet(): Web3Wallet {
 
   useEffect(() => {
     if (window.ethereum && window.ethereum.isMetaMask) {
+      setMetaMask({ ...metaMask, isConnecting: true });
       getAccountsMetaMask().then((accounts: string[]) => {
         const provider =
           accounts.length > 0
             ? new ethers.providers.Web3Provider(window.ethereum)
             : null;
-        setMetaMask({ available: true, accounts, provider });
+        setMetaMask({
+          available: true,
+          accounts,
+          provider,
+          isConnecting: false,
+        });
       });
     }
   }, []);
