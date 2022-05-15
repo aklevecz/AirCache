@@ -1,12 +1,9 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { claimCache } from "../../libs/api";
-import { Latlng } from "../../libs/types";
 import Button from "../Button";
-import Axe from "../Icons/Axe";
 import Spinner from "../Loading/Spinner";
 import Container from "./Container";
-import { motion } from "framer-motion";
 import Sad from "../Icons/Sad";
 import AxeAnimation from "../Animations/Axe";
 import { haversineDistance, ipfsToPinata, isIpfs } from "../../libs/utils";

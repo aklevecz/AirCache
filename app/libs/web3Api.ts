@@ -13,7 +13,7 @@ import {
 import { delay, ipfstoIO, isIpfs } from "./utils";
 import { prod } from "./env";
 
-const ALCHEMY_KEY = prod
+export const ALCHEMY_KEY = prod
   ? process.env.ALCHEMY_KEY
   : process.env.ALCHEMY_KEY_MUMBAI;
 const network = prod ? "matic" : "maticmum";

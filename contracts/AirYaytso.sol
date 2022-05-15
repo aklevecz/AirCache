@@ -22,6 +22,8 @@ contract AirYaytso is Ownable, ERC1155Holder, ERC721Holder {
         address tokenAddress;
     }
 
+    event cacheCreated(uint256 cacheId, bytes32 lat, bytes32 lng);
+
     event NFTHeld(
         uint256 cacheId,
         address indexed tokenAddress,
@@ -41,6 +43,7 @@ contract AirYaytso is Ownable, ERC1155Holder, ERC721Holder {
         uint256 newCacheId = cacheId.current();
         Cache memory newCache = Cache(lat, lng, newCacheId, 0, address(0));
         caches[newCacheId] = newCache;
+        emit cacheCreated(newCacheId, lat, lng);
     }
 
     function holdNFT(

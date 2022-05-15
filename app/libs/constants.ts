@@ -36,6 +36,8 @@ export const abis = {
     "function setApprovalForAll(address operator, bool approved) public",
   isApprovedForAll:
     "function isApprovedForAll(address account, address operator) public view returns (bool)",
+  getApproved:
+    "function getApproved(uint256 tokenId) public view returns (address)",
 };
 
 export const BAHAMA_COORDS = {
@@ -52,3 +54,8 @@ export const SF_COORDS = {
   lat: 37.7664967,
   lng: -122.4293212,
 };
+
+export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+
+export const FRONTEND_HOST = () =>
+  `${window.location.protocol}//${window.location.host}`;

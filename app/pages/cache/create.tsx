@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { Map } from "../../components/Map/Component";
 import eggIcon from "../../assets/icons/egg2.png";
 import smiler from "../../assets/icons/smiler.svg";
@@ -7,14 +7,21 @@ import useAirCache from "../../hooks/useAirCache";
 import useModal from "../../hooks/useModal";
 import TxModal from "../../components/Modals/TxModal";
 import { TxState } from "../../libs/types";
+import api, { endpoints, onCreateCache } from "../../libs/api";
+import { LA_COORDS } from "../../libs/constants";
+import { prod } from "../../libs/env";
 
 export default function Create() {
   const [map, setMap] = useState<google.maps.Map>();
   const airCache = useAirCache(null);
   const modal = useModal();
   const [txState, setTxState] = useState<TxState>(TxState.Idle);
+  const [latLng, setLatLng] = useState("");
+  const [groupName, setGroupName] = useState("");
+  const [note, setNote] = useState("");
 
   const createCachePositionRef = useRef({ lat: 0, lng: 0 });
+  const createCacheMarkerRef = useRef<google.maps.Marker | null>(null);
 
   const initMap = (map: google.maps.Map) => {
     setMap(map);
@@ -26,6 +33,18 @@ export default function Create() {
     setTxState(TxState.Mining);
     const success = await airCache.createCache(lat, lng);
     if (success) {
+      // REFACTOR
+      const cacheId = (await airCache.contract!.cacheId()).toNumber();
+      console.log(groupName, cacheId);
+
+      onCreateCache(
+        groupName,
+        cacheId,
+        lat,
+        lng,
+        airCache.contract!.address,
+        note
+      );
       setTxState(TxState.Complete);
     } else {
       setTxState(TxState.Error);
@@ -43,6 +62,8 @@ export default function Create() {
       draggable: true,
     });
 
+    createCacheMarkerRef.current! = cacheMarker;
+
     cacheMarker.addListener("drag", (e: any) => {
       const lat = e.latLng.lat();
       const lng = e.latLng.lng();
@@ -50,6 +71,9 @@ export default function Create() {
     });
   };
   useEffect(() => {
+    if (map && !prod) {
+      // createCacheMarker(LA_COORDS.lat, LA_COORDS.lng);
+    }
     if (map && navigator.geolocation && typeof window !== "undefined") {
       try {
         navigator.geolocation.getCurrentPosition((position) => {
@@ -63,7 +87,8 @@ export default function Create() {
             scaledSize: new google.maps.Size(30, 30),
           };
           const latLng = { lat: pos.latitude, lng: pos.longitude };
-          createCacheMarker(latLng.lat, latLng.lng);
+          !createCacheMarkerRef.current &&
+            createCacheMarker(latLng.lat, latLng.lng);
         });
       } catch (e) {
         console.error("Geolocation is not supported by this browser.");
@@ -71,16 +96,51 @@ export default function Create() {
     }
   }, [map]);
 
+  const onLatLngChange = (e: FormEvent<HTMLInputElement>) => {
+    const latLng = e.currentTarget.value;
+    setLatLng(latLng);
+    const ll = latLng.trim().split(",");
+    const lat = parseFloat(ll[0]);
+    const lng = parseFloat(ll[1]);
+    map?.setCenter({ lat, lng });
+    createCachePositionRef.current = { lat, lng };
+    console.log(createCacheMarkerRef.current);
+    createCacheMarkerRef.current?.setPosition({ lat, lng });
+  };
+
   return (
     <>
       <Map initMap={initMap} map={map} />
-      <div className="absolute left-0 bottom-14 w-full flex justify-center">
-        <Button
-          onClick={createCache}
-          style={{ background: "black", color: "white" }}
-        >
-          Create
-        </Button>
+      <div className="absolute left-0 top-0 h-full m-5">
+        <div className="mb-5">
+          <input
+            placeholder="latlng"
+            value={latLng}
+            onChange={onLatLngChange}
+          />
+        </div>
+        <div className="mb-5">
+          <input
+            placeholder="group"
+            value={groupName}
+            onChange={(e) => setGroupName(e.currentTarget.value)}
+          />
+        </div>
+        <div className="mb-5">
+          <input
+            placeholder="note"
+            value={note}
+            onChange={(e) => setNote(e.currentTarget.value)}
+          />
+        </div>
+        <div>
+          <Button
+            onClick={createCache}
+            style={{ background: "black", color: "white" }}
+          >
+            Create
+          </Button>
+        </div>
       </div>
       <TxModal
         open={modal.open}

@@ -5,7 +5,6 @@ import MapIcon from "./Icons/Map";
 
 const links = [
   { name: "Map", path: "/", icon: <MapIcon /> },
-
   { name: "Wallet", path: "/wallet", icon: <EgglineIcon /> },
 ];
 
@@ -13,13 +12,14 @@ const ICON_DIMS = 60;
 export default function Nav() {
   const router = useRouter();
 
+  const hideNavPaths = ["/login", "/manager"];
   return (
     <div
       style={{
-        display: router.asPath === "/login" ? "none" : "flex",
+        display: hideNavPaths.includes(router.asPath) ? "none" : "flex",
         height: 80,
       }}
-      className="fixed bottom-0 left-0 w-full justify-around"
+      className="fixed bottom-0 left-0 w-full justify-around pointer-events-none"
     >
       {links.map((link) => (
         <Link key={link.name} href={`${link.path}`}>
@@ -31,7 +31,7 @@ export default function Nav() {
               boxSizing: "border-box",
               backgroundColor: "#f97dff",
             }}
-            className="capitalize text-white font-bold text-2xl p-2 items-center justify-center flex rounded-full"
+            className="capitalize text-white font-bold text-2xl p-2 items-center justify-center flex rounded-full pointer-events-auto"
           >
             {link.icon}
           </div>

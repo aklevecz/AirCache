@@ -20,10 +20,10 @@ const endpoints = {
 // return config;
 // });
 
-export const getOwnerNfts = async (owner: string) => {
+export const getOwnerNfts = async (owner: string, tokenAddress?: string) => {
   try {
     const response = await api
-      .get(endpoints.getNfts, { params: { owner } })
+      .get(endpoints.getNfts, { params: { owner, tokenAddress } })
       .catch((error) => {
         if (error.response) {
           const err = error.response.data;
@@ -31,7 +31,6 @@ export const getOwnerNfts = async (owner: string) => {
           // return { data: { tx: null, message: err.message, error: err.error } };
         }
       });
-    console.log(response);
     if (response) {
       const data = Object.keys(response.data).map((key) => {
         return response.data[key];

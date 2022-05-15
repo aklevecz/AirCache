@@ -1,0 +1,39 @@
+import type { NextApiRequest, NextApiResponse } from "next";
+import jwt from "jsonwebtoken";
+import db from "../../libs/db";
+
+const JWT_SECRET = process.env.JWT_SECRET as string;
+
+type Data = {
+  dbRes: any;
+};
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) {
+  if (!req.headers.authorization) return res.status(405).end();
+  try {
+    const user = await jwt.verify(
+      req.headers.authorization as string,
+      JWT_SECRET
+    );
+    const { groupName, cacheId, lat, lng, address, note } = req.body;
+    const params = {
+      TableName: "cache-by-group",
+      Item: {
+        cacheId: cacheId.toString(),
+        groupName,
+        lat: lat.toString(),
+        lng: lng.toString(),
+        address,
+        note,
+      },
+    };
+    const dbRes = await db.put(params).promise();
+    res.status(200).json({ dbRes });
+  } catch (e) {
+    console.log(e);
+    res.status(405).end();
+  }
+}

@@ -9,6 +9,8 @@ export const endpoints = {
   login: "/api/login",
   user: "/api/user",
   claim: "/api/claim",
+  onCreateCache: "/api/on-create-cache",
+  getCachesByGroup: "/api/get-caches-by-group",
 };
 
 api.interceptors.request.use(async (config: AxiosRequestConfig) => {
@@ -61,6 +63,32 @@ export const claimCache = async (
     console.error(e);
     return null;
   }
+};
+
+export const onCreateCache = (
+  groupName: string,
+  cacheId: number,
+  lat: number,
+  lng: number,
+  address: string,
+  note: string
+) => {
+  const res = api.post(endpoints.onCreateCache, {
+    groupName,
+    cacheId,
+    lat,
+    lng,
+    address,
+    note,
+  });
+  console.log(res);
+};
+
+export const getCachesByGroup = async (groupName: string) => {
+  const res = await api.get(endpoints.getCachesByGroup, {
+    params: { groupName },
+  });
+  return res.data;
 };
 
 export default api;

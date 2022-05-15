@@ -34,10 +34,9 @@ export default function useAirCache(cacheId: string | null) {
   const [web3Ready, setWeb3Ready] = useState(false);
   useEffect(() => {
     console.log("air cache init");
-    console.log("MAGIC LINK IS ONLY MATIC RIGHT NOW");
     const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!, {
-      // network: !prod ? maticMumBaiNodeOptions : maticNodeOptions,
-      network: maticNodeOptions,
+      network: !prod ? maticMumBaiNodeOptions : maticNodeOptions,
+      // network: maticNodeOptions,
     });
     const provider = new ethers.providers.Web3Provider(
       magic.rpcProvider as any
@@ -261,7 +260,9 @@ export default function useAirCache(cacheId: string | null) {
       const latBytes = ethers.utils.formatBytes32String(lat.toString());
       const lngBytes = ethers.utils.formatBytes32String(lng.toString());
       try {
+        console.log(signer);
         const tx = await contractSigner.createCache(latBytes, lngBytes);
+        console.log(tx);
         const receipt = await tx.wait();
         for (const event of receipt.events) {
           console.log(event);

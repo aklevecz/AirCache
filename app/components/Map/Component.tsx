@@ -30,7 +30,7 @@ export const Map = forwardRef<Ref, Props>(({ initMap, map }, ref) => {
           ? JSON.parse(last_location)
           : { lat: LA_COORDS.lat, lng: LA_COORDS.lng };
         const map = new google.maps.Map(mapContainer.current, {
-          zoom: 15,
+          zoom: 10,
           styles: darkMap,
           center,
         });
@@ -39,5 +39,7 @@ export const Map = forwardRef<Ref, Props>(({ initMap, map }, ref) => {
     });
   }, []);
 
-  return <div ref={mapContainer} style={{ height: "100%" }}></div>;
+  return (
+    <div ref={mapContainer} style={{ height: "100%", width: "100%" }}></div>
+  );
 });

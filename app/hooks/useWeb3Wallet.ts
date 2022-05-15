@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import AirYaytsoInterface from "./AirYaytso.json";
-import { AIRCACHE_ADDRESS_MATIC } from "../libs/constants";
+import { AIRCACHE_ADDRESS, AIRCACHE_ADDRESS_MATIC } from "../libs/constants";
 import { MetaMask, Web3Wallet } from "../libs/types";
 
 declare global {
@@ -23,7 +23,7 @@ export default function useWeb3Wallet(): Web3Wallet {
 
   const initAirCache = () => {
     const contract = new ethers.Contract(
-      AIRCACHE_ADDRESS_MATIC,
+      AIRCACHE_ADDRESS,
       AirYaytsoInterface.abi,
       metaMask.provider!
     );
@@ -75,6 +75,12 @@ export default function useWeb3Wallet(): Web3Wallet {
           provider,
           isConnecting: false,
         });
+      });
+      window.ethereum.on("disconnect", async (e: any) => {
+        const accounts = await getAccountsMetaMask();
+        if (accounts.length === 0) {
+          window.location.reload();
+        }
       });
     }
   }, []);

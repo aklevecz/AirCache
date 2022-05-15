@@ -512,8 +512,8 @@
       ]
     },
     "/Users/arielklevecz/air-cache/contracts/AirYaytso.sol": {
-      "lastModificationDate": 1651709996337,
-      "contentHash": "f6eeec492a89aeea3c17caa48e7aa388",
+      "lastModificationDate": 1652311356159,
+      "contentHash": "7f4f6111de3aa73d39c5e2d9b42c1159",
       "sourceName": "contracts/AirYaytso.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -853,6 +853,45 @@
       ],
       "artifacts": [
         "FakeNFT2"
+      ]
+    },
+    "/Users/arielklevecz/air-cache/contracts/Pixeltross.sol": {
+      "lastModificationDate": 1652650969704,
+      "contentHash": "5f32175fdbd32e951617a81efec2cf03",
+      "sourceName": "contracts/Pixeltross.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/Strings.sol",
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Pixeltross"
       ]
     }
   }

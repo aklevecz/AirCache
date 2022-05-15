@@ -31,7 +31,8 @@ export function haversineDistance(a: Latlng, b: Latlng) {
 }
 
 export const maticMumBaiNodeOptions = {
-  rpcUrl: "https://rpc-mumbai.maticvigil.com/", // Polygon RPC URL
+  rpcUrl:
+    "https://polygon-mumbai.g.alchemy.com/v2/e9f3zs2O-BVmBkCXfZEUI-xmdt6wpzz9", // Polygon RPC URL
   chainId: 80001, // Polygon chain id
 };
 
