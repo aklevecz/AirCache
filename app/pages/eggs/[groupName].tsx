@@ -123,15 +123,25 @@ type Params = {
   params: any;
 };
 export const getStaticProps = async ({ params }: Params) => {
-  console.log("static params", params);
-  const host =
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:3000"
-      : "https://air.yaytso.art";
-  const res = await axios.get(host + "/api/get-caches-by-group", {
-    params: { groupName: params.groupName },
-  });
-  const caches = res.data.caches;
+  // console.log("static params", params);
+  // const host =
+  //   process.env.NODE_ENV === "development"
+  //     ? "http://localhost:3000"
+  //     : "https://air.yaytso.art";
+  // const res = await axios.get(host + "/api/get-caches-by-group", {
+  //   params: { groupName: params.groupName },
+  // });
+  const { groupName } = params;
+  const dbparams = {
+    TableName: "cache-by-group",
+    ExpressionAttributeValues: {
+      ":g": groupName,
+    },
+    // IndexName: "groupName-index",
+    FilterExpression: "groupName = :g",
+  };
+  const dbRes = await db.scan(dbparams).promise();
+  const caches = dbRes.Items;
   return {
     props: { caches, groupName: params.groupName },
   };
