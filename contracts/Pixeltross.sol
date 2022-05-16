@@ -11,6 +11,9 @@ contract Pixeltross is ERC721, Ownable {
 
     constructor(string memory baseURI) ERC721("Pixeltrosses", "TROSS") {
         _baseUri = baseURI;
+        for (uint256 i = 1; i <= 10; i++) {
+            _safeMint(msg.sender, i);
+        }
     }
 
     function createTross(address recipient, uint256 tokenId) public onlyOwner {

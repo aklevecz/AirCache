@@ -856,8 +856,8 @@
       ]
     },
     "/Users/arielklevecz/air-cache/contracts/Pixeltross.sol": {
-      "lastModificationDate": 1652650969704,
-      "contentHash": "5f32175fdbd32e951617a81efec2cf03",
+      "lastModificationDate": 1652659220239,
+      "contentHash": "586d50b26798e8835faee5461026cc6e",
       "sourceName": "contracts/Pixeltross.sol",
       "solcConfig": {
         "version": "0.8.4",
