@@ -21,7 +21,7 @@ const seoConfig: { [key: string]: any } = {
     description:
       "Find eggs filled with NFT Pixeltrosses scattered around Palm Beach!",
     image: `${host}/permissionless_banner.png`,
-    map_center: { lat: 26.70621060954564, lng: -80.03699564611513 },
+    map_center: { lat: 26.70605988106027, lng: -80.04643388959501 },
   },
 };
 
