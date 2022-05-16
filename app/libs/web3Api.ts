@@ -78,14 +78,17 @@ const getNFTMeta = async (tokenId: number, tokenAddress: string) => {
   if (!isIpfs(uri)) {
     // This should just return the uri
     // If it has id replacement
-    let url = "";
+    let url = uri;
     if (uri.includes("{id}")) {
       url = uri.replace("{id}", tokenId.toString());
     }
     try {
       console.log("hello");
+      console.log(url);
       const response = await axios.get(url);
+      console.log(response);
       const metadata = response.data;
+
       return metadata;
     } catch (e) {
       return { name: "Broken NFT", image: "" };

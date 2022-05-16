@@ -69,7 +69,6 @@ export default function Group({ caches, groupName }: Props) {
       console.log(head.map_center);
       map.setCenter(head.map_center);
       caches.forEach((cache) => {
-        console.log(cache);
         createCacheMarker(
           parseFloat(cache.lat),
           parseFloat(cache.lng),
