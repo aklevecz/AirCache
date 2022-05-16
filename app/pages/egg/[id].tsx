@@ -137,7 +137,7 @@ export default Cache;
 export async function getStaticPaths() {
   const caches = await web3Api.getAllCaches();
   return {
-    paths: caches.map((cache) => `/cache/${cache.id.toNumber()}`) ?? [],
+    paths: caches.map((cache) => `/egg/${cache.id.toNumber()}`) ?? [],
     fallback: true,
   };
 }
