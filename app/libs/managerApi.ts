@@ -35,6 +35,7 @@ export const getOwnerNfts = async (owner: string, tokenAddress?: string) => {
       const data = Object.keys(response.data).map((key) => {
         return response.data[key];
       });
+      console.log(data);
       return data;
     }
   } catch (e) {

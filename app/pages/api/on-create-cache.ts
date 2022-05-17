@@ -19,8 +19,12 @@ export default async function handler(
       JWT_SECRET
     );
     const { groupName, cacheId, lat, lng, address, note } = req.body;
+    const TableName =
+      process.env.NODE_ENV === "development"
+        ? "cache-by-group-test"
+        : "cache-by-group";
     const params = {
-      TableName: "cache-by-group",
+      TableName,
       Item: {
         cacheId: cacheId.toString(),
         groupName,

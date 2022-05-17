@@ -64,3 +64,8 @@ export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 export const FRONTEND_HOST = () =>
   `${window.location.protocol}//${window.location.host}`;
+
+export const colors = {
+  lavender: "#f97dff",
+  red: "#ff4444",
+};

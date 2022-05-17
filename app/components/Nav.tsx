@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { colors } from "../libs/constants";
 import EgglineIcon from "./Icons/Eggline";
 import MapIcon from "./Icons/Map";
 
@@ -29,7 +30,7 @@ export default function Nav() {
               height: ICON_DIMS,
               padding: 17,
               boxSizing: "border-box",
-              backgroundColor: "#f97dff",
+              backgroundColor: colors.lavender,
             }}
             className="capitalize text-white font-bold text-2xl p-2 items-center justify-center flex rounded-full pointer-events-auto"
           >

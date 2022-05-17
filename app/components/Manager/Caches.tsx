@@ -8,6 +8,12 @@ import { ethers } from "ethers";
 import useModal from "../../hooks/useModal";
 import PickCache from "../Modals/PickCache";
 import FullScreenSpinner from "../Loading/FullScreenSpinner";
+import { colors } from "../../libs/constants";
+
+enum View {
+  List,
+  Map,
+}
 
 type Props = {
   web3Wallet: Web3Wallet;
@@ -32,6 +38,16 @@ export default function Caches({
   const modal = useModal();
   const [map, setMap] = useState<google.maps.Map>();
 
+  const [view, setView] = useState(View.List);
+
+  const toggleList = () => {
+    setView(view === View.List ? View.Map : View.List);
+  };
+
+  const onSelectList = (lat: number, lng: number) => {
+    map && map.setCenter({ lat, lng });
+  };
+
   const initMap = (map: google.maps.Map) => {
     setMap(map);
   };
@@ -54,6 +70,7 @@ export default function Caches({
     console.log(lat, lng);
     cacheMarker.addListener("click", () => {
       modal.toggleModal({ cacheId: id });
+      setSelectedCache(id);
     });
     // cacheMarker.addListener("drag", (e: any) => {
     //   const lat = e.latLng.lat();
@@ -74,9 +91,9 @@ export default function Caches({
   }, [caches]);
 
   const hasCaches = caches.length > 0;
-  console.log(fetching);
+  console.log(caches);
   return (
-    <div className="h-full w-full items-center justify-center flex flex-col">
+    <div className="h-full w-full items-center flex flex-col">
       <Big
         style={{ display: hasCaches ? "none" : "block" }}
         onClick={getAvailableCaches}
@@ -84,22 +101,37 @@ export default function Caches({
         {fetching ? <BlackWrappedSpinner /> : "Get Caches"}
       </Big>
       {fetching && <FullScreenSpinner />}
-      {/* {caches.map((cache, i) => {
-        return (
-          <div
-            key={cache + i}
-            className="w-1/2 m-2 p-5 text-2xl border-white border-2"
-            style={{
-              backgroundColor: selectedCache === i + 1 ? "red" : "black",
-            }}
-            onClick={() => {
-              setSelectedCache(i + 1);
-            }}
-          >
-            {cache.id.toNumber()}
-          </div>
-        );
-      })} */}
+      <Big onClick={toggleList} className="absolute top-5 w-64 z-30">
+        {view === View.List ? "Hide List" : "View List"}
+      </Big>
+      {view === View.List && (
+        <div
+          className="absolute left-0 top-20 z-10"
+          style={{ maxHeight: "90vh", overflow: "scroll" }}
+        >
+          {caches.map((cache, i) => {
+            const id = cache.id.toNumber();
+            const lat = ethers.utils.parseBytes32String(cache.lat);
+            const lng = ethers.utils.parseBytes32String(cache.lng);
+            return (
+              <div
+                key={cache + i}
+                className="m-2 p-1 px-2 text-1xl border-white border-2"
+                style={{
+                  backgroundColor: selectedCache === id ? "red" : "black",
+                }}
+                onClick={() => {
+                  // setSelectedCache(i + 1);
+                  setSelectedCache(id);
+                  onSelectList(parseFloat(lat), parseFloat(lng));
+                }}
+              >
+                {cache.id.toNumber()} - {lat.slice(0, 7)}, {lng.slice(0, 7)}
+              </div>
+            );
+          })}
+        </div>
+      )}
       {/* {selectedCache ? (
         <Big onClick={goToFillCache}>
           {fetching ? <BlackWrappedSpinner /> : "Fill Cache"}
@@ -117,6 +149,14 @@ export default function Caches({
           goToFillCache();
         }}
       />
+      <div
+        className="absolute bottom-5 text-center text-2xl font-bold w-full"
+        style={{ color: colors.lavender }}
+      >
+        {" "}
+        <div>Time to pick an empty egg to place your NFT into</div>
+        <div>Click the egg on the map to pick it!</div>
+      </div>
     </div>
   );
 }

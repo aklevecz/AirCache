@@ -6,16 +6,11 @@ import Caches from "../components/Manager/Caches";
 import Connect from "../components/Manager/Connect";
 import Nfts from "../components/Manager/Nfts";
 import useWeb3Wallet from "../hooks/useWeb3Wallet";
-import {
-  abis,
-  AIRCACHE_ADDRESS,
-  AIRCACHE_ADDRESS_MATIC,
-} from "../libs/constants";
+import { abis, AIRCACHE_ADDRESS } from "../libs/constants";
 import managerApi from "../libs/managerApi";
 import Fill from "../components/Manager/Fill";
 import Success from "../components/Manager/Success";
 import web3Api from "../libs/web3Api";
-import { getCachedCaches } from "../libs/storage";
 
 enum View {
   Connect,
@@ -38,7 +33,10 @@ const Manager: NextPage = () => {
   const [caches, setCaches] = useState<any[]>([]);
   const [selectedCache, setSelectedCache] = useState(0);
 
+  const [message, setMessage] = useState("");
+
   const onGetNfts = async (tokenAddress?: string) => {
+    setMessage("");
     setFetching(true);
     const nfts = await managerApi.getOwnerNfts(
       web3Wallet.metaMask.accounts[0],
@@ -46,6 +44,9 @@ const Manager: NextPage = () => {
     );
     setFetching(false);
     setNfts(nfts as any);
+    if (nfts && nfts.length === 0) {
+      setMessage("No NFTs were found :(");
+    }
   };
 
   const clearNfts = () => {
@@ -171,7 +172,6 @@ const Manager: NextPage = () => {
   };
 
   const showBack = (view === 1 && !isConnected) || view > 1;
-  console.log(view);
   return (
     <div className="h-full w-full">
       {view === View.Connect && <Connect web3Wallet={web3Wallet} />}
@@ -185,6 +185,7 @@ const Manager: NextPage = () => {
           web3Wallet={web3Wallet}
           fetching={fetching}
           approve={approve}
+          message={message}
         />
       )}
       {view === View.Caches && (
