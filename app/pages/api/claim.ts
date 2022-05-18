@@ -56,6 +56,7 @@ export default async function handler(
     const distance = haversineDistance(userLocation, cacheLocation);
     const isTooFar = distance > 100;
     const isAdmin = user.email === "arielklevecz@gmail.com";
+    console.log(user.email, distance);
     if (isTooFar || !isAdmin) {
       return res.json({
         tx: null,
