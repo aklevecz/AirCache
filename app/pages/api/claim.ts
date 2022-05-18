@@ -57,7 +57,7 @@ export default async function handler(
     const isTooFar = distance > 100;
     const isAdmin = user.email === "arielklevecz@gmail.com";
     console.log(user.email, distance);
-    if (isTooFar || !isAdmin) {
+    if (isTooFar && !isAdmin) {
       return res.json({
         tx: null,
         message: "You must get closer to claim!",
