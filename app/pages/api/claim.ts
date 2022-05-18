@@ -126,7 +126,9 @@ export default async function handler(
 
     // res.status(200).json({ tx, message: "SUCCESS" });
   } catch (e) {
-    console.log(e);
-    res.status(405).end();
+    return res.status(405).json({
+      error: "NO_AUTH",
+      message: "You must login to claim eggs!",
+    });
   }
 }
