@@ -54,7 +54,9 @@ export default async function handler(
     const { cacheId, userLocation, cacheLocation, navigator } = req.body;
 
     const distance = haversineDistance(userLocation, cacheLocation);
-    if (distance > 10000) {
+    const isTooFar = distance > 100;
+    const isAdmin = user.email === "arielklevecz@gmail.com";
+    if (isTooFar || !isAdmin) {
       return res.json({
         tx: null,
         message: "You must get closer to claim!",

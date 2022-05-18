@@ -20,9 +20,14 @@ export default function Img(props: Props) {
       axios
         .get(`/api/img-fetch?uri=${url}`, { responseType: "arraybuffer" })
         .then((res) => {
+          const badType = "application/octet-stream";
+          const givenType = res.headers["content-type"];
+          const svgType = "image/svg+xml";
+          let type = givenType === badType ? svgType : givenType;
           const blob = new Blob([res.data], {
-            type: res.headers["content-type"],
+            type,
           });
+          console.log(blob);
           setSrc(URL.createObjectURL(blob));
           setLoaded(true);
         });

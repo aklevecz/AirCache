@@ -67,7 +67,6 @@ export default function Caches({
       icon,
       draggable: true,
     });
-    console.log(lat, lng);
     cacheMarker.addListener("click", () => {
       modal.toggleModal({ cacheId: id });
       setSelectedCache(id);
@@ -94,12 +93,12 @@ export default function Caches({
   console.log(caches);
   return (
     <div className="h-full w-full items-center flex flex-col">
-      <Big
+      {/* <Big
         style={{ display: hasCaches ? "none" : "block" }}
         onClick={getAvailableCaches}
       >
         {fetching ? <BlackWrappedSpinner /> : "Get Caches"}
-      </Big>
+      </Big> */}
       {fetching && <FullScreenSpinner />}
       <Big onClick={toggleList} className="absolute top-5 w-64 z-30">
         {view === View.List ? "Hide List" : "View List"}
@@ -116,9 +115,10 @@ export default function Caches({
             return (
               <div
                 key={cache + i}
-                className="m-2 p-1 px-2 text-1xl border-white border-2"
+                className="m-2 p-1 px-2 text-1xl border-white border-2 cursor-pointer"
                 style={{
-                  backgroundColor: selectedCache === id ? "red" : "black",
+                  backgroundColor:
+                    selectedCache === id ? colors.lavender : "black",
                 }}
                 onClick={() => {
                   // setSelectedCache(i + 1);

@@ -41,6 +41,10 @@ export const oldCacheContracts = oldCacheAddresses.map((address: string) => {
 
 export { provider as AlchemyProvider };
 
+// Utilize get cached caches
+// or use the dynamodb as source of truth for caches and their location
+// then need an intelligent way to check if they are available
+// ALSO get cache by the groupName
 const getCache = async (id: number) => {
   const cache = await contract.caches(id);
   return { ...cache, contractAddress: contract.address };

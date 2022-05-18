@@ -27,6 +27,7 @@ export default function useWeb3Wallet(): Web3Wallet {
       AirYaytsoInterface.abi,
       metaMask.provider!
     );
+
     setContract(contract);
   };
 
