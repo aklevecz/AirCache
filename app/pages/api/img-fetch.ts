@@ -15,5 +15,6 @@ export default async function handler(
   const { uri } = req.query;
   console.log(uri);
   const r = await axios.get(uri as string, { responseType: "arraybuffer" });
+  res.setHeader("content-type", r.headers["content-type"]);
   res.send(r.data);
 }

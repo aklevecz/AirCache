@@ -16,18 +16,15 @@ export default function Img(props: Props) {
   useEffect(() => {
     if (uri) {
       const url = isIpfs(uri) ? ipfstoIO(uri) : uri;
-      console.log(url);
+      // THis could try to fetch and if there is cors then it switches to the proxy
       axios
-        .get(`/api/img-fetch?uri=${url}`, { responseType: "arraybuffer" })
+        .get(isIpfs(uri) ? url : `/api/img-fetch?uri=${url}`, {
+          responseType: "arraybuffer",
+        })
         .then((res) => {
-          const badType = "application/octet-stream";
-          const givenType = res.headers["content-type"];
-          const svgType = "image/svg+xml";
-          let type = givenType === badType ? svgType : givenType;
           const blob = new Blob([res.data], {
-            type,
+            type: res.headers["content-type"],
           });
-          console.log(blob);
           setSrc(URL.createObjectURL(blob));
           setLoaded(true);
         });

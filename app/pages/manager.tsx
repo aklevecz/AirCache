@@ -11,6 +11,8 @@ import managerApi from "../libs/managerApi";
 import Fill from "../components/Manager/Fill";
 import Success from "../components/Manager/Success";
 import web3Api from "../libs/web3Api";
+import { useRouter } from "next/router";
+import { getCachesByGroup } from "../libs/api";
 
 enum View {
   Connect,
@@ -34,6 +36,9 @@ const Manager: NextPage = () => {
   const [selectedCache, setSelectedCache] = useState(0);
 
   const [message, setMessage] = useState("");
+
+  const router = useRouter();
+  console.log(router.query);
 
   const onGetNfts = async (tokenAddress?: string) => {
     setMessage("");
@@ -158,14 +163,20 @@ const Manager: NextPage = () => {
     setFetching(true);
     // const numCaches = await web3Wallet.contract!.cacheId();
     // const cachedCaches = await getCachedCaches
-    const caches = await web3Api.getAllCaches();
+    let caches = [];
+    if (router.query.group) {
+      caches = (await getCachesByGroup(router.query.group as string)).caches;
+    } else {
+      caches = await web3Api.getAllCaches();
+    }
+    console.log(caches);
     const emptyCaches = [];
     for (let i = 0; i < caches.length; i++) {
       const id = i + 1;
-      const cache = await web3Wallet.contract!.caches(id);
-      if (cache.tokenId.toNumber() === 0) {
-        emptyCaches.push(cache);
-      }
+      // const cache = await web3Wallet.contract!.caches(id);
+      // if (cache.tokenId.toNumber() === 0) {
+      emptyCaches.push(caches[i]);
+      // }
     }
     setCaches(emptyCaches);
     setFetching(false);

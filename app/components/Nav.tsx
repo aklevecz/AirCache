@@ -17,7 +17,9 @@ export default function Nav() {
   return (
     <div
       style={{
-        display: hideNavPaths.includes(router.asPath) ? "none" : "flex",
+        display: hideNavPaths.includes(router.asPath.split("?")[0])
+          ? "none"
+          : "flex",
         height: 80,
       }}
       className="fixed bottom-0 left-0 w-full justify-around pointer-events-none"

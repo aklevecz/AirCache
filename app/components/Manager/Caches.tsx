@@ -77,15 +77,24 @@ export default function Caches({
     //   createCachePositionRef.current = { lat, lng };
     // });
   };
-  console.log(modal);
+
   useEffect(() => {
     for (let i = 0; i < caches.length; i++) {
       const cache = caches[i];
-      createCacheMarker(
-        cache.id.toNumber(),
-        parseFloat(ethers.utils.parseBytes32String(cache.lat)),
-        parseFloat(ethers.utils.parseBytes32String(cache.lng))
-      );
+      let id = 0,
+        lat = "",
+        lng = "";
+      try {
+        id = cache.id.toNumber();
+        lat = ethers.utils.parseBytes32String(cache.lat);
+        lng = ethers.utils.parseBytes32String(cache.lng);
+      } catch (e) {
+        console.log("FIX THIS CRAP");
+        id = cache.cacheId;
+        lat = cache.lat;
+        lng = cache.lng;
+      }
+      createCacheMarker(id, parseFloat(lat), parseFloat(lng));
     }
   }, [caches]);
 
@@ -109,9 +118,19 @@ export default function Caches({
           style={{ maxHeight: "90vh", overflow: "scroll" }}
         >
           {caches.map((cache, i) => {
-            const id = cache.id.toNumber();
-            const lat = ethers.utils.parseBytes32String(cache.lat);
-            const lng = ethers.utils.parseBytes32String(cache.lng);
+            let id = 0,
+              lat = "",
+              lng = "";
+            try {
+              id = cache.id.toNumber();
+              lat = ethers.utils.parseBytes32String(cache.lat);
+              lng = ethers.utils.parseBytes32String(cache.lng);
+            } catch (e) {
+              console.log("FIX THIS CRAP");
+              id = cache.cacheId;
+              lat = cache.lat;
+              lng = cache.lng;
+            }
             return (
               <div
                 key={cache + i}
@@ -126,7 +145,7 @@ export default function Caches({
                   onSelectList(parseFloat(lat), parseFloat(lng));
                 }}
               >
-                {cache.id.toNumber()} - {lat.slice(0, 7)}, {lng.slice(0, 7)}
+                {id} - {lat.slice(0, 7)}, {lng.slice(0, 7)}
               </div>
             );
           })}
