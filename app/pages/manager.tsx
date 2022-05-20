@@ -173,10 +173,10 @@ const Manager: NextPage = () => {
     const emptyCaches = [];
     for (let i = 0; i < caches.length; i++) {
       const id = i + 1;
-      // const cache = await web3Wallet.contract!.caches(id);
-      // if (cache.tokenId.toNumber() === 0) {
-      emptyCaches.push(caches[i]);
-      // }
+      const cache = await web3Wallet.contract!.caches(id);
+      if (cache.tokenId.toNumber() === 0) {
+        emptyCaches.push(cache);
+      }
     }
     setCaches(emptyCaches);
     setFetching(false);
