@@ -13,6 +13,7 @@ import Success from "../components/Manager/Success";
 import web3Api from "../libs/web3Api";
 import { useRouter } from "next/router";
 import { getCachesByGroup } from "../libs/api";
+import { cache } from "swr/dist/utils/config";
 
 enum View {
   Connect,
@@ -173,7 +174,10 @@ const Manager: NextPage = () => {
     const emptyCaches = [];
     for (let i = 0; i < caches.length; i++) {
       const id = i + 1;
-      const cache = await web3Wallet.contract!.caches(id);
+      const currentCache = caches[i];
+      const cache = await web3Wallet.contract!.caches(
+        currentCache.cacheId ? currentCache.cacheId : currentCache.id.toNumber()
+      );
       if (cache.tokenId.toNumber() === 0) {
         emptyCaches.push(cache);
       }
