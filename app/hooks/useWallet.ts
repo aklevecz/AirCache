@@ -49,7 +49,7 @@ export default function useWallet(address: string) {
 
   const [fetching, setFetching] = useState(true);
   const [nfts, setNfts] = useState<any[] | null>([]);
-  const [uris, setUris] = useState<string[]>([]);
+  const [uris, setUris] = useState<any[]>([]);
   const [metadatas, setMetadatas] = useState<any[]>([]);
 
   useEffect(() => {
@@ -81,7 +81,7 @@ export default function useWallet(address: string) {
       //   magic.rpcProvider as any
       // );
       (async () => {
-        const uris: string[] = [];
+        const uris: any[] = [];
         console.log("nft loop");
         for (let i = 0; i < nfts.length; i++) {
           const nft = nfts[i];
@@ -102,7 +102,11 @@ export default function useWallet(address: string) {
             }
           }
           if (uri && uri !== "null") {
-            uris.push(uri);
+            uris.push({
+              uri,
+              contractAddress: nft.contractAddress,
+              tokenId: nft.tokenId,
+            });
           }
         }
         if (uris.length > 0) {
@@ -120,26 +124,37 @@ export default function useWallet(address: string) {
       (async () => {
         const metadatas = [];
         for (let i = 0; i < uris.length; i++) {
-          const uri = uris[i];
-          const metadata = await storage.getItem(uri);
+          const { uri, contractAddress, tokenId } = uris[i];
+          let metadata = await storage.getItem(uri);
+          console.log(metadata);
           if (metadata) {
-            metadatas.push(JSON.parse(metadata));
+            const data = JSON.parse(metadata);
+            data.contractAddress = contractAddress;
+            data.tokenId = tokenId;
+            metadatas.push(data);
           } else {
             if (isIpfs(uri)) {
               const url = ipfsToPinata(uri);
               try {
                 await delay();
                 const res = await axios.get(url);
-                storage.setItem(uri, JSON.stringify(res.data));
-                metadatas.push(res.data);
+                const metadata = res.data;
+                metadata.contractAddress = contractAddress;
+                metadata.tokenId = tokenId;
+                storage.setItem(uri, JSON.stringify(metadata));
+                metadatas.push(metadata);
               } catch (e) {
                 console.log(e);
               }
             } else {
+              // what is this for?
               try {
                 const res = await axios.get(uri);
-                storage.setItem(uri, JSON.stringify(res.data));
-                metadatas.push(res.data);
+                const metadata = res.data;
+                metadata.contractAddress = contractAddress;
+                metadata.tokenId = tokenId;
+                storage.setItem(uri, JSON.stringify(metadata));
+                metadatas.push(metadata);
               } catch (e) {
                 console.log("broken meta");
               }

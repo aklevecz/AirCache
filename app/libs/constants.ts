@@ -68,4 +68,5 @@ export const FRONTEND_HOST = () =>
 export const colors = {
   lavender: "#f97dff",
   red: "#ff4444",
+  polygon: "#8247E5",
 };

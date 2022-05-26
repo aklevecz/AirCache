@@ -11,6 +11,7 @@ import Spinner from "../../components/Loading/Spinner";
 import Axe from "../../components/Icons/Axe";
 import AxeAnimation from "../../components/Animations/Axe";
 import EgglineIcon from "../../components/Icons/Eggline";
+import logo from "../../assets/icons/yaytso.svg";
 
 type NFTMeta = {
   name: string;
@@ -92,7 +93,10 @@ export default function Claim() {
   if (isEmpty) {
     return (
       <div className="h-full flex flex-col justify-center items-center text-4xl text-center">
-        <div className="w-1/2 mb-10">
+        <div className="w-1/2 max-w-xs mb-5">
+          <img src={logo.src} />
+        </div>
+        <div className="w-1/2 mb-10 max-w-xs">
           <EgglineIcon />
         </div>
         <div className="font-bold w-3/4">Someone got here first!</div>
@@ -101,6 +105,9 @@ export default function Claim() {
   }
   return (
     <div>
+      <div className="w-1/2 max-w-xs my-5 mx-auto block">
+        <img src={logo.src} />
+      </div>
       {!NFT && fetching && (
         <div className="flex justify-center items-center h-screen pb-20">
           <Spinner />
@@ -121,7 +128,7 @@ export default function Claim() {
                 This beautiful item can be yours
               </div>
               <div className="mt-8">
-                <Big className="m-auto block text-2xl px-5" onClick={onClaim}>
+                <Big className="m-auto block text-2xl px-10" onClick={onClaim}>
                   {fetching ? <BlackWrappedSpinner /> : "Claim"}
                 </Big>
               </div>
@@ -166,7 +173,7 @@ export default function Claim() {
                 onChange={(e) => setEmail(e.currentTarget.value)}
               />
               <div className="mt-8">
-                <Big className="m-auto block text-2xl px-5" onClick={onLogin}>
+                <Big className="m-auto block text-2xl px-10" onClick={onLogin}>
                   {auth.fetching ? <BlackWrappedSpinner /> : "Login"}
                 </Big>
               </div>
