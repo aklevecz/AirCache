@@ -1,9 +1,7 @@
-import FullCenter from "../components/Layout/FullCenter";
 import useAuth from "../hooks/useAuth";
 import LoginComponent from "../components/Auth/LoginRaptor";
 import { useRouter } from "next/router";
-import { FormEvent, useEffect, useState } from "react";
-import airYaytsoLogo from "../assets/icons/air-yaytso.svg";
+import { useEffect, useState } from "react";
 import Raptor from "../components/Icons/Raptor";
 
 export default function Login() {
@@ -24,10 +22,10 @@ export default function Login() {
       // goHome();
     } else {
       // I don't know why I need to do this otherwise magic barfs about cookies and locks up the renders
-      auth.logout();
+      // auth.logout();
     }
   }, [auth.user]);
-
+  console.log(router.query.claim);
   return (
     <div>
       <div className="m-auto mt-10" style={{ width: 300 }}>
@@ -41,6 +39,7 @@ export default function Login() {
         fetching={auth.fetching}
         goHome={goHome}
         cacheId={router.query.cache}
+        claim={router.query.claim}
       />
     </div>
   );

@@ -4,14 +4,16 @@ import Button from "../Button";
 import Spinner from "../Loading/Spinner";
 import eggImg from "../../assets/icons/egg.png";
 
-export default function Login({
+export default function LoginRaptor({
   login,
   logout,
   mutate,
   goHome,
   fetching,
   cacheId,
+  claim,
 }: any) {
+  console.log(claim);
   const [email, setEmail] = useState("");
   const onChange = (e: FormEvent<HTMLInputElement>) =>
     setEmail(e.currentTarget.value);
@@ -40,7 +42,11 @@ export default function Login({
       <Button
         className="w-32 mt-4 font-bold"
         onClick={() => {
-          const destination = cacheId ? `/${cacheId}` : "/";
+          let destination = cacheId ? `/cache-${cacheId}` : "/";
+
+          if (claim) {
+            destination = `/claim-${claim}`;
+          }
           console.log(destination);
           login(email, destination);
         }}

@@ -13,11 +13,13 @@ const ICON_DIMS = 60;
 export default function Nav() {
   const router = useRouter();
 
-  const hideNavPaths = ["/login", "/manager"];
+  const hideNavPaths = ["login", "manager", "claim"];
   return (
     <div
       style={{
-        display: hideNavPaths.includes(router.asPath.split("?")[0])
+        display: hideNavPaths.includes(
+          router.asPath.split("/")[1].split("?")[0]
+        )
           ? "none"
           : "flex",
         height: 80,

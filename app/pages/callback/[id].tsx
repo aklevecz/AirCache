@@ -7,7 +7,7 @@ import storage from "../../libs/storage";
 
 export default function Callback() {
   const router = useRouter();
-  console.log(router.query.id);
+
   const onCreds = async (cred: string, id: string) => {
     const did = await new Magic(
       process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!
@@ -21,7 +21,8 @@ export default function Callback() {
       const { token } = authRequest.data;
       storage.setItem(storage.keys.token, token);
       mutate(endpoints.user);
-      router.push(`/cache/${id}`);
+      let destination = id.replace("-", "/");
+      router.push("/" + destination);
     }
   };
 

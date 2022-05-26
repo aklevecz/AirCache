@@ -14,7 +14,10 @@ export default function useAuth() {
     // if (typeof window === "undefined") {
     //   return console.error("No Window");
     // }
+    logout();
+
     setFetching(true);
+
     let redirectURI = "https://air.yaytso.art/callback" + destination;
     if (typeof window !== "undefined") {
       redirectURI = `${window.location.protocol}//${window.location.host}/callback${destination}`;
@@ -26,10 +29,14 @@ export default function useAuth() {
     //     ? `?${destination.split("/")[0]}=${destination.split("/")[1]}`
     //     : "";
     const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!);
-    const did = await magic.auth.loginWithMagicLink({
-      email,
-      redirectURI: redirectURI,
-    });
+
+    const config: any = { email };
+
+    if (!window.location.href.includes("192")) {
+      config.redirectURI = redirectURI;
+    }
+
+    const did = await magic.auth.loginWithMagicLink(config);
     const authRequest = await api.post(endpoints.login, null, {
       headers: { Authorization: `Bearer ${did}` },
     });
@@ -38,7 +45,9 @@ export default function useAuth() {
       storage.setItem(storage.keys.token, token);
       mutate();
       setTimeout(() => {
-        router.push(destination === "/" ? destination : `/cache${destination}`);
+        router.push(
+          destination === "/" ? destination : `${destination.replace("-", "/")}`
+        );
         setFetching(false);
       }, 1000);
     }
@@ -47,11 +56,15 @@ export default function useAuth() {
   const logout = async () => {
     // const logoutReq = await fetch("/api/logout");
     // if (logoutReq.ok) {
-    const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!);
-    magic.user.logout();
-    storage.deleteItem(storage.keys.token);
-    localStorage.clear();
-    mutate();
+    return new Promise(async (resolve) => {
+      const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!);
+      await magic.user.logout();
+      storage.deleteItem(storage.keys.token);
+      localStorage.clear();
+      mutate();
+      setTimeout(() => resolve(true), 500);
+    });
+
     // }
     // return logoutReq.ok;
   };

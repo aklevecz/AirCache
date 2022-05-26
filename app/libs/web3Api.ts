@@ -130,4 +130,10 @@ const getPolyaytsoBalance = async (address: string) => {
   return tokens;
 };
 
-export default { getCache, getAllCaches, getNFTMeta, getPolyaytsoBalance };
+export default {
+  getCache,
+  getAllCaches,
+  getNFTMeta,
+  getPolyaytsoBalance,
+  contract,
+};
