@@ -141,7 +141,9 @@ export default function Claim() {
                 className="bg-polygon px-6 py-2 rounded-full flex items-center justify-center w-40 m-auto"
                 target="_blank"
                 rel="noreferrer"
-                href={`https://opensea.io/assets/matic/${NFT.contractAddress}/${NFT.tokenId}`}
+                href={`https://opensea.io/assets/matic/${
+                  (NFT as any).contractAddress
+                }/${(NFT as any).tokenId}`}
               >
                 OpenSea{" "}
                 <div className="w-4 ml-1">
