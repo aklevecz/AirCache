@@ -12,7 +12,7 @@ import Axe from "../../components/Icons/Axe";
 import AxeAnimation from "../../components/Animations/Axe";
 import EgglineIcon from "../../components/Icons/Eggline";
 import logo from "../../assets/icons/yaytso.svg";
-
+import Polygon from "../../components/Icons/Polygon";
 type NFTMeta = {
   name: string;
   description: string;
@@ -37,7 +37,8 @@ export default function Claim() {
         cacheContent.tokenId.toNumber(),
         cacheContent.tokenAddress
       );
-      console.log(nftMeta);
+      nftMeta.contractAddress = cacheContent.tokenAddress;
+      nftMeta.tokenId = cacheContent.tokenId.toNumber();
       setFetching(false);
       setNFT(nftMeta);
     } catch (e) {
@@ -132,6 +133,21 @@ export default function Claim() {
                   {fetching ? <BlackWrappedSpinner /> : "Claim"}
                 </Big>
               </div>
+              <div className="bg-white w-full h-2 mt-10" />
+              <div className="text-center font-bold mt-5 mb-2">
+                See it on OpenSea!
+              </div>
+              <a
+                className="bg-polygon px-6 py-2 rounded-full flex items-center justify-center w-40 m-auto"
+                target="_blank"
+                rel="noreferrer"
+                href={`https://opensea.io/assets/matic/${NFT.contractAddress}/${NFT.tokenId}`}
+              >
+                OpenSea{" "}
+                <div className="w-4 ml-1">
+                  <Polygon fill="white" />
+                </div>
+              </a>
             </>
           )}
           {txState && txState === TxState.Mining ? (
