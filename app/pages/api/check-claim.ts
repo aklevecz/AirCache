@@ -27,7 +27,6 @@ export default async function handler(
     KeyConditionExpression: "sacret = :s",
   };
   const dbRes = await db.query(params).promise();
-  console.log(dbRes);
   if (dbRes.Items) {
     res.status(200).json({ ...dbRes.Items[0] });
   } else {
