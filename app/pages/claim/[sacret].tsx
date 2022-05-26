@@ -129,7 +129,7 @@ export default function Claim() {
                 This beautiful item can be yours
               </div>
               <div className="mt-8">
-                <Big className="m-auto block text-2xl px-10" onClick={onClaim}>
+                <Big className="m-auto block text-2xl w-40" onClick={onClaim}>
                   {fetching ? <BlackWrappedSpinner /> : "Claim"}
                 </Big>
               </div>
@@ -138,7 +138,7 @@ export default function Claim() {
                 See it on OpenSea!
               </div>
               <a
-                className="bg-polygon px-6 py-2 rounded-full flex items-center justify-center w-40 m-auto"
+                className="bg-polygon px-6 py-2 rounded-full flex items-center justify-center w-40 m-auto mb-12"
                 target="_blank"
                 rel="noreferrer"
                 href={`https://opensea.io/assets/matic/${
@@ -191,7 +191,10 @@ export default function Claim() {
                 onChange={(e) => setEmail(e.currentTarget.value)}
               />
               <div className="mt-8">
-                <Big className="m-auto block text-2xl px-10" onClick={onLogin}>
+                <Big
+                  className="m-auto block text-2xl px-10 w-40"
+                  onClick={onLogin}
+                >
                   {auth.fetching ? <BlackWrappedSpinner /> : "Login"}
                 </Big>
               </div>
