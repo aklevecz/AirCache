@@ -15,13 +15,17 @@ const host =
   process.env.NODE_ENV === "development"
     ? "http://localhost:3000"
     : "https://air.yaytso.art";
+
+const cityCenters = {
+  palmBeach: { lat: 26.70605988106027, lng: -80.04643388959501 },
+  austin: { lat: 30.27317532798779, lng: -97.74452745161928 },
+};
 const seoConfig: { [key: string]: any } = {
-  permissionless: {
-    title: "Permissionless Egg Hunt",
-    description:
-      "Find eggs filled with NFT Pixeltrosses scattered around Palm Beach!",
+  ["coindesk-austin"]: {
+    title: "Coindesk Egg Hunt",
+    description: "Find eggs filled with NFT Longhorns scattered around Austin!",
     image: `${host}/permissionless_banner.png`,
-    map_center: { lat: 26.70605988106027, lng: -80.04643388959501 },
+    map_center: cityCenters.austin,
   },
 };
 
@@ -57,6 +61,8 @@ export default function Group({ caches, groupName }: Props) {
       draggable: true,
     });
 
+    // SOLANA
+    // - if Solana then also send the token information here (or in the modal?)
     cacheMarker.addListener("click", () => {
       modal.toggleModal({
         cache: { id, contractAddress, location: { lat, lng } },
@@ -140,7 +146,9 @@ export const getStaticProps = async ({ params }: Params) => {
     FilterExpression: "groupName = :g",
   };
   const dbRes = await db.scan(dbparams).promise();
+  console.log(dbRes);
   const caches = dbRes.Items;
+
   return {
     props: { caches, groupName: params.groupName },
   };

@@ -29,12 +29,27 @@ export default async function handler(
     //   "https://polygon-mumbai.g.alchemy.com/v2/" +
     //   process.env.ALCHEMY_KEY_MUMBAI;
     const url = maticurl;
-    const config = {
-      method: "get" as Method,
-      url: `${maticurl}?owner=${owner}${tokenContractQuery}&withMetadata=true`,
+
+    const queryNFTs = async (pageKey?: string) => {
+      const pageKeyQuery = pageKey ? `&pageKey=${pageKey}` : "";
+      const config = {
+        method: "get" as Method,
+        url: `${maticurl}?owner=${owner}${tokenContractQuery}&withMetadata=true${pageKeyQuery}`,
+      };
+      const nftres = await axios.request(config);
+      return nftres.data;
     };
-    const nftres = await axios.request(config);
-    res.status(200).json({ ...nftres.data.ownedNfts });
+    const nfts = [];
+    let pageKey = "";
+    while (nfts.length === 0) {
+      console.log(pageKey);
+      const data = await queryNFTs(pageKey);
+      const filteredOwned = data.ownedNfts.filter((n: any) => n.title);
+      pageKey = data.pageKey;
+      nfts.push(...filteredOwned);
+    }
+    console.log("done");
+    res.status(200).json({ ...nfts });
   } catch (e) {
     console.log(e);
     res.status(405).end();

@@ -9,7 +9,6 @@ export default function NFT({ nft }: any) {
   const { observe, inView } = useInView({
     onEnter: ({ unobserve }) => unobserve(), // only run once
   });
-  console.log(nft);
   const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
@@ -17,7 +16,6 @@ export default function NFT({ nft }: any) {
       localforage.getItem(nft.image).then((blob: any) => {
         if (imgRef.current) {
           if (blob) {
-            console.log("cached iomg");
             imgRef.current.src = URL.createObjectURL(blob);
           } else {
             const url = isIpfs(nft.image) ? ipfsToPinata(nft.image) : nft.image;

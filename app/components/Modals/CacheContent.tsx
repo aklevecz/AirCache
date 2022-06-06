@@ -46,9 +46,12 @@ export default function CacheContentModal({
   const [error, setError] = useState({ error: "", message: "" });
   const [fetchingLocation, setFetchingLocation] = useState(false);
   const [fetchingMeta, setFetchingMeta] = useState(false);
+
   const fetchCache = async (cacheId: number) => {
     setFetchingMeta(true);
     console.log(data.cache);
+    // Solana
+    // if Solana get token data from incoming data or from db
     const contract = new ethers.Contract(
       data.cache.contractAddress,
       AirYaytsoInterface.abi,

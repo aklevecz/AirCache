@@ -63,7 +63,7 @@ export default function Nfts({
               querying all of your NFTs
             </div>
             <Big
-              className="text-2xl px-10 mb-6"
+              className="text-2xl px-12 mb-6"
               onClick={() => setToggleTokenAddress(!toggleTokenAddress)}
             >
               {!toggleTokenAddress
@@ -80,7 +80,7 @@ export default function Nfts({
               ></motion.input>
             )}
             <Big
-              className="text-2xl px-10"
+              className="text-2xl px-12"
               onClick={() => onGetNfts(toggleTokenAddress ? tokenAddress : "")}
             >
               {fetching ? <BlackWrappedSpinner /> : queryText}
@@ -122,7 +122,7 @@ export default function Nfts({
                 </div>
 
                 {nft.metadata.image && isSelected && (
-                  <Img uri={nft.metadata.image} className="w-52" />
+                  <Img uri={nft.metadata.image} className="w-52 p-4" />
                   // <img
                   //   className="w-52"
                   //   src={

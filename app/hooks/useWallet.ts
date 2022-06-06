@@ -18,7 +18,6 @@ import api from "../libs/api";
 
 const fetcher = async (address: string) => {
   const res = await api.get("/api/get-nft-txs");
-  console.log(res.data);
   const data = res.data.result.transfers.map((tx: any) => {
     const meta = { tokenId: 0, contractAddress: "" };
     if (tx.category === "erc1155") {
@@ -30,7 +29,6 @@ const fetcher = async (address: string) => {
     }
     return meta;
   });
-  console.log(data);
   return data;
   return res.data.result.transfers;
   // .filter(
@@ -126,7 +124,6 @@ export default function useWallet(address: string) {
         for (let i = 0; i < uris.length; i++) {
           const { uri, contractAddress, tokenId } = uris[i];
           let metadata = await storage.getItem(uri);
-          console.log(metadata);
           if (metadata) {
             const data = JSON.parse(metadata);
             data.contractAddress = contractAddress;

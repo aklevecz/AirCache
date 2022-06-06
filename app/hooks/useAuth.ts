@@ -1,4 +1,5 @@
 import { Magic } from "magic-sdk";
+import { SolanaExtension } from "@magic-ext/solana";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import useSWR from "swr";
@@ -22,14 +23,19 @@ export default function useAuth() {
     if (typeof window !== "undefined") {
       redirectURI = `${window.location.protocol}//${window.location.host}/callback${destination}`;
     }
-    console.log(redirectURI);
     // const redirectURI = "https://air.yaytso.art/callback";
     // const redirectDestination =
     //   destination === "/"
     //     ? `?${destination.split("/")[0]}=${destination.split("/")[1]}`
     //     : "";
-    const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!);
-
+    const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!, {
+      extensions: [
+        new SolanaExtension({
+          rpcUrl: "https://api.devnet.solana.com",
+        }),
+      ],
+    });
+    console.log("SOLANA");
     const config: any = { email };
 
     if (!window.location.href.includes("192")) {
@@ -41,6 +47,7 @@ export default function useAuth() {
       headers: { Authorization: `Bearer ${did}` },
     });
     if (authRequest.status === 200) {
+      console.log(await magic.user.getMetadata());
       const { token } = authRequest.data;
       storage.setItem(storage.keys.token, token);
       mutate();
@@ -70,7 +77,7 @@ export default function useAuth() {
   };
 
   const loading = user === undefined;
-
+  console.log(user);
   return {
     user,
     login,

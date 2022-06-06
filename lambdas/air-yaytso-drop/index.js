@@ -18,6 +18,11 @@ const defaultProvider = new ethers.providers.AlchemyProvider(
   network,
   ALCHEMY_KEY
 );
+
+// SOLANA
+// - check if token address is Solana
+// - get the token from the db instead of depending on cache contract
+// - send the token through the wallet
 exports.handler = async (event) => {
   const messageAttributes = event.Records[0].messageAttributes;
   try {

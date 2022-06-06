@@ -219,7 +219,6 @@ export default function useAirCache(cacheId: string | null) {
         } else {
           NFT = await getNFTMeta(tokenId, tokenAddress, signer.provider!);
         }
-        console.log(cache);
         setCaches([{ ...cache, NFT }]);
 
         // IF ALL CACHE
@@ -228,7 +227,6 @@ export default function useAirCache(cacheId: string | null) {
         const caches = [];
         for (let i = 0; i < allContracts.length; i++) {
           const contract = allContracts[i];
-          console.log(contract);
           const numOfCaches = (await contract.cacheId()).toNumber();
           const cachedData = await getCachedCaches(
             numOfCaches,
@@ -236,14 +234,11 @@ export default function useAirCache(cacheId: string | null) {
           );
           caches.push(...cachedData.cached);
           for (let i = 0; i < cachedData.new.length; i++) {
-            console.log("get cache from blockchain");
             const cache = await getCache(cachedData.new[i], contract);
-            console.log(cache);
             let NFT: object | null = {};
             caches.push({ ...cache, NFT });
           }
         }
-        console.log(caches);
         setCaches(caches);
       }
     }
