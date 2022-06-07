@@ -1,7 +1,7 @@
 const hre = require("hardhat");
 
 async function main() {
-  const Pixeltross = await hre.ethers.getContractFactory("Pixeltross");
+  const Pixeltross = await hre.ethers.getContractFactory("LuckyLonghorns");
   const pixeltross = await Pixeltross.deploy(
     "https://cdn.yaytso.art/pixeltross/metadata/"
   );

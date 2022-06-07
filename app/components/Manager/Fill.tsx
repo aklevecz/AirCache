@@ -5,6 +5,7 @@ import BlackWrappedSpinner from "../Loading/BlackWrappedSpinner";
 import metaMaskWhite from "../../assets/icons/metamask_white.svg";
 import { ipfstoIO, isIpfs } from "../../libs/utils";
 
+// FILL BUTTON IS UGLY
 type Props = {
   nft: any;
   cache: any;

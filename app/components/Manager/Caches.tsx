@@ -25,7 +25,8 @@ type Props = {
   fetching: boolean;
   goToFillCache: () => void;
 };
-
+// BUG LOADIING
+// INCREASE ZOOM
 export default function Caches({
   web3Wallet,
   getAvailableCaches,

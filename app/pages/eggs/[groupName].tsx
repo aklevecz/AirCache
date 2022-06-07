@@ -24,7 +24,7 @@ const seoConfig: { [key: string]: any } = {
   ["coindesk-austin"]: {
     title: "Coindesk Egg Hunt",
     description: "Find eggs filled with NFT Longhorns scattered around Austin!",
-    image: `${host}/permissionless_banner.png`,
+    image: `${host}/coindesk-austin-banner.png`,
     map_center: cityCenters.austin,
   },
 };

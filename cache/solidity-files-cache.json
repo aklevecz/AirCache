@@ -893,6 +893,45 @@
       "artifacts": [
         "Pixeltross"
       ]
+    },
+    "/Users/arielklevecz/air-cache/contracts/LuckyLonghorns.sol": {
+      "lastModificationDate": 1654582325170,
+      "contentHash": "7c80dfd52805821cec9e44ba06196dd6",
+      "sourceName": "contracts/LuckyLonghorns.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/Strings.sol",
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "LuckyLonghorns"
+      ]
     }
   }
 }
