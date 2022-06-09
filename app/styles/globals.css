@@ -24,7 +24,7 @@ input {
 .recenter-button {
   position:absolute;
   left:50%;
-  bottom: 26px;
+  top: 26px;
   width: 150px;
   margin-left: -60px;
   font-weight: bold;
