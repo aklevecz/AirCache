@@ -4,12 +4,18 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import eggIcon from "../../assets/icons/egg2.png";
 import { Map } from "../../components/Map/Component";
+import { getMarker } from "../../components/Map/utils";
 import CacheContentModal from "../../components/Modals/CacheContent";
 import useAirCache from "../../hooks/useAirCache";
 import useAuth from "../../hooks/useAuth";
 import useModal from "../../hooks/useModal";
 import { AIRCACHE_ADDRESS, FRONTEND_HOST } from "../../libs/constants";
 import db from "../../libs/db";
+import storage from "../../libs/storage";
+import { Latlng } from "../../libs/types";
+import smiler from "../../assets/icons/smiler.svg";
+import Button from "../../components/Button";
+import Locate from "../../components/Icons/Locate";
 
 const host =
   process.env.NODE_ENV === "development"
@@ -36,6 +42,8 @@ export default function Group({ caches, groupName }: Props) {
   const airCache = useAirCache(null);
   const auth = useAuth();
 
+  const { user } = auth;
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const head = seoConfig[groupName] ?? {};
@@ -43,6 +51,82 @@ export default function Group({ caches, groupName }: Props) {
   const initMap = (map: google.maps.Map) => {
     setMap(map);
   };
+
+  const userRef = useRef<any>(null);
+  const userMarkerRef = useRef<google.maps.Marker | null>(null);
+  const userPositionRef = useRef<any>(null);
+
+  const centerMap = async () => {
+    map!.setCenter(userPositionRef.current as Latlng);
+  };
+
+  const getUserLocation = () => {
+    return new Promise((resolve) => {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const latLng = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        userPositionRef.current = latLng;
+        resolve(latLng);
+      });
+    });
+  };
+
+  const updateUserMarker = async () => {
+    if (userRef.current) {
+      const position = await getUserLocation();
+      if (position && userMarkerRef.current) {
+        userMarkerRef.current.setPosition(position as Latlng);
+        // map!.setCenter(position as Latlng);
+      }
+    }
+  };
+
+  useEffect(() => {
+    let interval: any;
+    if (user) {
+      interval = setInterval(updateUserMarker, 3000);
+    }
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [user]);
+
+  useEffect(() => {
+    if (map && navigator.geolocation && typeof window !== "undefined" && user) {
+      try {
+        navigator.geolocation.getCurrentPosition((position) => {
+          const pos = position.coords;
+          const icon = {
+            url: smiler.src,
+            scaledSize: new google.maps.Size(30, 30),
+          };
+          const latLng = { lat: pos.latitude, lng: pos.longitude };
+          const userMarker = new google.maps.Marker({
+            position: latLng,
+            map,
+            icon,
+            // draggable: true,
+            clickable: false,
+          });
+          getMarker(`img[src='${smiler.src}']`).then((marker: any) => {
+            if (marker) {
+              marker.classList.add("pulse");
+              marker.classList.add("user-marker");
+            }
+          });
+          userMarkerRef.current = userMarker;
+          userRef.current = latLng;
+          // navigatorRef.current = position;
+          storage.setItem(storage.keys.user_location, JSON.stringify(latLng));
+        });
+      } catch (e) {
+        console.error("Geolocation error");
+      }
+    }
+  }, [map, user]);
 
   const createCacheMarker = (
     lat: number,
@@ -58,7 +142,7 @@ export default function Group({ caches, groupName }: Props) {
       position: { lat, lng },
       map,
       icon,
-      draggable: true,
+      // draggable: true,
     });
 
     // SOLANA
@@ -84,7 +168,6 @@ export default function Group({ caches, groupName }: Props) {
       });
     }
   }, [caches, map]);
-
   return (
     <>
       <Head>
@@ -98,7 +181,16 @@ export default function Group({ caches, groupName }: Props) {
         <meta name="twitter:text:title" content={head.title} />
       </Head>
 
-      <Map initMap={initMap} map={map} />
+      <Map initMap={initMap} map={map} user={auth.user} />
+      {user && (
+        <Button
+          onClick={centerMap}
+          className="recenter-button"
+          style={{ display: "flex" }}
+        >
+          Re-center <Locate />
+        </Button>
+      )}
       {!airCache.loading && (
         <CacheContentModal
           open={modal.open}

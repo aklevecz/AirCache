@@ -84,6 +84,8 @@ export default function CacheContentModal({
   }, [open, data]);
 
   useEffect(() => {
+    // Solana
+    // I'm not sure what this listener will be, maybe it will be optimisic
     if (airCache.contract && airCache.signer && auth.user && open) {
       console.log("Listening to NFT Dropped");
       airCache.contract.on("NFTDropped", detectWinner);
@@ -149,7 +151,7 @@ export default function CacheContentModal({
           setTxState(TxState.Error);
           setError({
             message:
-              "I don't think your browser supports geolocation. If you are using the shitty Facebook webview, then switch to Chrome or Safari!",
+              "I don't think your browser supports geolocation or you may have turned it off in the settings on your phone.",
             error: "NO_GEOLOCATION",
           });
         }
