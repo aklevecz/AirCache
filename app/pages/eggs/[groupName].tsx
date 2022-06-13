@@ -16,6 +16,7 @@ import { Latlng } from "../../libs/types";
 import smiler from "../../assets/icons/smiler.svg";
 import Button from "../../components/Button";
 import Locate from "../../components/Icons/Locate";
+import web3Api from "../../libs/web3Api";
 
 const host =
   process.env.NODE_ENV === "development"
@@ -238,7 +239,6 @@ export const getStaticProps = async ({ params }: Params) => {
     FilterExpression: "groupName = :g",
   };
   const dbRes = await db.scan(dbparams).promise();
-  console.log(dbRes);
   const caches = dbRes.Items;
 
   return {
