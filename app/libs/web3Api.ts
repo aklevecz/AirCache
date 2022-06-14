@@ -10,7 +10,7 @@ import {
   POLYAYTSO_ADDRESS_MATIC,
   POLYAYTSO_ADDRESS_MUMBAI,
 } from "./constants";
-import { delay, ipfstoIO, isIpfs } from "./utils";
+import { delay, ipfstoIO, ipfsToPinata, isIpfs } from "./utils";
 import { prod } from "./env";
 
 export const ALCHEMY_KEY = prod
@@ -90,7 +90,6 @@ const getNFTMeta = async (tokenId: number, tokenAddress: string) => {
       console.log("hello");
       console.log(url);
       const response = await axios.get(url);
-      console.log(response);
       const metadata = response.data;
 
       return metadata;
@@ -101,7 +100,7 @@ const getNFTMeta = async (tokenId: number, tokenAddress: string) => {
   // const baseUrl = "https://gateway.pinata.cloud/ipfs/";
   // let metaurl = `${uri.replace("ipfs://", baseUrl)}`;
 
-  const metaurl = ipfstoIO(uri);
+  const metaurl = ipfsToPinata(uri);
   await delay(1000);
   const response = await axios.get(metaurl);
   const metadata = response.data;
