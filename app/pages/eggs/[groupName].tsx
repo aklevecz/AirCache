@@ -26,6 +26,7 @@ const host =
 const cityCenters = {
   palmBeach: { lat: 26.70605988106027, lng: -80.04643388959501 },
   austin: { lat: 30.27317532798779, lng: -97.74452745161928 },
+  alphabet_city: { lat: 40.72563642453208, lng: -73.97979855792384 },
 };
 const seoConfig: { [key: string]: any } = {
   ["coindesk-austin"]: {
@@ -33,6 +34,12 @@ const seoConfig: { [key: string]: any } = {
     description: "Find eggs filled with NFT Longhorns scattered around Austin!",
     image: `${host}/coindesk-austin-banner.png`,
     map_center: cityCenters.austin,
+  },
+  ["nft-nyc"]: {
+    title: "NFT NYC Word Hunt",
+    description: "Find letters in Alphabet City and win Word NFTs!",
+    image: "",
+    map_center: cityCenters.alphabet_city,
   },
 };
 

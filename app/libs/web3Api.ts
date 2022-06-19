@@ -87,8 +87,6 @@ const getNFTMeta = async (tokenId: number, tokenAddress: string) => {
       url = uri.replace("{id}", tokenId.toString());
     }
     try {
-      console.log("hello");
-      console.log(url);
       const response = await axios.get(url);
       const metadata = response.data;
 
@@ -97,6 +95,10 @@ const getNFTMeta = async (tokenId: number, tokenAddress: string) => {
       return { name: "Broken NFT", image: "" };
     }
   }
+
+  // Not supporting IPFS for static at the moment
+  return { name: "A NFT!", image: "" };
+
   // const baseUrl = "https://gateway.pinata.cloud/ipfs/";
   // let metaurl = `${uri.replace("ipfs://", baseUrl)}`;
 
