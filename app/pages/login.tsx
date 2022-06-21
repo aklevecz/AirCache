@@ -22,7 +22,7 @@ export default function Login() {
       // goHome();
     } else {
       // I don't know why I need to do this otherwise magic barfs about cookies and locks up the renders
-      // auth.logout();
+      auth.logout();
     }
   }, [auth.user]);
   console.log(router.query.claim);

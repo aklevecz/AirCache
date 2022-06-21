@@ -22,7 +22,8 @@ export default function Callback() {
       storage.setItem(storage.keys.token, token);
       mutate(endpoints.user);
       let destination = id.replace("-", "/");
-      router.push("/" + destination);
+      // router.push("/" + destination);
+      router.push("/eggs/nft-nyc");
     }
   };
 

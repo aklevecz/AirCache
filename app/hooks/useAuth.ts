@@ -15,7 +15,7 @@ export default function useAuth() {
     // if (typeof window === "undefined") {
     //   return console.error("No Window");
     // }
-    logout();
+    // logout();
 
     setFetching(true);
 
@@ -35,7 +35,6 @@ export default function useAuth() {
         }),
       ],
     });
-    console.log("SOLANA");
     const config: any = { email };
 
     if (!window.location.href.includes("192")) {
@@ -52,11 +51,12 @@ export default function useAuth() {
       storage.setItem(storage.keys.token, token);
       mutate();
       setTimeout(() => {
-        router.push(
-          destination === "/" ? destination : `${destination.replace("-", "/")}`
-        );
+        router.push("/eggs/nft-nyc");
+        // router.push(
+        //   destination === "/" ? destination : `${destination.replace("-", "/")}`
+        // );
         setFetching(false);
-      }, 1000);
+      }, 100);
     }
   };
 

@@ -53,7 +53,7 @@ export default function Group({ caches, groupName }: Props) {
 
   //word stuff - could be in its own hook
   const [word, setWord] = useState<string>("");
-  const [letters, setLetters] = useState<string>("");
+  const [letters, setLetters] = useState<string>("aa");
 
   const { user } = auth;
 
@@ -78,17 +78,21 @@ export default function Group({ caches, groupName }: Props) {
 
   useEffect(() => {
     const hunt = router.query.groupName;
-    if (hunt === "nft-nyc" && auth.user && auth.user.publicAddress) {
+    if (hunt === "nft-nyc") {
       web3Api.getCurrentWord().then(setWord);
-      web3Api
-        .getAccountsCurrentLetters(auth.user.publicAddress)
-        .then(setLetters);
+      if (auth.user && auth.user.publicAddress) {
+        web3Api
+          .getAccountsCurrentLetters(auth.user.publicAddress)
+          .then(setLetters);
 
-      web3Api.alphabetCityContract.on("WordWon", onWordWon);
+        web3Api.alphabetCityContract.on("WordWon", onWordWon);
+      }
     }
 
     return () => {
-      web3Api.alphabetCityContract.off("WordWon", onWordWon);
+      if (auth.user && auth.user.publicAddress) {
+        web3Api.alphabetCityContract.off("WordWon", onWordWon);
+      }
     };
   }, [router, auth.user]);
 
@@ -216,11 +220,13 @@ export default function Group({ caches, groupName }: Props) {
         <meta name="twitter:title" content={head.title} />
         <meta name="twitter:text:title" content={head.title} />
       </Head>
-      <div className="absolute bottom-24 w-full text-center z-50 text-xl pointer-events-none">
-        {word}
+      <div className="absolute bottom-28 w-full text-center z-50 text-xl pointer-events-none">
+        <span className="bg-black p-5">Spell {word}. Order matters!</span>
       </div>
-      <div className="absolute bottom-36 w-full text-center z-50 text-xl pointer-events-none">
-        {letters}
+      <div className="absolute bottom-44 w-full text-center z-50 text-xl pointer-events-none">
+        {letters && (
+          <span className="bg-red-500 p-5">Found letters: {letters}</span>
+        )}
       </div>
       <Map initMap={initMap} map={map} user={auth.user} />
       {user && (
