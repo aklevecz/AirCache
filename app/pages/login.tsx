@@ -10,6 +10,8 @@ export default function Login() {
   const [render, setRender] = useState(false);
 
   const goHome = () => {
+    router.push("/eggs/nft-nyc");
+    return;
     if (router.query.cache) {
       router.push(`/egg/${router.query.cache}`);
     } else {
@@ -19,7 +21,7 @@ export default function Login() {
 
   useEffect(() => {
     if (auth.user) {
-      // goHome();
+      goHome();
     } else {
       // I don't know why I need to do this otherwise magic barfs about cookies and locks up the renders
       auth.logout();

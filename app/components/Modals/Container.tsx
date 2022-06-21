@@ -21,6 +21,7 @@ export default function Container({ children, open, toggleModal }: Props) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="bg-black p-10 pb-10 w-4/5 z-10 max-w-lg rounded-3xl"
+            style={{ zIndex: 9999999 }}
           >
             {children}
           </motion.div>

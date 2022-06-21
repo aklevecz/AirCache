@@ -220,9 +220,11 @@ export default function Group({ caches, groupName }: Props) {
         <meta name="twitter:title" content={head.title} />
         <meta name="twitter:text:title" content={head.title} />
       </Head>
-      <div className="absolute bottom-28 w-full text-center z-50 text-xl pointer-events-none">
-        <span className="bg-black p-5">Spell {word}. Order matters!</span>
-      </div>
+      {word && (
+        <div className="absolute bottom-28 w-full text-center z-50 text-xl pointer-events-none">
+          <span className="bg-black p-5">Spell {word}. Order matters!</span>
+        </div>
+      )}
       <div className="absolute bottom-44 w-full text-center z-50 text-xl pointer-events-none">
         {letters && (
           <span className="bg-red-500 p-5">Found letters: {letters}</span>
