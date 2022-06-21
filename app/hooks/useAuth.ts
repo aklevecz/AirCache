@@ -77,7 +77,6 @@ export default function useAuth() {
   };
 
   const loading = user === undefined;
-  console.log(user);
   return {
     user,
     login,

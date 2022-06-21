@@ -11,7 +11,7 @@ export default function Login() {
 
   const goHome = () => {
     if (router.query.cache) {
-      router.push(`/cache/${router.query.cache}`);
+      router.push(`/egg/${router.query.cache}`);
     } else {
       router.push("/");
     }

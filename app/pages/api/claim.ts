@@ -3,6 +3,8 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { ethers } from "ethers";
 import { haversineDistance } from "../../libs/utils";
 import AWS from "aws-sdk";
+import { ALPHABET_CITY, ALPHABET_CITY_MUMBAI } from "../../libs/constants";
+import web3Api from "../../libs/web3Api";
 
 const ALCHEMY_KEY = process.env.ALCHEMY_KEY_MUMBAI;
 const PP2 = process.env.PP2 as string;
@@ -51,11 +53,26 @@ export default async function handler(
     // Check if the cache actually has a token
 
     // The reference from cacheId to location or vice versa should be in a db or something
-    const { cacheId, userLocation, cacheLocation, navigator } = req.body;
+    const { cacheId, userLocation, cacheLocation, navigator, tokenAddress } =
+      req.body;
+    if (tokenAddress === ALPHABET_CITY) {
+      const hasWord = await web3Api.accountHasWord(user.publicAddress);
+      if (hasWord) {
+        return res.json({
+          tx: null,
+          message:
+            "You have already won a word! Let someone else have a chance :)",
+          error: "FAIL",
+        });
+      }
+    }
 
+    // return console.log(tokenAddress, "token address", ALPHABET_CITY);
     const distance = haversineDistance(userLocation, cacheLocation);
     const isTooFar = distance > 100;
-    const isAdmin = user.email === "arielklevecz@gmail.com";
+    const isAdmin =
+      user.email === "arielklevecz@gmail.com" ||
+      user.email === "ariel@yaytso.art";
     console.log(user.email, distance);
     if (isTooFar && !isAdmin) {
       return res.json({

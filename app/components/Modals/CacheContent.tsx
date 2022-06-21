@@ -69,7 +69,11 @@ export default function CacheContentModal({
       const nft = await airCache.getNFTMeta(tokenId, cache.tokenAddress);
       console.log(nft);
       setFetchingMeta(false);
-      setNFT(nft);
+      setNFT({
+        ...nft,
+        tokenAddress: cache.tokenAddress,
+        tokenId: cache.tokenId,
+      });
     }
   };
 
@@ -86,7 +90,7 @@ export default function CacheContentModal({
   useEffect(() => {
     // Solana
     // I'm not sure what this listener will be, maybe it will be optimisic
-    if (airCache.contract && airCache.signer && auth.user && open) {
+    if (airCache.contract && airCache.signer && auth.user && open && NFT) {
       console.log("Listening to NFT Dropped");
       airCache.contract.on("NFTDropped", detectWinner);
     }
@@ -95,7 +99,7 @@ export default function CacheContentModal({
         airCache.contract.off("NFTDropped", detectWinner);
       }
     };
-  }, [airCache.contract, airCache.signer, auth.user, open]);
+  }, [airCache.contract, airCache.signer, auth.user, open && NFT]);
 
   const claim = () => {
     setFetchingLocation(true);
@@ -123,6 +127,7 @@ export default function CacheContentModal({
 
             const res = await claimCache(
               data.cache.id,
+              NFT.tokenAddress,
               data.cache.location,
               userLocation,
               {
@@ -170,7 +175,10 @@ export default function CacheContentModal({
     tokenId: any,
     event: any
   ) => {
-    if (winner === auth.user.publicAddress) {
+    if (
+      winner === auth.user.publicAddress &&
+      tokenAddress == NFT.tokenAddress
+    ) {
       console.log(event);
       setTxState(TxState.Complete);
     }

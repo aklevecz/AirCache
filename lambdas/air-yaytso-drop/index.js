@@ -36,30 +36,37 @@ exports.handler = async (event) => {
       masterWallet.provider
     );
     const signer = contract.connect(masterWallet);
-    let gasLimit = 100000;
-    try {
-      const estimatedGas = await signer.estimateGas
-        .dropNFT(cacheId, winner)
-        .then((b) => {
-          return b.toNumber();
-        });
-      if (estimatedGas > 0) {
-        gasLimit = estimatedGas;
-      }
-    } catch (e) {
-      console.log(e);
-    }
+    let gasLimit = 900000;
+    // try {
+    //   const estimatedGas = await signer.estimateGas
+    //     .dropNFT(cacheId, winner)
+    //     .then((b) => {
+    //       return b.toNumber();
+    //     });
+    //   if (estimatedGas > 0) {
+    //     gasLimit = estimatedGas;
+    //   }
+    // } catch (e) {
+    //   console.log(e);
+    // }
     // console.log("HELLO");
     // res.status(200).end();
     // return;
     const fees = await fetch(
-      "https://gasstation-mainnet.matic.network/v2"
+      `https://polygon-${LIVE ? "mainnet" : "mainnet"}.g.alchemyapi.io/v2/` +
+        process.env.ALCHEMY_KEY,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: '{"jsonrpc":"2.0","method":"eth_gasPrice","params":[],"id":1}',
+      }
     ).then((response) => response.json());
-    const fee = ethers.BigNumber.from(
-      Math.floor(fees.standard.maxFee * 10 ** 9)
-    );
+    // const fee = ethers.BigNumber.from(
+    //   Math.floor(fees.standard.maxFee * 10 ** 9)
+    // );
+    console.log(fees);
     const tx = await signer.dropNFT(cacheId, winner, {
-      gasPrice: fee,
+      gasPrice: fees.result,
       gasLimit,
     });
     console.log(tx);

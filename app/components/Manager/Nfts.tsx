@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { FormEvent, useState } from "react";
 import {
+  ALPHABET_CITY,
   colors,
   PIXELTROSS_ADDRESS_MUMBAI,
   POLYAYTSO_ADDRESS_MATIC,
@@ -33,7 +34,7 @@ export default function Nfts({
   approve,
   message,
 }: Props) {
-  const [tokenAddress, setTokenAddress] = useState(PIXELTROSS_ADDRESS_MUMBAI);
+  const [tokenAddress, setTokenAddress] = useState(ALPHABET_CITY);
   const [toggleTokenAddress, setToggleTokenAddress] = useState(false);
 
   const tryAgain = () => {

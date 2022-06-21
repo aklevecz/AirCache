@@ -9,7 +9,7 @@ type Props = {
   cache: any;
 };
 export default function Success({ nft, cache }: Props) {
-  const link = `${FRONTEND_HOST()}/cache/${cache}`;
+  const link = `${FRONTEND_HOST()}/egg/${cache}`;
   const copy = () => {
     navigator.clipboard.writeText(link);
     alert(`copied ${link} to your clipboard!`);

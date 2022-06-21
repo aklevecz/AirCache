@@ -38,7 +38,7 @@ const seoConfig: { [key: string]: any } = {
   ["nft-nyc"]: {
     title: "NFT NYC Word Hunt",
     description: "Find letters in Alphabet City and win Word NFTs!",
-    image: "",
+    image: `${host}/ac-bg.png`,
     map_center: cityCenters.alphabet_city,
   },
 };
@@ -49,6 +49,11 @@ export default function Group({ caches, groupName }: Props) {
   const [map, setMap] = useState<google.maps.Map>();
   const airCache = useAirCache(null);
   const auth = useAuth();
+  const router = useRouter();
+
+  //word stuff - could be in its own hook
+  const [word, setWord] = useState<string>("");
+  const [letters, setLetters] = useState<string>("");
 
   const { user } = auth;
 
@@ -63,6 +68,29 @@ export default function Group({ caches, groupName }: Props) {
   const userRef = useRef<any>(null);
   const userMarkerRef = useRef<google.maps.Marker | null>(null);
   const userPositionRef = useRef<any>(null);
+
+  const onWordWon = (winner: any, word: any, event: any) => {
+    console.log(event, winner, word);
+    if (winner === auth.user.publicAddress) {
+      alert(`You won the word! Congratz!`);
+    }
+  };
+
+  useEffect(() => {
+    const hunt = router.query.groupName;
+    if (hunt === "nft-nyc" && auth.user && auth.user.publicAddress) {
+      web3Api.getCurrentWord().then(setWord);
+      web3Api
+        .getAccountsCurrentLetters(auth.user.publicAddress)
+        .then(setLetters);
+
+      web3Api.alphabetCityContract.on("WordWon", onWordWon);
+    }
+
+    return () => {
+      web3Api.alphabetCityContract.off("WordWon", onWordWon);
+    };
+  }, [router, auth.user]);
 
   const centerMap = async () => {
     map!.setCenter(userPositionRef.current as Latlng);
@@ -188,7 +216,12 @@ export default function Group({ caches, groupName }: Props) {
         <meta name="twitter:title" content={head.title} />
         <meta name="twitter:text:title" content={head.title} />
       </Head>
-
+      <div className="absolute bottom-24 w-full text-center z-50 text-xl pointer-events-none">
+        {word}
+      </div>
+      <div className="absolute bottom-36 w-full text-center z-50 text-xl pointer-events-none">
+        {letters}
+      </div>
       <Map initMap={initMap} map={map} user={auth.user} />
       {user && (
         <Button
@@ -196,7 +229,7 @@ export default function Group({ caches, groupName }: Props) {
           className="recenter-button"
           style={{ display: "flex" }}
         >
-          Re-center <Locate />
+          Recenter <Locate />
         </Button>
       )}
       {!airCache.loading && (

@@ -41,6 +41,7 @@ export default function useAirCache(cacheId: string | null) {
     const provider = new ethers.providers.Web3Provider(
       magic.rpcProvider as any
     );
+    console.log(provider);
     setProvider(provider);
     const signer = provider.getSigner();
     setSigner(signer);

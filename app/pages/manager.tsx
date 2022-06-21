@@ -172,17 +172,18 @@ const Manager: NextPage = () => {
     }
     console.log(caches);
     const emptyCaches = [];
-    for (let i = 0; i < caches.length; i++) {
-      const id = i + 1;
-      const currentCache = caches[i];
-      const cache = await web3Wallet.contract!.caches(
-        currentCache.cacheId ? currentCache.cacheId : currentCache.id.toNumber()
-      );
-      if (cache.tokenId.toNumber() === 0) {
-        emptyCaches.push(cache);
-      }
-    }
-    setCaches(emptyCaches);
+    // for (let i = 0; i < caches.length; i++) {
+    //   const id = i + 1;
+    //   const currentCache = caches[i];
+    //   const cache = await web3Wallet.contract!.caches(
+    //     currentCache.cacheId ? currentCache.cacheId : currentCache.id.toNumber()
+    //   );
+    //   if (cache.tokenId.toNumber() === 0) {
+    //     emptyCaches.push(cache);
+    //   }
+    // }
+    // setCaches(emptyCaches);
+    setCaches(caches);
     setFetching(false);
   };
 

@@ -2,15 +2,17 @@ import axios from "axios";
 import { BigNumber, ethers } from "ethers";
 import AirYaytsoInterface from "../hooks/AirYaytso.json";
 import PolyaytsoInterface from "./Polyaytso.json";
+import AlphabetCityInterface from "./AlphabetCity.json";
 import {
   abis,
   AIRCACHE_ADDRESS_MATIC,
   AIRCACHE_ADDRESS_MUMBAI,
+  ALPHABET_CITY,
   oldContracts,
   POLYAYTSO_ADDRESS_MATIC,
   POLYAYTSO_ADDRESS_MUMBAI,
 } from "./constants";
-import { delay, ipfstoIO, ipfsToPinata, isIpfs } from "./utils";
+import { alphabetMap, delay, ipfstoIO, ipfsToPinata, isIpfs } from "./utils";
 import { prod } from "./env";
 
 export const ALCHEMY_KEY = prod
@@ -131,10 +133,39 @@ const getPolyaytsoBalance = async (address: string) => {
   return tokens;
 };
 
+const alphabetCityContract = new ethers.Contract(
+  ALPHABET_CITY,
+  AlphabetCityInterface.abi,
+  provider
+);
+
+const getCurrentWord = async () => {
+  const wordArray = await alphabetCityContract.getWord();
+  const letterArray = wordArray.map(
+    (bigNumberWord: BigNumber) => alphabetMap[bigNumberWord.toNumber()]
+  );
+  return letterArray.join(" ");
+};
+
+const getAccountsCurrentLetters = async (account: string) => {
+  const wordArray = await alphabetCityContract.getUsersGuesses(account);
+  const word = wordArray.map((lId: number) => alphabetMap[lId]).join("");
+  return word;
+};
+
+const accountHasWord = async (account: string) => {
+  const hasWord = await alphabetCityContract.accountHasWord(account);
+  return hasWord;
+};
+
 export default {
   getCache,
   getAllCaches,
   getNFTMeta,
   getPolyaytsoBalance,
+  accountHasWord,
+  getCurrentWord,
+  getAccountsCurrentLetters,
   contract,
+  alphabetCityContract,
 };

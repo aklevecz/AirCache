@@ -41,6 +41,7 @@ export const getUser = async () => {
 
 export const claimCache = async (
   cacheId: number,
+  tokenAddress: string,
   cacheLocation: Latlng,
   userLocation: Latlng,
   navigator: any
@@ -49,6 +50,7 @@ export const claimCache = async (
     const response = await api
       .post(endpoints.claim, {
         cacheId,
+        tokenAddress,
         cacheLocation,
         userLocation,
         navigator,
