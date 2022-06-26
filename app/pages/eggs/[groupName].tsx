@@ -3,6 +3,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import eggIcon from "../../assets/icons/egg2.png";
+import blankEggIcon from "../../assets/icons/egg.png";
 import { Map } from "../../components/Map/Component";
 import { getMarker } from "../../components/Map/utils";
 import CacheContentModal from "../../components/Modals/CacheContent";
@@ -17,6 +18,29 @@ import smiler from "../../assets/icons/smiler.svg";
 import Button from "../../components/Button";
 import Locate from "../../components/Icons/Locate";
 import web3Api from "../../libs/web3Api";
+
+import nycEggData from "../../data.json";
+import nycEggMeta from "../../nycMeta.json";
+
+// nyc delete list
+// 64
+// 71
+// 90
+// 102
+// 103
+// 97
+// 92
+// 80
+// 66
+// 60
+// 68
+// 82
+// 87
+// 99
+const nycDeleteList = [
+  64, 71, 90, 102, 103, 97, 92, 80, 66, 60, 68, 82, 87, 99, 75, 58, 72, 79, 63,
+  109,
+];
 
 const host =
   process.env.NODE_ENV === "development"
@@ -53,7 +77,7 @@ export default function Group({ caches, groupName }: Props) {
 
   //word stuff - could be in its own hook
   const [word, setWord] = useState<string>("");
-  const [letters, setLetters] = useState<string>("");
+  const [letters, setLetters] = useState<string>("PIZ");
 
   const { user } = auth;
 
@@ -70,7 +94,6 @@ export default function Group({ caches, groupName }: Props) {
   const userPositionRef = useRef<any>(null);
 
   const onWordWon = (winner: any, word: any, event: any) => {
-    console.log(event, winner, word);
     if (winner === auth.user.publicAddress) {
       alert(`You won the word! Congratz!`);
     }
@@ -172,12 +195,20 @@ export default function Group({ caches, groupName }: Props) {
     lat: number,
     lng: number,
     id: number,
-    contractAddress: string
+    contractAddress: string,
+    tokenId: number,
+    tokenAddress: string,
+    nft: any
   ) => {
     const icon = {
-      url: eggIcon.src,
+      url: tokenId ? eggIcon.src : blankEggIcon.src,
       scaledSize: new google.maps.Size(40, 40),
     };
+
+    if (nft) {
+      icon.url = nft.image;
+    }
+
     const cacheMarker = new google.maps.Marker({
       position: { lat, lng },
       map,
@@ -203,7 +234,10 @@ export default function Group({ caches, groupName }: Props) {
           parseFloat(cache.lat),
           parseFloat(cache.lng),
           cache.cacheId,
-          cache.address ?? AIRCACHE_ADDRESS
+          cache.address ?? AIRCACHE_ADDRESS,
+          cache.tokenId,
+          cache.tokenAddress,
+          cache.nft
         );
       });
     }
@@ -222,12 +256,17 @@ export default function Group({ caches, groupName }: Props) {
       </Head>
       {word && (
         <div className="absolute bottom-28 w-full text-center z-50 text-xl pointer-events-none">
-          <span className="bg-black p-5">Spell {word}. Order matters!</span>
+          <span className="bg-black p-5 font-fatfrank">
+            Spell:
+            <span style={{ fontSize: "2rem", marginLeft: 10 }}>{word}</span>
+          </span>
         </div>
       )}
       <div className="absolute bottom-44 w-full text-center z-50 text-xl pointer-events-none">
         {letters && (
-          <span className="bg-red-500 p-5">Found letters: {letters}</span>
+          <span className="bg-red-500 px-5 py-2 font-fatfrank text-2xl tracking-widest">
+            {letters}
+          </span>
         )}
       </div>
       <Map initMap={initMap} map={map} user={auth.user} />
@@ -268,15 +307,15 @@ export async function getStaticPaths() {
 type Params = {
   params: any;
 };
+
+const filterOutEmptyNYC = (cache: any) => {
+  if (nycDeleteList.includes(parseInt(cache!.cacheId))) {
+    return false;
+  }
+  return true;
+};
+
 export const getStaticProps = async ({ params }: Params) => {
-  // console.log("static params", params);
-  // const host =
-  //   process.env.NODE_ENV === "development"
-  //     ? "http://localhost:3000"
-  //     : "https://air.yaytso.art";
-  // const res = await axios.get(host + "/api/get-caches-by-group", {
-  //   params: { groupName: params.groupName },
-  // });
   const { groupName } = params;
   const dbparams = {
     TableName: "cache-by-group",
@@ -287,9 +326,49 @@ export const getStaticProps = async ({ params }: Params) => {
     FilterExpression: "groupName = :g",
   };
   const dbRes = await db.scan(dbparams).promise();
-  const caches = dbRes.Items;
+  let caches = dbRes.Items;
 
+  caches = caches!.filter(filterOutEmptyNYC);
+
+  // Do this before the buildstep to create a config then have all of the cache calls read from it
+  // Note: What should it do if there are no caches?
+  // if (caches) {
+  //   for (let i = 0; i < caches.length; i++) {
+  //     const cacheData = await web3Api.getCache(caches[i].cacheId);
+  //     caches[i].tokenAddress = cacheData.tokenAddress;
+  //     caches[i].tokenId = cacheData.tokenId.toNumber();
+  //   }
+  // }
+  // fs.writeFileSync("./data.json", JSON.stringify(caches));
+
+  // const metas = [];
+  // for (let i = 0; i < nycEggData.length; i++) {
+  //   const egg = nycEggData[i];
+  //   if (egg.tokenId) {
+  //     const meta = await web3Api.getNFTMeta(egg.tokenId, egg.tokenAddress);
+  //     metas.push({
+  //       ...meta,
+  //       tokenId: egg.tokenId,
+  //       tokenAddress: egg.tokenAddress,
+  //     });
+  //   }
+  // }
+  // fs.writeFileSync("nycMeta.json", JSON.stringify(metas));
+
+  const mergedData = nycEggData.filter(filterOutEmptyNYC).map((cache) => {
+    const data: any = cache;
+    if (cache.tokenId) {
+      const nft = nycEggMeta.find(
+        (nft) =>
+          nft.tokenId === cache.tokenId &&
+          cache.tokenAddress === nft.tokenAddress
+      );
+      console.log(nft, "hiaa");
+      data.nft = nft;
+    }
+    return data;
+  });
   return {
-    props: { caches, groupName: params.groupName },
+    props: { caches: mergedData, groupName: params.groupName },
   };
 };
