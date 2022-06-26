@@ -77,7 +77,7 @@ export default function Group({ caches, groupName }: Props) {
 
   //word stuff - could be in its own hook
   const [word, setWord] = useState<string>("");
-  const [letters, setLetters] = useState<string>("PIZ");
+  const [letters, setLetters] = useState<string>("");
 
   const { user } = auth;
 
