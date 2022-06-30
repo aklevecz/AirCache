@@ -11,7 +11,7 @@ const cityCenters = {
   palmBeach: { lat: 26.70605988106027, lng: -80.04643388959501 },
   austin: { lat: 30.27317532798779, lng: -97.74452745161928 },
   alphabet_city: { lat: 40.72563642453208, lng: -73.97979855792384 },
-  hudson_river: { lat: 40.67854274395009, lng: -74.03770642719961 },
+  hudson_river: { lat: 40.70851962382408, lng: -74.01021772654222 },
 };
 
 const host =
@@ -34,7 +34,7 @@ export const seoConfig: { [key: string]: any } = {
     map_center: cityCenters.alphabet_city,
     icon: { useNFT: true, image: { empty: emptyEgg, filled: filledEgg } },
   },
-  blackbeard: {
+  ["myosin-yacht"]: {
     title: "Hunting for Treasure in the Hudson",
     description:
       "Gems and Jewelry hidden in treasure troves strewn about the Hudson!",

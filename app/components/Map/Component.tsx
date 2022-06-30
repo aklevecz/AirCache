@@ -29,7 +29,7 @@ export const Map = forwardRef<Ref, Props>(
             ? JSON.parse(last_location)
             : { lat: LA_COORDS.lat, lng: LA_COORDS.lng };
           const map = new google.maps.Map(mapContainer.current, {
-            zoom: 13,
+            zoom: 14,
             styles: darkMap,
             center,
           });

@@ -329,10 +329,13 @@ export async function getStaticPaths() {
   const allCachesByGroup = await db
     .scan({ TableName: cacheByGroupTableName })
     .promise();
-  console.log(allCachesByGroup);
+
+  const caches = allCachesByGroup.Items!.map((cache) => {
+    return cache.groupName;
+  });
+
   return {
-    paths:
-      allCachesByGroup.Items!.map((cache) => `/eggs/${cache.groupName}`) ?? [],
+    paths: caches.map((groupName) => `/eggs/${groupName}`) ?? [],
     fallback: true,
   };
 }
@@ -349,7 +352,11 @@ const filterOutEmptyNYC = (cache: any) => {
 };
 
 export const getStaticProps = async ({ params }: Params) => {
-  const { groupName } = params;
+  let { groupName } = params;
+
+  //patch
+  // groupName = groupName === "myosin-yacht" ? "blackbeard" : groupName;
+
   const dbparams = {
     TableName: "cache-by-group",
     ExpressionAttributeValues: {
