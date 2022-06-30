@@ -23,7 +23,7 @@ export default function Callback() {
       mutate(endpoints.user);
       let destination = id.replace("-", "/");
       // router.push("/" + destination);
-      router.push("/eggs/nft-nyc");
+      router.push("/eggs/myosin-yacht");
     }
   };
 
