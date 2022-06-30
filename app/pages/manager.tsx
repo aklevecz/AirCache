@@ -12,7 +12,7 @@ import Fill from "../components/Manager/Fill";
 import Success from "../components/Manager/Success";
 import web3Api from "../libs/web3Api";
 import { useRouter } from "next/router";
-import { getCachesByGroup } from "../libs/api";
+import { getCachesByGroup, onUpdateCache } from "../libs/api";
 import { cache } from "swr/dist/utils/config";
 
 enum View {
@@ -39,7 +39,6 @@ const Manager: NextPage = () => {
   const [message, setMessage] = useState("");
 
   const router = useRouter();
-  console.log(router.query);
 
   const onGetNfts = async (tokenAddress?: string) => {
     setMessage("");
@@ -84,10 +83,15 @@ const Manager: NextPage = () => {
       web3Wallet.metaMask.accounts[0],
       AIRCACHE_ADDRESS
     );
-    const approvedAddress = await ds.getApproved(selectedNft.id.tokenId);
 
+    let approvedAddress = "";
+    try {
+      approvedAddress = await ds.getApproved(selectedNft.id.tokenId);
+    } catch (e) {
+      console.log(e);
+    }
     const isApproved = isApprovedForAll || approvedAddress === AIRCACHE_ADDRESS;
-
+    console.log(isApproved);
     if (!isApproved) {
       const signer = tokenContract.connect(
         web3Wallet.metaMask.provider!.getSigner()
@@ -102,19 +106,22 @@ const Manager: NextPage = () => {
         const signer = tokenContract.connect(
           web3Wallet.metaMask.provider!.getSigner()
         );
-        const success = await signer
-          .approve(AIRCACHE_ADDRESS, selectedNft.id.tokenId)
-          // THIS CATCH DOES NOTHING BECAUSe ITS ALREADY IN A TRY BLOCK -- right?
-          .catch((e: any) => {
-            setFetching(false);
-            return false;
-          });
+        console.log("try approve");
+        const success = await signer.approve(
+          AIRCACHE_ADDRESS,
+          selectedNft.id.tokenId
+        );
+        // THIS CATCH DOES NOTHING BECAUSe ITS ALREADY IN A TRY BLOCK -- right?
+        // .catch((e: any) => {
+        //   setFetching(false);
+        //   return false;
+        // });
         if (success) {
           setView(View.Caches);
           setFetching(false);
         }
       } catch (e) {
-        console.log(e);
+        console.log(e, "try for all");
         const success = await signer
           .setApprovalForAll(AIRCACHE_ADDRESS, true)
           .catch(() => {
@@ -134,16 +141,12 @@ const Manager: NextPage = () => {
 
   const fillCache = async () => {
     setFetching(true);
-    console.log(web3Wallet.contract);
-    console.log(web3Wallet.metaMask.provider);
     const signer = web3Wallet.contract!.connect(
       web3Wallet.metaMask.provider!.getSigner()
     );
-    console.log(signer);
     const tokenAddress = selectedNft.contract.address;
     const tokenId = selectedNft.id.tokenId;
     const cacheId = selectedCache;
-    console.log("A", tokenAddress, "ID", tokenId, "C", cacheId);
 
     const tx = await signer
       .holdNFT(tokenAddress, tokenId, cacheId)
@@ -154,6 +157,13 @@ const Manager: NextPage = () => {
     const receipt = await tx.wait();
     for (const event of receipt.events) {
       if (event.event === "NFTHeld") {
+        // Refactor: Should this be optimisic or a webhook?
+        onUpdateCache(
+          cacheId.toString(),
+          tokenId,
+          tokenAddress,
+          router.query.group as string
+        );
         setView(View.Success);
         setFetching(false);
       }
@@ -172,18 +182,18 @@ const Manager: NextPage = () => {
     }
     console.log(caches);
     const emptyCaches = [];
-    // for (let i = 0; i < caches.length; i++) {
-    //   const id = i + 1;
-    //   const currentCache = caches[i];
-    //   const cache = await web3Wallet.contract!.caches(
-    //     currentCache.cacheId ? currentCache.cacheId : currentCache.id.toNumber()
-    //   );
-    //   if (cache.tokenId.toNumber() === 0) {
-    //     emptyCaches.push(cache);
-    //   }
-    // }
-    // setCaches(emptyCaches);
-    setCaches(caches);
+    for (let i = 0; i < caches.length; i++) {
+      const id = i + 1;
+      const currentCache = caches[i];
+      const cache = await web3Wallet.contract!.caches(
+        currentCache.cacheId ? currentCache.cacheId : currentCache.id.toNumber()
+      );
+      if (cache.tokenId.toNumber() === 0) {
+        emptyCaches.push(cache);
+      }
+    }
+    setCaches(emptyCaches);
+    // setCaches(caches);
     setFetching(false);
   };
 

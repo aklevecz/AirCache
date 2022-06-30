@@ -31,6 +31,9 @@ const LUCKYLONGHORNS_ADDRESS_MATIC =
 export const ALPHABET_CITY_MUMBAI =
   "0x15F7bC9A3a8C63A55B95bF092d80D7f16b5dcAB5";
 
+export const GEMS_MUMBAI = "0x90d901BDF15Fe07c46E4FaB572F8084deC8AaF8D";
+export const GEMS_MATIC = "0x93E9c3dd0Ab468Aae3D9906f8F44808e19DDD44B";
+
 export const ALPHABET_CITY_MATIC = "0x796A5BB70D8b0135218d1Db1004bBcb731BfFA9B";
 
 export const ALPHABET_CITY = !prod ? ALPHABET_CITY_MUMBAI : ALPHABET_CITY_MATIC;
@@ -41,6 +44,8 @@ export const AIRCACHE_ADDRESS = !prod
 export const SPOTTED_PIGS_ADDRESS = !prod
   ? SPOTTED_PIGS_ADDRESS_MUMBAI
   : SPOTTED_PIGS_ADDRESS_MATIC;
+
+export const GEMS_ADDRESS = prod ? GEMS_MATIC : GEMS_MUMBAI;
 
 export const abis = {
   tokenURI: "function tokenURI(uint256) public view returns (string memory)",
@@ -79,3 +84,7 @@ export const colors = {
   red: "#ff4444",
   polygon: "#8247E5",
 };
+
+export const cacheByGroupTableName = prod
+  ? "cache-by-group"
+  : "cache-by-group-test";

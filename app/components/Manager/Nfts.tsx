@@ -3,6 +3,7 @@ import { FormEvent, useState } from "react";
 import {
   ALPHABET_CITY,
   colors,
+  GEMS_ADDRESS,
   PIXELTROSS_ADDRESS_MUMBAI,
   POLYAYTSO_ADDRESS_MATIC,
 } from "../../libs/constants";
@@ -34,7 +35,7 @@ export default function Nfts({
   approve,
   message,
 }: Props) {
-  const [tokenAddress, setTokenAddress] = useState(ALPHABET_CITY);
+  const [tokenAddress, setTokenAddress] = useState(GEMS_ADDRESS);
   const [toggleTokenAddress, setToggleTokenAddress] = useState(false);
 
   const tryAgain = () => {

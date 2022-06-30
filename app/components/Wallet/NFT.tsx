@@ -14,6 +14,7 @@ export default function NFT({ nft }: any) {
   useEffect(() => {
     if (inView) {
       localforage.getItem(nft.image).then((blob: any) => {
+        console.log(blob);
         if (imgRef.current) {
           if (blob) {
             imgRef.current.src = URL.createObjectURL(blob);

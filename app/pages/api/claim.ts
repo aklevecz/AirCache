@@ -3,8 +3,14 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { ethers } from "ethers";
 import { haversineDistance } from "../../libs/utils";
 import AWS from "aws-sdk";
-import { ALPHABET_CITY, ALPHABET_CITY_MUMBAI } from "../../libs/constants";
+import {
+  ALPHABET_CITY,
+  ALPHABET_CITY_MUMBAI,
+  cacheByGroupTableName,
+  ZERO_ADDRESS,
+} from "../../libs/constants";
 import web3Api from "../../libs/web3Api";
+import { update } from "lodash";
 
 const ALCHEMY_KEY = process.env.ALCHEMY_KEY_MUMBAI;
 const PP2 = process.env.PP2 as string;
@@ -53,8 +59,14 @@ export default async function handler(
     // Check if the cache actually has a token
 
     // The reference from cacheId to location or vice versa should be in a db or something
-    const { cacheId, userLocation, cacheLocation, navigator, tokenAddress } =
-      req.body;
+    const {
+      cacheId,
+      groupName,
+      userLocation,
+      cacheLocation,
+      navigator,
+      tokenAddress,
+    } = req.body;
     if (tokenAddress === ALPHABET_CITY) {
       const hasWord = await web3Api.accountHasWord(user.publicAddress);
       if (hasWord) {
@@ -72,7 +84,8 @@ export default async function handler(
     const isTooFar = distance > 100;
     const isAdmin =
       user.email === "arielklevecz@gmail.com" ||
-      user.email === "ariel@yaytso.art";
+      user.email === "ariel@yaytso.art" ||
+      user.email === "teh@raptor.pizza";
     console.log(user.email, distance);
     if (isTooFar && !isAdmin) {
       return res.json({
@@ -81,6 +94,52 @@ export default async function handler(
         error: "TOO_FAR",
       });
     }
+
+    // Is cache being claimed?
+    const TableName = cacheByGroupTableName;
+
+    const queryParams = {
+      TableName,
+      KeyConditionExpression: "cacheId = :cacheId",
+      ExpressionAttributeValues: {
+        ":cacheId": cacheId.toString(),
+      },
+    };
+
+    const queryRes = await db.query(queryParams).promise();
+    console.log(queryRes.Items);
+    if (!queryRes.Items) {
+      return res.json({
+        tx: null,
+        message: "I don't see this cache anywhere",
+        error: "NO_CACHE",
+      });
+    }
+    if (!queryRes.Items[0].tokenId) {
+      return res.json({
+        tx: null,
+        message: "This NFT is already being claimed!",
+        error: "CLAIMING",
+      });
+    }
+
+    // To do: this should also trigger a task to check if the NFT was truly claimed
+    // In the future it could even queue people up who were next in line.
+    console.log(groupName);
+    const updateParams = {
+      TableName,
+      Key: {
+        cacheId: cacheId.toString(),
+        groupName,
+      },
+      UpdateExpression: "set tokenAddress = :tokenAddress, tokenId = :tokenId",
+      ExpressionAttributeValues: {
+        ":tokenAddress": ZERO_ADDRESS,
+        ":tokenId": 0,
+      },
+    };
+    const dbRes = await db.update(updateParams).promise();
+    console.log(dbRes);
     const mintParams = {
       MessageAttributes: {
         address: {

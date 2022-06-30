@@ -74,7 +74,7 @@ export const getTokenURI = async (
     uri = await tokenContract.tokenURI(tokenId);
   } catch (e) {
     uri = await tokenContract.uri(tokenId);
-    uri = uri.replace("{id}", tokenId);
+    uri = uri.replace("{id}", "0x" + tokenId.toString(16).padStart(2, "0"));
   }
   return uri;
 };

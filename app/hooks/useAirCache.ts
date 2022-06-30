@@ -152,7 +152,9 @@ export default function useAirCache(cacheId: string | null) {
         console.log(uri);
       }
       // this is the metadata url that might have token replacement
-      if (uri) uri = uri.replace("{id}", tokenId.toString());
+      // To do: better erc-1155 replacement
+      if (uri)
+        uri = uri.replace("{id}", tokenId.toString(16).padStart(64, "0"));
       await storage.setItem(uriKey, uri ? uri : "null");
     }
 

@@ -123,6 +123,7 @@ export default function useWallet(address: string) {
         const metadatas = [];
         for (let i = 0; i < uris.length; i++) {
           const { uri, contractAddress, tokenId } = uris[i];
+          console.log(uris);
           let metadata = await storage.getItem(uri);
           if (metadata) {
             const data = JSON.parse(metadata);

@@ -49,7 +49,6 @@ export default function CacheContentModal({
 
   const fetchCache = async (cacheId: number) => {
     setFetchingMeta(true);
-    console.log(data.cache);
     // Solana
     // if Solana get token data from incoming data or from db
     const contract = new ethers.Contract(
@@ -60,14 +59,11 @@ export default function CacheContentModal({
     const cache = await airCache.getCache(data.cache.id, contract);
     console.log(cache);
     const tokenId = cache.tokenId;
-    console.log(tokenId);
     if (!tokenId) {
       setFetchingMeta(false);
       console.log("cache is empty");
     } else {
-      console.log(tokenId, cache.tokenAddress);
       const nft = await airCache.getNFTMeta(tokenId, cache.tokenAddress);
-      console.log(nft);
       setFetchingMeta(false);
       setNFT({
         ...nft,
@@ -123,10 +119,10 @@ export default function CacheContentModal({
               lat: position.coords.latitude,
               lng: position.coords.longitude,
             };
-            console.log(haversineDistance(userLocation, data.cache.location));
-
+            console.log(data);
             const res = await claimCache(
               data.cache.id,
+              data.groupName,
               NFT.tokenAddress,
               data.cache.location,
               userLocation,
@@ -180,6 +176,7 @@ export default function CacheContentModal({
       tokenAddress == NFT.tokenAddress
     ) {
       console.log(event);
+      // could update cache db here
       setTxState(TxState.Complete);
     }
     //   console.log(cacheId);

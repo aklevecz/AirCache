@@ -42,13 +42,15 @@ export default async function handler(
     const nfts = [];
     let pageKey = "";
     while (nfts.length === 0) {
-      console.log(pageKey);
       const data = await queryNFTs(pageKey);
+      data.ownedNfts.map(console.log);
       const filteredOwned = data.ownedNfts.filter((n: any) => n.title);
       pageKey = data.pageKey;
       nfts.push(...filteredOwned);
+      if (!pageKey) break;
     }
     console.log("done");
+    console.log(nfts);
     res.status(200).json({ ...nfts });
   } catch (e) {
     console.log(e);

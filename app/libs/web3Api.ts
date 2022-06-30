@@ -85,8 +85,9 @@ const getNFTMeta = async (tokenId: number, tokenAddress: string) => {
     // This should just return the uri
     // If it has id replacement
     let url = uri;
+    // Need some interator for various ERC-1155 schemes
     if (uri.includes("{id}")) {
-      url = uri.replace("{id}", tokenId.toString());
+      url = uri.replace("{id}", tokenId.toString(16).padStart(64, "0"));
     }
     try {
       const response = await axios.get(url);

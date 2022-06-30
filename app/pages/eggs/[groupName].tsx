@@ -10,7 +10,7 @@ import CacheContentModal from "../../components/Modals/CacheContent";
 import useAirCache from "../../hooks/useAirCache";
 import useAuth from "../../hooks/useAuth";
 import useModal from "../../hooks/useModal";
-import { AIRCACHE_ADDRESS, FRONTEND_HOST } from "../../libs/constants";
+import { AIRCACHE_ADDRESS, cacheByGroupTableName } from "../../libs/constants";
 import db from "../../libs/db";
 import storage from "../../libs/storage";
 import { Latlng } from "../../libs/types";
@@ -19,61 +19,26 @@ import Button from "../../components/Button";
 import Locate from "../../components/Icons/Locate";
 import web3Api from "../../libs/web3Api";
 
-import nycEggData from "../../data.json";
 import nycEggMeta from "../../nycMeta.json";
+import { getCachesByGroup } from "../../libs/api";
+import { seoConfig } from "../../libs/config";
 
-// nyc delete list
-// 64
-// 71
-// 90
-// 102
-// 103
-// 97
-// 92
-// 80
-// 66
-// 60
-// 68
-// 82
-// 87
-// 99
 const nycDeleteList = [
   64, 71, 90, 102, 103, 97, 92, 80, 66, 60, 68, 82, 87, 99, 75, 58, 72, 79, 63,
   109,
 ];
 
-const host =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:3000"
-    : "https://air.yaytso.art";
-
-const cityCenters = {
-  palmBeach: { lat: 26.70605988106027, lng: -80.04643388959501 },
-  austin: { lat: 30.27317532798779, lng: -97.74452745161928 },
-  alphabet_city: { lat: 40.72563642453208, lng: -73.97979855792384 },
-};
-const seoConfig: { [key: string]: any } = {
-  ["coindesk-austin"]: {
-    title: "Coindesk Egg Hunt",
-    description: "Find eggs filled with NFT Longhorns scattered around Austin!",
-    image: `${host}/coindesk-austin-banner.png`,
-    map_center: cityCenters.austin,
-  },
-  ["nft-nyc"]: {
-    title: "NFT NYC Word Hunt",
-    description: "Find letters in Alphabet City and win Word NFTs!",
-    image: `${host}/ac-bg.png`,
-    map_center: cityCenters.alphabet_city,
-  },
-};
-
 type Props = { caches: any[]; groupName: string };
-export default function Group({ caches, groupName }: Props) {
+export default function Group({ caches: c, groupName }: Props) {
   const modal = useModal();
   const [map, setMap] = useState<google.maps.Map>();
   const airCache = useAirCache(null);
   const auth = useAuth();
   const router = useRouter();
+
+  // Note: maybe this needs a context
+  const [caches, setCaches] = useState(c);
+  const markersRef = useRef<any[]>([]);
 
   //word stuff - could be in its own hook
   const [word, setWord] = useState<string>("");
@@ -99,8 +64,36 @@ export default function Group({ caches, groupName }: Props) {
     }
   };
 
+  const refreshMarkers = () => {
+    getCachesByGroup(groupName).then((data) => {
+      let caches = data.caches;
+      if (groupName === "nft-nyc") caches = caches.filter(filterOutEmptyNYC);
+      setCaches(
+        caches.map((cache: any) => {
+          const data: any = cache;
+          if (cache.tokenId) {
+            // To do: too specific to NYC
+            const nft = nycEggMeta.find(
+              (nft) =>
+                nft.tokenId === cache.tokenId &&
+                cache.tokenAddress === nft.tokenAddress
+            );
+            data.nft = nft;
+          }
+          return data;
+        })
+      );
+    });
+  };
+
+  useEffect(() => {
+    if (!modal.open) refreshMarkers();
+    // To do: Naive and does not scale
+  }, [modal.open]);
+
   useEffect(() => {
     const hunt = router.query.groupName;
+    // To do: better reducer for different hunts
     if (hunt === "nft-nyc") {
       web3Api.getCurrentWord().then(setWord);
       if (auth.user && auth.user.publicAddress) {
@@ -191,6 +184,27 @@ export default function Group({ caches, groupName }: Props) {
     }
   }, [map, user]);
 
+  const getIcon = (tokenId: number, nft: any) => {
+    console.log(tokenId, nft);
+    let icon = {
+      url: tokenId ? eggIcon.src : blankEggIcon.src,
+      scaledSize: new google.maps.Size(40, 40),
+    };
+    if (head.icon && head.icon.image) {
+      icon = {
+        url: tokenId ? head.icon.image.filled.src : head.icon.image.empty.src,
+        scaledSize: new google.maps.Size(40, 40),
+      };
+    } else {
+    }
+
+    if (nft) {
+      icon.url = nft.image;
+    }
+    console.log(icon);
+    return icon;
+  };
+
   const createCacheMarker = (
     lat: number,
     lng: number,
@@ -200,15 +214,9 @@ export default function Group({ caches, groupName }: Props) {
     tokenAddress: string,
     nft: any
   ) => {
-    const icon = {
-      url: tokenId ? eggIcon.src : blankEggIcon.src,
-      scaledSize: new google.maps.Size(40, 40),
-    };
-
-    if (nft) {
-      icon.url = nft.image;
-    }
-
+    console.log(tokenId, nft);
+    const icon = getIcon(tokenId, nft);
+    console.log(icon);
     const cacheMarker = new google.maps.Marker({
       position: { lat, lng },
       map,
@@ -216,21 +224,42 @@ export default function Group({ caches, groupName }: Props) {
       // draggable: true,
     });
 
+    (cacheMarker as any).cacheId = id;
+
     // SOLANA
     // - if Solana then also send the token information here (or in the modal?)
     cacheMarker.addListener("click", () => {
       modal.toggleModal({
-        cache: { id, contractAddress, location: { lat, lng } },
+        cache: {
+          id,
+          contractAddress,
+          location: { lat, lng },
+          callback: refreshMarkers,
+        },
+        groupName,
         NFT: {},
       });
     });
+    return cacheMarker;
   };
   useEffect(() => {
+    // Lots of redundancy here
     if (caches && caches.length && map) {
-      console.log(head.map_center);
-      map.setCenter(head.map_center);
+      console.log(markersRef.current);
+      if (markersRef.current.length === 0) map.setCenter(head.map_center);
+      const markers: any[] = [];
       caches.forEach((cache) => {
-        createCacheMarker(
+        const markerExists = markersRef.current.find(
+          (marker) => marker.cacheId === cache.cacheId
+        );
+        if (markerExists) {
+          const icon = getIcon(cache.tokenId, cache.nft);
+          console.log("chaning icon");
+          markerExists.setIcon(icon);
+          markers.push(markerExists);
+          return;
+        }
+        const marker = createCacheMarker(
           parseFloat(cache.lat),
           parseFloat(cache.lng),
           cache.cacheId,
@@ -239,9 +268,13 @@ export default function Group({ caches, groupName }: Props) {
           cache.tokenAddress,
           cache.nft
         );
+        markers.push(marker);
       });
+      markersRef.current = markers;
+      console.log(markersRef.current);
     }
   }, [caches, map]);
+
   return (
     <>
       <Head>
@@ -294,7 +327,7 @@ export default function Group({ caches, groupName }: Props) {
 
 export async function getStaticPaths() {
   const allCachesByGroup = await db
-    .scan({ TableName: "cache-by-group" })
+    .scan({ TableName: cacheByGroupTableName })
     .promise();
   console.log(allCachesByGroup);
   return {
@@ -326,9 +359,9 @@ export const getStaticProps = async ({ params }: Params) => {
     FilterExpression: "groupName = :g",
   };
   const dbRes = await db.scan(dbparams).promise();
-  let caches = dbRes.Items;
+  let caches = dbRes.Items!;
 
-  caches = caches!.filter(filterOutEmptyNYC);
+  if (groupName === "nft-nyc") caches = caches!.filter(filterOutEmptyNYC);
 
   // Do this before the buildstep to create a config then have all of the cache calls read from it
   // Note: What should it do if there are no caches?
@@ -355,15 +388,14 @@ export const getStaticProps = async ({ params }: Params) => {
   // }
   // fs.writeFileSync("nycMeta.json", JSON.stringify(metas));
 
-  const mergedData = nycEggData.filter(filterOutEmptyNYC).map((cache) => {
+  const mergedData = caches.map((cache) => {
     const data: any = cache;
-    if (cache.tokenId) {
+    if (cache.tokenId && groupName === "nft-nyc") {
       const nft = nycEggMeta.find(
         (nft) =>
           nft.tokenId === cache.tokenId &&
           cache.tokenAddress === nft.tokenAddress
       );
-      console.log(nft, "hiaa");
       data.nft = nft;
     }
     return data;

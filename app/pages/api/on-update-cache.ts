@@ -19,23 +19,24 @@ export default async function handler(
       req.headers.authorization as string,
       JWT_SECRET
     );
-    const { groupName, cacheId, lat, lng, address, note } = req.body;
+    const { cacheId, tokenId, tokenAddress, groupName } = req.body;
+    // const cacheId = 23;
+    // const tokenId = 0;
+    // const tokenAddress = ZERO_ADDRESS;
     const TableName = cacheByGroupTableName;
     const params = {
       TableName,
-      Item: {
+      Key: {
         cacheId: cacheId.toString(),
         groupName,
-        lat: lat.toString(),
-        lng: lng.toString(),
-        address,
-        note,
-        tokenId: 0,
-        tokenAddress: ZERO_ADDRESS,
+      },
+      UpdateExpression: "set tokenAddress = :tokenAddress, tokenId = :tokenId",
+      ExpressionAttributeValues: {
+        ":tokenAddress": tokenAddress,
+        ":tokenId": tokenId,
       },
     };
-    console.log(params);
-    const dbRes = await db.put(params).promise();
+    const dbRes = await db.update(params).promise();
 
     res.status(200).json({ dbRes });
   } catch (e) {

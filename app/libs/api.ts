@@ -10,6 +10,7 @@ export const endpoints = {
   user: "/api/user",
   claim: "/api/claim",
   onCreateCache: "/api/on-create-cache",
+  onUpdateCache: "/api/on-update-cache",
   getCachesByGroup: "/api/get-caches-by-group",
   checkClaim: "/api/check-claim",
   claimSacret: "/api/claim-sacret",
@@ -41,6 +42,7 @@ export const getUser = async () => {
 
 export const claimCache = async (
   cacheId: number,
+  groupName: string,
   tokenAddress: string,
   cacheLocation: Latlng,
   userLocation: Latlng,
@@ -50,6 +52,7 @@ export const claimCache = async (
     const response = await api
       .post(endpoints.claim, {
         cacheId,
+        groupName,
         tokenAddress,
         cacheLocation,
         userLocation,
@@ -85,7 +88,20 @@ export const onCreateCache = (
     address,
     note,
   });
-  console.log(res);
+};
+
+export const onUpdateCache = (
+  cacheId: string,
+  tokenId: number,
+  tokenAddress: string,
+  groupName: string
+) => {
+  const res = api.post(endpoints.onUpdateCache, {
+    cacheId,
+    tokenId,
+    tokenAddress,
+    groupName,
+  });
 };
 
 export const getCachesByGroup = async (groupName: string) => {
