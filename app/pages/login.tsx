@@ -3,6 +3,7 @@ import LoginComponent from "../components/Auth/LoginRaptor";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Raptor from "../components/Icons/Raptor";
+import Chest from "../assets/icons/chest-filled.png";
 
 export default function Login() {
   const auth = useAuth();
@@ -10,7 +11,7 @@ export default function Login() {
   const [render, setRender] = useState(false);
 
   const goHome = () => {
-    router.push("/eggs/nft-nyc");
+    router.push("/eggs/myosin-yacht");
     return;
     if (router.query.cache) {
       router.push(`/egg/${router.query.cache}`);
@@ -27,12 +28,12 @@ export default function Login() {
       auth.logout();
     }
   }, [auth.user]);
-  console.log(router.query.claim);
   return (
     <div>
       <div className="m-auto mt-10" style={{ width: 300 }}>
         {/* <img src={airYaytsoLogo.src} /> */}
-        <Raptor />
+        {/* <Raptor /> */}
+        <img src={Chest.src} />
       </div>
       <LoginComponent
         login={auth.login}
