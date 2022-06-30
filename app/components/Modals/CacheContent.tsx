@@ -321,7 +321,7 @@ export default function CacheContentModal({
                   router.push(`/login?cache=${data.cache.id}`);
                 }}
               >
-                Login
+                Claim
               </Button>
             )}
           </div>
