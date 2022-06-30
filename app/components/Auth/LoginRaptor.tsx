@@ -21,7 +21,9 @@ export default function LoginRaptor({
   return (
     <div className="flex flex-col justify-center items-center">
       {/* <img src={eggImg.src} /> */}
-      <div className="text-4xl font-bold w-3/4 text-center mb-10">Sign in</div>
+      <div className="text-4xl font-bold w-3/4 text-center mb-10">
+        Sign up with your email to claim
+      </div>
 
       <input
         autoComplete="email"
@@ -56,7 +58,7 @@ export default function LoginRaptor({
             <Spinner />
           </div>
         ) : (
-          "Begin"
+          "Claim"
         )}
       </Button>
 
