@@ -5,7 +5,7 @@ import EgglineIcon from "./Icons/Eggline";
 import MapIcon from "./Icons/Map";
 
 const links = [
-  { name: "Map", path: "/", icon: <MapIcon /> },
+  { name: "Map", path: "/eggs/myosin-yacht", icon: <MapIcon /> },
   { name: "Wallet", path: "/wallet", icon: <EgglineIcon /> },
 ];
 
