@@ -81,7 +81,7 @@ export default async function handler(
 
     // return console.log(tokenAddress, "token address", ALPHABET_CITY);
     const distance = haversineDistance(userLocation, cacheLocation);
-    const isTooFar = distance > 100;
+    const isTooFar = distance > 300;
     const isAdmin =
       user.email === "arielklevecz@gmail.com" ||
       user.email === "ariel@yaytso.art" ||
