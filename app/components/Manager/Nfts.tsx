@@ -1,14 +1,7 @@
 import { motion } from "framer-motion";
 import { FormEvent, useState } from "react";
-import {
-  ALPHABET_CITY,
-  colors,
-  GEMS_ADDRESS,
-  PIXELTROSS_ADDRESS_MUMBAI,
-  POLYAYTSO_ADDRESS_MATIC,
-} from "../../libs/constants";
+import { COCAINE_MATIC, colors, GEMS_ADDRESS } from "../../libs/constants";
 import { Web3Wallet } from "../../libs/types";
-import { ipfstoIO, isIpfs } from "../../libs/utils";
 import Big from "../Button/Big";
 import Img from "../Img";
 import BlackWrappedSpinner from "../Loading/BlackWrappedSpinner";
@@ -35,7 +28,7 @@ export default function Nfts({
   approve,
   message,
 }: Props) {
-  const [tokenAddress, setTokenAddress] = useState(GEMS_ADDRESS);
+  const [tokenAddress, setTokenAddress] = useState(COCAINE_MATIC);
   const [toggleTokenAddress, setToggleTokenAddress] = useState(false);
 
   const tryAgain = () => {

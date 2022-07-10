@@ -105,6 +105,7 @@ export const onUpdateCache = (
 };
 
 export const getCachesByGroup = async (groupName: string) => {
+  console.log(groupName);
   const res = await api.get(endpoints.getCachesByGroup, {
     params: { groupName },
   });

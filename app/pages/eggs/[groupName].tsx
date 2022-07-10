@@ -65,8 +65,10 @@ export default function Group({ caches: c, groupName }: Props) {
   };
 
   const refreshMarkers = () => {
+    console.log("refresh", groupName);
     getCachesByGroup(groupName).then((data) => {
       let caches = data.caches;
+      console.log(caches);
       if (groupName === "nft-nyc") caches = caches.filter(filterOutEmptyNYC);
       setCaches(
         caches.map((cache: any) => {
@@ -87,9 +89,13 @@ export default function Group({ caches: c, groupName }: Props) {
   };
 
   useEffect(() => {
-    if (!modal.open) refreshMarkers();
+    storage.setItem(storage.keys.current_group, groupName);
+  }, []);
+
+  useEffect(() => {
+    if (!modal.open && groupName) refreshMarkers();
     // To do: Naive and does not scale
-  }, [modal.open]);
+  }, [modal.open, groupName]);
 
   useEffect(() => {
     const hunt = router.query.groupName;

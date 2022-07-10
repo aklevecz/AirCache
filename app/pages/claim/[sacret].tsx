@@ -156,7 +156,7 @@ export default function Claim() {
             <div>
               <AxeAnimation />
               <div className="font-bold text-center text-2xl mt-20 w-3/4 mx-auto">
-                Your item is on its way to you!
+                Your new NFT is on its way to you!
               </div>
             </div>
           ) : (
@@ -165,7 +165,7 @@ export default function Claim() {
           {txState && txState === TxState.Complete ? (
             <div>
               <div className="font-bold text-center text-4xl mt-0 mb-10 w-5/6 mx-auto">
-                The item is now yours!
+                The NFT is now yours!
               </div>
               <div className="font-bold text-center text-2xl mt-2 w-3/4 mx-auto">
                 View it in your wallet

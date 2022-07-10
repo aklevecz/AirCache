@@ -35,7 +35,6 @@ export default function Create() {
     if (success) {
       // REFACTOR
       const cacheId = (await airCache.contract!.cacheId()).toNumber();
-      console.log(groupName, cacheId);
 
       onCreateCache(
         groupName,

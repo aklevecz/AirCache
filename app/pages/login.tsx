@@ -11,7 +11,7 @@ export default function Login() {
   const [render, setRender] = useState(false);
 
   const goHome = () => {
-    router.push("/eggs/myosin-yacht");
+    router.push("/wallet");
     return;
     if (router.query.cache) {
       router.push(`/egg/${router.query.cache}`);

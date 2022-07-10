@@ -1086,6 +1086,45 @@
       "artifacts": [
         "EIP712"
       ]
+    },
+    "/Users/arielklevecz/air-cache/contracts/Cocaine.sol": {
+      "lastModificationDate": 1657432989298,
+      "contentHash": "9c4bff74039ae1845ded9dc5fc022169",
+      "sourceName": "contracts/Cocaine.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/Strings.sol",
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Cocaine"
+      ]
     }
   }
 }

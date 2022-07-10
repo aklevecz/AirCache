@@ -16,48 +16,50 @@ export default function useAuth() {
     //   return console.error("No Window");
     // }
     // logout();
+    return new Promise(async (resolve) => {
+      setFetching(true);
 
-    setFetching(true);
+      let redirectURI = "https://air.yaytso.art/callback" + destination;
+      if (typeof window !== "undefined") {
+        redirectURI = `${window.location.protocol}//${window.location.host}/callback${destination}`;
+      }
+      // const redirectURI = "https://air.yaytso.art/callback";
+      // const redirectDestination =
+      //   destination === "/"
+      //     ? `?${destination.split("/")[0]}=${destination.split("/")[1]}`
+      //     : "";
+      const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!, {
+        // extensions: [
+        //   new SolanaExtension({
+        //     rpcUrl: "https://api.devnet.solana.com",
+        //   }),
+        // ],
+      });
+      const config: any = { email };
 
-    let redirectURI = "https://air.yaytso.art/callback" + destination;
-    if (typeof window !== "undefined") {
-      redirectURI = `${window.location.protocol}//${window.location.host}/callback${destination}`;
-    }
-    // const redirectURI = "https://air.yaytso.art/callback";
-    // const redirectDestination =
-    //   destination === "/"
-    //     ? `?${destination.split("/")[0]}=${destination.split("/")[1]}`
-    //     : "";
-    const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!, {
-      // extensions: [
-      //   new SolanaExtension({
-      //     rpcUrl: "https://api.devnet.solana.com",
-      //   }),
-      // ],
+      if (!window.location.href.includes("192")) {
+        config.redirectURI = redirectURI;
+      }
+
+      const did = await magic.auth.loginWithMagicLink(config);
+      const authRequest = await api.post(endpoints.login, null, {
+        headers: { Authorization: `Bearer ${did}` },
+      });
+      if (authRequest.status === 200) {
+        console.log(await magic.user.getMetadata());
+        const { token } = authRequest.data;
+        storage.setItem(storage.keys.token, token);
+        mutate();
+        setTimeout(() => {
+          // router.push("/eggs/nft-nyc");
+          // router.push(
+          //   destination === "/" ? destination : `${destination.replace("-", "/")}`
+          // );
+          setFetching(false);
+          resolve(true);
+        }, 100);
+      }
     });
-    const config: any = { email };
-
-    if (!window.location.href.includes("192")) {
-      config.redirectURI = redirectURI;
-    }
-
-    const did = await magic.auth.loginWithMagicLink(config);
-    const authRequest = await api.post(endpoints.login, null, {
-      headers: { Authorization: `Bearer ${did}` },
-    });
-    if (authRequest.status === 200) {
-      console.log(await magic.user.getMetadata());
-      const { token } = authRequest.data;
-      storage.setItem(storage.keys.token, token);
-      mutate();
-      setTimeout(() => {
-        // router.push("/eggs/nft-nyc");
-        // router.push(
-        //   destination === "/" ? destination : `${destination.replace("-", "/")}`
-        // );
-        setFetching(false);
-      }, 100);
-    }
   };
 
   const logout = async () => {

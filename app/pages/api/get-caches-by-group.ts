@@ -11,6 +11,7 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   const { groupName } = req.query;
+  console.log(groupName);
   const params = {
     TableName: cacheByGroupTableName,
     ExpressionAttributeValues: {
@@ -19,6 +20,6 @@ export default async function handler(
     FilterExpression: "groupName = :g",
   };
   const dbRes = await db.scan(params).promise();
-
+  console.log(dbRes.Items);
   res.status(200).json({ caches: dbRes.Items });
 }

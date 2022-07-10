@@ -21,9 +21,9 @@ export default function Callback() {
       const { token } = authRequest.data;
       storage.setItem(storage.keys.token, token);
       mutate(endpoints.user);
-      let destination = id.replace("-", "/");
-      // router.push("/" + destination);
-      router.push("/eggs/myosin-yacht");
+      // let destination = id.replace("-", "/");
+      router.push("/eggs/" + id);
+      // router.push("/wallet");
     }
   };
 

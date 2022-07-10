@@ -6,6 +6,8 @@ module.exports = {
   theme: {
     fontFamily: {
       fatfrank: ["fatfrank", "sans-serif"],
+      blackbeard: ["black-beard", "sans-serif"],
+      temir: ["temir-web", "serif"],
     },
 
     extend: {

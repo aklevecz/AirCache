@@ -6,6 +6,10 @@ import NFT from "../components/Wallet/NFT";
 import useAuth from "../hooks/useAuth";
 import useWallet from "../hooks/useWallet";
 
+// Solana
+// Another version for Solana?
+// or state switching that fetches other ones?
+// or they are combined?
 export default function Wallet() {
   const router = useRouter();
   const auth = useAuth();
@@ -31,7 +35,7 @@ export default function Wallet() {
   return (
     <div className="pb-20">
       <div className="text-3xl text-center m-4 font-bold font-fatfrank tracking-wider bg-white text-black">
-        Your Items
+        Your new NFTs
       </div>
       {auth.user && (
         <>
@@ -59,7 +63,7 @@ export default function Wallet() {
       {!auth.user && (
         <>
           <div className="text-3xl font-bold w-3/4 my-10 m-auto text-center">
-            You must sign in to view your items
+            You must sign in to view Your new NFTs
           </div>
           <Button
             className="w-32 m-auto font-bold text-2xl block mt-8"

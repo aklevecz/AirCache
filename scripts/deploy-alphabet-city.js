@@ -37,4 +37,4 @@ main().catch((error) => {
   process.exitCode = 1;
 });
 
-// npx hardhat verify 0x15F7bC9A3a8C63A55B95bF092d80D7f16b5dcAB5 "https://cdn.yaytso.art/alphabet-city/metadata/" --network matic_mum
+// npx hardhat verify 0x796A5BB70D8b0135218d1Db1004bBcb731BfFA9B "https://cdn.yaytso.art/alphabet-city/metadata/" --network matic

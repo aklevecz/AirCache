@@ -41,7 +41,7 @@ export default async function handler(
   if (!req.headers.authorization) {
     return res.status(405).json({
       error: "NO_AUTH",
-      message: "Sign up with your email to claim",
+      message: "Create/Import your wallet",
     });
   }
   try {
@@ -107,7 +107,6 @@ export default async function handler(
     };
 
     const queryRes = await db.query(queryParams).promise();
-    console.log(queryRes.Items);
     if (!queryRes.Items) {
       return res.json({
         tx: null,
@@ -122,7 +121,6 @@ export default async function handler(
         error: "CLAIMING",
       });
     }
-
     // To do: this should also trigger a task to check if the NFT was truly claimed
     // In the future it could even queue people up who were next in line.
     console.log(groupName);
@@ -204,7 +202,7 @@ export default async function handler(
   } catch (e) {
     return res.status(405).json({
       error: "NO_AUTH",
-      message: "Sign up with your email to claim",
+      message: "Create/Import your wallet",
     });
   }
 }

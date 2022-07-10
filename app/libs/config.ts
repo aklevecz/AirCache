@@ -6,12 +6,16 @@ import hornEgg from "../assets/icons/horn-egg.png";
 // blackbeard
 import emptyChest from "../assets/icons/chest-empty.png";
 import filledChest from "../assets/icons/chest-filled.png";
+// narcos
+import emptyCocaine from "../assets/icons/cocaine-empty.png";
+import filledCocaine from "../assets/icons/cocaine.png";
 
 const cityCenters = {
   palmBeach: { lat: 26.70605988106027, lng: -80.04643388959501 },
   austin: { lat: 30.27317532798779, lng: -97.74452745161928 },
   alphabet_city: { lat: 40.72563642453208, lng: -73.97979855792384 },
   hudson_river: { lat: 40.70851962382408, lng: -74.01021772654222 },
+  prospect_park: { lat: 40.66103384799173, lng: -73.9698999374802 },
 };
 
 const host =
@@ -41,5 +45,15 @@ export const seoConfig: { [key: string]: any } = {
     image: `${host}/blackbeard-ogimage.png`,
     map_center: cityCenters.hudson_river,
     icon: { useNFT: false, image: { empty: emptyChest, filled: filledChest } },
+  },
+  ["narcos-park"]: {
+    title: "Collecting cocaine in the park",
+    description: "Just another day in beautiful Prospect Park!",
+    image: `${host}/cocaine.png`,
+    map_center: cityCenters.prospect_park,
+    icon: {
+      useNFT: false,
+      image: { empty: emptyCocaine, filled: filledCocaine },
+    },
   },
 };

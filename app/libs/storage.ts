@@ -4,6 +4,7 @@ const storage = {
     token: "token",
     user_location: "user_location",
     active_cache_contract_address: "active_cache_contract_address",
+    current_group: "current_group",
   },
   setItem(key: string, value: string) {
     localStorage.setItem(key, value);

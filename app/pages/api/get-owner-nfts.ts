@@ -29,7 +29,7 @@ export default async function handler(
     //   "https://polygon-mumbai.g.alchemy.com/v2/" +
     //   process.env.ALCHEMY_KEY_MUMBAI;
     const url = maticurl;
-
+    console.log(maticurl);
     const queryNFTs = async (pageKey?: string) => {
       const pageKeyQuery = pageKey ? `&pageKey=${pageKey}` : "";
       const config = {

@@ -11,6 +11,9 @@ import MapIcon from "../Icons/Map";
 import { useRouter } from "next/router";
 import AirYaytsoInterface from "../../hooks/AirCache.json";
 import { provider } from "../../libs/web3Api";
+import storage from "../../libs/storage";
+import BlackWrappedSpinner from "../Loading/BlackWrappedSpinner";
+import { cache } from "swr/dist/utils/config";
 
 enum TxState {
   Idle,
@@ -47,6 +50,12 @@ export default function CacheContentModal({
   const [fetchingLocation, setFetchingLocation] = useState(false);
   const [fetchingMeta, setFetchingMeta] = useState(false);
 
+  const [email, setEmail] = useState("");
+
+  const onChangeEmail = (e: React.FormEvent<HTMLInputElement>) => {
+    setEmail(e.currentTarget.value);
+  };
+
   const fetchCache = async (cacheId: number) => {
     setFetchingMeta(true);
     // Solana
@@ -57,7 +66,6 @@ export default function CacheContentModal({
       provider
     );
     const cache = await airCache.getCache(data.cache.id, contract);
-    console.log(cache);
     const tokenId = cache.tokenId;
     if (!tokenId) {
       setFetchingMeta(false);
@@ -82,6 +90,29 @@ export default function CacheContentModal({
       fetchCache(data.cache.id);
     }
   }, [open, data]);
+
+  const detectWinner = (
+    cacheId: any,
+    winner: any,
+    tokenAddress: any,
+    tokenId: any,
+    event: any
+  ) => {
+    if (
+      winner === auth.user.publicAddress &&
+      tokenAddress == NFT.tokenAddress &&
+      tokenId == NFT.tokenId
+    ) {
+      console.log(event);
+      // could update cache db here
+      setTxState(TxState.Complete);
+    }
+    //   console.log(cacheId);
+    //   console.log(winner);
+    //   console.log(tokenAddress);
+    //   console.log(tokenId);
+    //   console.log(event);
+  };
 
   useEffect(() => {
     // Solana
@@ -164,32 +195,10 @@ export default function CacheContentModal({
     }
   };
 
-  const detectWinner = (
-    cacheId: any,
-    winner: any,
-    tokenAddress: any,
-    tokenId: any,
-    event: any
-  ) => {
-    if (
-      winner === auth.user.publicAddress &&
-      tokenAddress == NFT.tokenAddress
-    ) {
-      console.log(event);
-      // could update cache db here
-      setTxState(TxState.Complete);
-    }
-    //   console.log(cacheId);
-    //   console.log(winner);
-    //   console.log(tokenAddress);
-    //   console.log(tokenId);
-    //   console.log(event);
-  };
-
   // gross because im smashing the data call into toggleModal-- I should probably just clear the data when it is toggled off
   const loading =
     typeof data !== "object" || data === null || data.clientX || fetchingMeta;
-
+  console.log(error);
   if (loading) {
     return (
       <Container open={open} toggleModal={toggleModal}>
@@ -209,7 +218,7 @@ export default function CacheContentModal({
     return (
       <Container open={open} toggleModal={toggleModal}>
         <div className="text-3xl font-bold text-center pb-5">
-          Egg is empty!{" "}
+          The NFT is gone... Someone got here first!{" "}
           {process.env.NODE_ENV === "development" ? data.cache.id : ""}
         </div>
         <div className="w-3/4 m-auto p-10">
@@ -259,7 +268,7 @@ export default function CacheContentModal({
       {txState === TxState.Mining ? (
         <>
           <div className="text-3xl font-bold text-center pb-5">
-            The item is being sent to you...
+            The NFT is being sent to you...
           </div>
           <AxeAnimation />
           {/* <div className="text-center">
@@ -278,7 +287,7 @@ export default function CacheContentModal({
       {txState === TxState.Complete ? (
         <>
           <div className="text-4xl font-bold text-center pb-5">
-            Your new item!
+            Your new NFT!
           </div>
 
           <div className="text-3xl font-bold text-center pb-5">{NFT.name}</div>
@@ -303,7 +312,7 @@ export default function CacheContentModal({
           <div className="text-3xl font-bold text-center pb-5">
             {error.message}
           </div>
-          <div className="max-w-xs px-14 m-auto">
+          <div className="max-w-xs px-2 m-auto">
             {error.error === "TOO_FAR" && <MapIcon />}
             {error.error === "TOO_FAR" && (
               <Button
@@ -314,15 +323,44 @@ export default function CacheContentModal({
               </Button>
             )}
             {error.error === "NO_AUTH" && (
-              <Button
-                className="m-auto w-28 block mt-0 py-3 font-bold text-2xl"
-                onClick={() => {
-                  // router.push("/login");
-                  router.push(`/login?cache=${data.cache.id}`);
-                }}
-              >
-                Claim
-              </Button>
+              <div>
+                <div className="text-1xl pb-5">
+                  use your email to create or import your blackbeard wallet
+                </div>
+                <input
+                  autoComplete="email"
+                  name="email"
+                  type="email"
+                  placeholder="Email"
+                  className="h-10 p-2 w-full mb-4 text-center black-beard"
+                  style={{ fontSize: 24 }}
+                  onChange={onChangeEmail}
+                />
+                <Button
+                  className="m-auto w-28 block mt-0 py-3 font-bold text-2xl"
+                  disabled={auth.fetching}
+                  onClick={() => {
+                    // router.push("/login");
+
+                    // router.push(`/login?cache=${data.cache.id}`);
+                    console.log(router, email);
+                    let destination = "/";
+                    if (typeof localStorage !== "undefined") {
+                      const currentGroup = storage.getItem(
+                        storage.keys.current_group
+                      );
+                      if (currentGroup) {
+                        destination = "/" + currentGroup;
+                      }
+                    }
+                    auth.login(email, destination).then(() => {
+                      toggleModal();
+                    });
+                  }}
+                >
+                  {auth.fetching ? <BlackWrappedSpinner /> : "Claim"}
+                </Button>
+              </div>
             )}
           </div>
         </>

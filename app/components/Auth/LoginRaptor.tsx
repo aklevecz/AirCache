@@ -22,7 +22,7 @@ export default function LoginRaptor({
     <div className="flex flex-col justify-center items-center">
       {/* <img src={eggImg.src} /> */}
       <div className="text-4xl font-bold w-3/4 text-center mb-10">
-        Sign up with your email to claim
+        Create/Import your wallet
       </div>
 
       <input

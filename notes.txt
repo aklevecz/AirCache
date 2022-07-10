@@ -1,0 +1,12 @@
+-- organize caches by series/location
+-- generalized this is spatial hash grids
+-- declarative this is keyed by a db table
+    --added as part of the create cache flow
+    --adds cache to a group when it is created
+    --maybe it does this optimisitically? and then is checked?
+
+-- get caches by group
+
+--for palm beach
+    --optmistic cache grouping by memin
+    --eggs/[group_id].tsx

@@ -29,7 +29,7 @@ export default async function handler(
   if (!req.headers.authorization) {
     return res.status(405).json({
       error: "NO_AUTH",
-      message: "Sign up with your email to claim",
+      message: "Create/Import your wallet",
     });
   }
   try {
@@ -126,7 +126,7 @@ export default async function handler(
   } catch (e) {
     return res.status(405).json({
       error: "NO_AUTH",
-      message: "Sign up with your email to claim",
+      message: "Create/Import your wallet",
     });
   }
 }
