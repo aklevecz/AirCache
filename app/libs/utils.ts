@@ -169,6 +169,6 @@ export const alphabetMap: { [key: number]: string } = {
   26: "Z",
 };
 
-const wordHunts = ["nft-nyc", "la"];
+const wordHunts = ["nft-nyc"];
 
 export const isWordHunt = (hunt: string) => wordHunts.includes(hunt);
