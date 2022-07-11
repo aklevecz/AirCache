@@ -35,7 +35,7 @@ export default function Wallet() {
   return (
     <div className="pb-20">
       <div className="text-3xl text-center m-4 font-bold font-fatfrank tracking-wider bg-white text-black">
-        Your new NFTs
+        Your NFTs
       </div>
       {auth.user && (
         <>
@@ -63,13 +63,13 @@ export default function Wallet() {
       {!auth.user && (
         <>
           <div className="text-3xl font-bold w-3/4 my-10 m-auto text-center">
-            You must sign in to view Your new NFTs
+            You must import/create your wallet to view your NFTs
           </div>
           <Button
-            className="w-32 m-auto font-bold text-2xl block mt-8"
+            className="w-60 m-auto font-bold text-2xl block mt-8"
             onClick={() => router.push("/login")}
           >
-            Login
+            Create Wallet
           </Button>
         </>
       )}

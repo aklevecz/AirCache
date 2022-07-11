@@ -5,6 +5,7 @@ const storage = {
     user_location: "user_location",
     active_cache_contract_address: "active_cache_contract_address",
     current_group: "current_group",
+    has_located: "has_located",
   },
   setItem(key: string, value: string) {
     localStorage.setItem(key, value);

@@ -69,7 +69,6 @@ export default function CacheContentModal({
     const tokenId = cache.tokenId;
     if (!tokenId) {
       setFetchingMeta(false);
-      console.log("cache is empty");
     } else {
       const nft = await airCache.getNFTMeta(tokenId, cache.tokenAddress);
       setFetchingMeta(false);
@@ -150,7 +149,6 @@ export default function CacheContentModal({
               lat: position.coords.latitude,
               lng: position.coords.longitude,
             };
-            console.log(data);
             const res = await claimCache(
               data.cache.id,
               data.groupName,
@@ -198,7 +196,6 @@ export default function CacheContentModal({
   // gross because im smashing the data call into toggleModal-- I should probably just clear the data when it is toggled off
   const loading =
     typeof data !== "object" || data === null || data.clientX || fetchingMeta;
-  console.log(error);
   if (loading) {
     return (
       <Container open={open} toggleModal={toggleModal}>
@@ -343,7 +340,6 @@ export default function CacheContentModal({
                     // router.push("/login");
 
                     // router.push(`/login?cache=${data.cache.id}`);
-                    console.log(router, email);
                     let destination = "/";
                     if (typeof localStorage !== "undefined") {
                       const currentGroup = storage.getItem(

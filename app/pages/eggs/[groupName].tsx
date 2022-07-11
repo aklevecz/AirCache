@@ -22,12 +22,17 @@ import web3Api from "../../libs/web3Api";
 import nycEggMeta from "../../nycMeta.json";
 import { getCachesByGroup } from "../../libs/api";
 import { seoConfig } from "../../libs/config";
+import BlackWrappedSpinner from "../../components/Loading/BlackWrappedSpinner";
 
 const nycDeleteList = [
   64, 71, 90, 102, 103, 97, 92, 80, 66, 60, 68, 82, 87, 99, 75, 58, 72, 79, 63,
   109,
 ];
 
+// Notes:
+// Most of the things here need to wait for the map to initialize.
+// Should probably have a better loading state for understanding that
+// Or the Map should be the container and only load once it is loaded
 type Props = { caches: any[]; groupName: string };
 export default function Group({ caches: c, groupName }: Props) {
   const modal = useModal();
@@ -43,6 +48,9 @@ export default function Group({ caches: c, groupName }: Props) {
   //word stuff - could be in its own hook
   const [word, setWord] = useState<string>("");
   const [letters, setLetters] = useState<string>("");
+
+  const [fetchingLocation, setFetchingLocation] = useState(false);
+  const [locationAllowed, setLocationAllowed] = useState(false);
 
   const { user } = auth;
 
@@ -65,10 +73,8 @@ export default function Group({ caches: c, groupName }: Props) {
   };
 
   const refreshMarkers = () => {
-    console.log("refresh", groupName);
     getCachesByGroup(groupName).then((data) => {
       let caches = data.caches;
-      console.log(caches);
       if (groupName === "nft-nyc") caches = caches.filter(filterOutEmptyNYC);
       setCaches(
         caches.map((cache: any) => {
@@ -89,8 +95,17 @@ export default function Group({ caches: c, groupName }: Props) {
   };
 
   useEffect(() => {
-    storage.setItem(storage.keys.current_group, groupName);
-  }, []);
+    if (map) {
+      storage.setItem(storage.keys.current_group, groupName);
+
+      const locationAllowed = storage.getItem(storage.keys.has_located);
+
+      if (locationAllowed && JSON.parse(locationAllowed)) {
+        initiateUserLocation();
+        setLocationAllowed(true);
+      }
+    }
+  }, [map]);
 
   useEffect(() => {
     if (!modal.open && groupName) refreshMarkers();
@@ -135,63 +150,120 @@ export default function Group({ caches: c, groupName }: Props) {
     });
   };
 
-  const updateUserMarker = async () => {
-    if (userRef.current) {
-      const position = await getUserLocation();
-      if (position && userMarkerRef.current) {
-        userMarkerRef.current.setPosition(position as Latlng);
-        // map!.setCenter(position as Latlng);
-      }
-    }
+  // USER LOCATION STUFF --- MAYBE MOVE INTO ITS OWN HOOK??
+
+  // const updateUserMarker = async () => {
+  //   if (userRef.current) {
+  //     const position = await getUserLocation();
+  //     if (position && userMarkerRef.current) {
+  //       userMarkerRef.current.setPosition(position as Latlng);
+  //       // map!.setCenter(position as Latlng);
+  //     }
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   let interval: any;
+  //   if (user) {
+  //     interval = setInterval(updateUserMarker, 3000);
+  //   }
+
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, [user]);
+
+  const initiateUserLocation = () => {
+    setFetchingLocation(true);
+    return new Promise((resolve) => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          // Maybe overkill
+          if (!userMarkerRef.current) {
+            const pos = position.coords;
+            const icon = {
+              url: smiler.src,
+              scaledSize: new google.maps.Size(30, 30),
+            };
+            const latLng = { lat: pos.latitude, lng: pos.longitude };
+            const userMarker = new google.maps.Marker({
+              position: latLng,
+              map,
+              icon,
+              // draggable: true,
+              clickable: false,
+            });
+            getMarker(`img[src='${smiler.src}']`).then((marker: any) => {
+              if (marker) {
+                marker.classList.add("pulse");
+                marker.classList.add("user-marker");
+              }
+            });
+            userMarkerRef.current = userMarker;
+            userRef.current = latLng;
+            // navigatorRef.current = position;
+            storage.setItem(storage.keys.user_location, JSON.stringify(latLng));
+            storage.setItem(storage.keys.has_located, JSON.stringify(true));
+            resolve(true);
+            setLocationAllowed(true);
+            setFetchingLocation(false);
+            // map?.setCenter(latLng);
+          }
+        },
+        function (error) {
+          if (error.message === "User denied Geolocation") {
+            setFetchingLocation(false);
+
+            return alert(
+              "You must have denied access to your location at some point. This can only be remedied in your browser settings."
+            );
+          }
+
+          return alert(
+            "There was an error fetching your location. I'm not sure what it was, but please try again and/or check your browser settings"
+          );
+        }
+      );
+    });
   };
 
   useEffect(() => {
-    let interval: any;
-    if (user) {
-      interval = setInterval(updateUserMarker, 3000);
-    }
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [user]);
-
-  useEffect(() => {
     if (map && navigator.geolocation && typeof window !== "undefined" && user) {
-      try {
-        navigator.geolocation.getCurrentPosition((position) => {
-          const pos = position.coords;
-          const icon = {
-            url: smiler.src,
-            scaledSize: new google.maps.Size(30, 30),
-          };
-          const latLng = { lat: pos.latitude, lng: pos.longitude };
-          const userMarker = new google.maps.Marker({
-            position: latLng,
-            map,
-            icon,
-            // draggable: true,
-            clickable: false,
-          });
-          getMarker(`img[src='${smiler.src}']`).then((marker: any) => {
-            if (marker) {
-              marker.classList.add("pulse");
-              marker.classList.add("user-marker");
-            }
-          });
-          userMarkerRef.current = userMarker;
-          userRef.current = latLng;
-          // navigatorRef.current = position;
-          storage.setItem(storage.keys.user_location, JSON.stringify(latLng));
-        });
-      } catch (e) {
-        console.error("Geolocation error");
-      }
+      initiateUserLocation();
     }
   }, [map, user]);
 
+  useEffect(() => {
+    let id = 0;
+    if (locationAllowed) {
+      id = navigator.geolocation.watchPosition(
+        function (position) {
+          if (userMarkerRef.current && position) {
+            const latLng = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+            userMarkerRef.current.setPosition(latLng as Latlng);
+
+            userPositionRef.current = latLng;
+            console.log("i'm tracking you!");
+          }
+        },
+        function (error) {
+          if (error.code == error.PERMISSION_DENIED)
+            console.log("you denied me :-(");
+          storage.setItem(storage.keys.has_located, JSON.stringify(false));
+        }
+      );
+    }
+    return () => {
+      navigator.geolocation.clearWatch(id);
+    };
+  }, [locationAllowed]);
+
+  // *** END USER LOCATION STUFF --- MAYBE MOVE INTO ITS OWN HOOK?? ****
+
   const getIcon = (tokenId: number, nft: any) => {
-    console.log(tokenId, nft);
     let icon = {
       url: tokenId ? eggIcon.src : blankEggIcon.src,
       scaledSize: new google.maps.Size(40, 40),
@@ -207,7 +279,6 @@ export default function Group({ caches: c, groupName }: Props) {
     if (nft) {
       icon.url = nft.image;
     }
-    console.log(icon);
     return icon;
   };
 
@@ -220,9 +291,7 @@ export default function Group({ caches: c, groupName }: Props) {
     tokenAddress: string,
     nft: any
   ) => {
-    console.log(tokenId, nft);
     const icon = getIcon(tokenId, nft);
-    console.log(icon);
     const cacheMarker = new google.maps.Marker({
       position: { lat, lng },
       map,
@@ -251,7 +320,6 @@ export default function Group({ caches: c, groupName }: Props) {
   useEffect(() => {
     // Lots of redundancy here
     if (caches && caches.length && map) {
-      console.log(markersRef.current);
       if (markersRef.current.length === 0) map.setCenter(head.map_center);
       const markers: any[] = [];
       caches.forEach((cache) => {
@@ -260,7 +328,6 @@ export default function Group({ caches: c, groupName }: Props) {
         );
         if (markerExists) {
           const icon = getIcon(cache.tokenId, cache.nft);
-          console.log("chaning icon");
           markerExists.setIcon(icon);
           markers.push(markerExists);
           return;
@@ -277,10 +344,8 @@ export default function Group({ caches: c, groupName }: Props) {
         markers.push(marker);
       });
       markersRef.current = markers;
-      console.log(markersRef.current);
     }
   }, [caches, map]);
-
   return (
     <>
       <Head>
@@ -308,8 +373,25 @@ export default function Group({ caches: c, groupName }: Props) {
           </span>
         )}
       </div>
+      {!locationAllowed && (
+        <div
+          className="absolute"
+          style={{
+            left: 0,
+            top: 100,
+            width: "100%",
+            zIndex: 999,
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Button onClick={initiateUserLocation}>
+            {fetchingLocation ? <BlackWrappedSpinner /> : "Allow Location"}
+          </Button>
+        </div>
+      )}
       <Map initMap={initMap} map={map} user={auth.user} />
-      {user && (
+      {locationAllowed && (
         <Button
           onClick={centerMap}
           className="recenter-button"

@@ -44,6 +44,7 @@ export default function Nav() {
             padding: 17,
             boxSizing: "border-box",
             backgroundColor: colors.lavender,
+            cursor: "pointer",
           }}
           className="capitalize text-white font-bold text-2xl p-2 items-center justify-center flex rounded-full pointer-events-auto"
         >
@@ -58,6 +59,7 @@ export default function Nav() {
             padding: 17,
             boxSizing: "border-box",
             backgroundColor: colors.lavender,
+            cursor: "pointer",
           }}
           className="capitalize text-white font-bold text-2xl p-2 items-center justify-center flex rounded-full pointer-events-auto"
         >

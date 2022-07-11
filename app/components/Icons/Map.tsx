@@ -5,6 +5,7 @@ export default function MapIcon({ color = "white" }) {
       width="100%"
       height="100%"
       viewBox="0 0 24 24"
+      style={{ pointerEvents: "none" }}
     >
       <path
         fill={color}

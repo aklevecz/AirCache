@@ -41,7 +41,6 @@ export default function useAirCache(cacheId: string | null) {
     const provider = new ethers.providers.Web3Provider(
       magic.rpcProvider as any
     );
-    console.log(provider);
     setProvider(provider);
     const signer = provider.getSigner();
     setSigner(signer);
@@ -168,7 +167,6 @@ export default function useAirCache(cacheId: string | null) {
     //   .toString(16)
     //   .padStart(64, "0")}.json`;
     let metadata = await storage.getItem(uri);
-    console.log(metadata);
     // if not IPFS
     if (!isIpfs(uri)) {
       // If it has id replacement
@@ -178,12 +176,10 @@ export default function useAirCache(cacheId: string | null) {
       // }
       let url = uri;
       if (!metadata) {
-        console.log(url);
         const response = await axios.get(url);
         metadata = response.data;
         await storage.setItem(uri, JSON.stringify(metadata));
       } else {
-        console.log("from storage");
         metadata = JSON.parse(metadata);
       }
       return metadata;
@@ -199,7 +195,6 @@ export default function useAirCache(cacheId: string | null) {
       metadata = response.data;
       await storage.setItem(uri, JSON.stringify(metadata));
     } else {
-      console.log("from storage");
       metadata = JSON.parse(metadata);
     }
 
@@ -207,8 +202,6 @@ export default function useAirCache(cacheId: string | null) {
   };
   const collectCacheMeta = async () => {
     if (contract && signer) {
-      console.log("collecting meta");
-
       const contractSigner = contract.connect(signer);
       // IF SINGLE CACHEE
       if (contract && signer && cacheId) {

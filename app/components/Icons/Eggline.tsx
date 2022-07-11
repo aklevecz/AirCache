@@ -4,7 +4,7 @@ export default function EgglineIcon({ color = "white" }) {
       width="100%"
       height="100%"
       viewBox="12 8 50 50"
-      style={{ overflow: "visible" }}
+      style={{ overflow: "visible", pointerEvents: "none" }}
     >
       <path
         fill="none"
