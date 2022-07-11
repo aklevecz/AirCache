@@ -20,6 +20,5 @@ export default async function handler(
     FilterExpression: "groupName = :g",
   };
   const dbRes = await db.scan(params).promise();
-  console.log(dbRes.Items);
   res.status(200).json({ caches: dbRes.Items });
 }

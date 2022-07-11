@@ -16,6 +16,7 @@ const cityCenters = {
   alphabet_city: { lat: 40.72563642453208, lng: -73.97979855792384 },
   hudson_river: { lat: 40.70851962382408, lng: -74.01021772654222 },
   prospect_park: { lat: 40.66103384799173, lng: -73.9698999374802 },
+  la: { lat: 34.08326394070492, lng: -118.21794546931355 },
 };
 
 const host =
@@ -55,5 +56,19 @@ export const seoConfig: { [key: string]: any } = {
       useNFT: false,
       image: { empty: emptyCocaine, filled: filledCocaine },
     },
+  },
+  ["admin-test"]: {
+    title: "admin-test",
+    description: "",
+    image: "",
+    map_center: "",
+    icon: {},
+  },
+  ["la"]: {
+    title: "LA Pizza",
+    description: "Pizza for LA",
+    image: "",
+    map_center: cityCenters.la,
+    icons: { useNFT: false, image: { empty: emptyEgg, filled: filledEgg } },
   },
 };

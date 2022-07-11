@@ -180,12 +180,12 @@ export default function Map({
         navigator.geolocation.getCurrentPosition((position) => {
           const pos = position.coords;
           if (!singleCache) {
-            map.setCenter({
-              lat: pos.latitude,
-              lng: pos.longitude,
-            });
+            // map.setCenter({
+            //   lat: pos.latitude,
+            //   lng: pos.longitude,
+            // });
           } else {
-            console.log("SETTING CACHE CENTER");
+            // console.log("SETTING CACHE CENTER");
             map.setCenter({
               lat: caches[0].lat,
               lng: caches[0].lng,

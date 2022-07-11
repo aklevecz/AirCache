@@ -65,14 +65,15 @@ export default function useAuth() {
   const logout = async () => {
     // const logoutReq = await fetch("/api/logout");
     // if (logoutReq.ok) {
-    // return new Promise(async (resolve) => {
-    const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!);
-    await magic.user.logout();
-    storage.deleteItem(storage.keys.token);
-    // localStorage.clear();
-    mutate();
-    // setTimeout(() => resolve(true), 500);
-    // });
+    return new Promise(async (resolve) => {
+      const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!);
+      await magic.user.logout();
+      storage.deleteItem(storage.keys.token);
+      // localStorage.clear();
+      mutate();
+      resolve(true);
+      // setTimeout(() => resolve(true), 500);
+    });
 
     // }
     // return logoutReq.ok;

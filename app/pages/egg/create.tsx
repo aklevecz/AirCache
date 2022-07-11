@@ -77,6 +77,7 @@ export default function Create() {
       try {
         navigator.geolocation.getCurrentPosition((position) => {
           const pos = position.coords;
+          console.log(pos);
           map.setCenter({
             lat: pos.latitude,
             lng: pos.longitude,

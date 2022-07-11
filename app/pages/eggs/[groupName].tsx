@@ -23,6 +23,7 @@ import nycEggMeta from "../../nycMeta.json";
 import { getCachesByGroup } from "../../libs/api";
 import { seoConfig } from "../../libs/config";
 import BlackWrappedSpinner from "../../components/Loading/BlackWrappedSpinner";
+import { isWordHunt } from "../../libs/utils";
 
 const nycDeleteList = [
   64, 71, 90, 102, 103, 97, 92, 80, 66, 60, 68, 82, 87, 99, 75, 58, 72, 79, 63,
@@ -75,7 +76,6 @@ export default function Group({ caches: c, groupName }: Props) {
   const refreshMarkers = () => {
     getCachesByGroup(groupName).then((data) => {
       let caches = data.caches;
-      if (groupName === "nft-nyc") caches = caches.filter(filterOutEmptyNYC);
       setCaches(
         caches.map((cache: any) => {
           const data: any = cache;
@@ -115,12 +115,15 @@ export default function Group({ caches: c, groupName }: Props) {
   useEffect(() => {
     const hunt = router.query.groupName;
     // To do: better reducer for different hunts
-    if (hunt === "nft-nyc") {
+    if (isWordHunt(hunt as string)) {
       web3Api.getCurrentWord().then(setWord);
       if (auth.user && auth.user.publicAddress) {
         web3Api
           .getAccountsCurrentLetters(auth.user.publicAddress)
-          .then(setLetters);
+          .then((letters) => {
+            console.log(letters);
+            setLetters(letters);
+          });
 
         web3Api.alphabetCityContract.on("WordWon", onWordWon);
       }
@@ -211,9 +214,9 @@ export default function Group({ caches: c, groupName }: Props) {
           }
         },
         function (error) {
-          if (error.message === "User denied Geolocation") {
-            setFetchingLocation(false);
+          setFetchingLocation(false);
 
+          if (error.message === "User denied Geolocation") {
             return alert(
               "You must have denied access to your location at some point. This can only be remedied in your browser settings."
             );
@@ -358,34 +361,29 @@ export default function Group({ caches: c, groupName }: Props) {
         <meta name="twitter:title" content={head.title} />
         <meta name="twitter:text:title" content={head.title} />
       </Head>
-      {word && (
-        <div className="absolute bottom-28 w-full text-center z-50 text-xl pointer-events-none">
-          <span className="bg-black p-5 font-fatfrank">
-            Spell:
-            <span style={{ fontSize: "2rem", marginLeft: 10 }}>{word}</span>
-          </span>
-        </div>
-      )}
-      <div className="absolute bottom-44 w-full text-center z-50 text-xl pointer-events-none">
-        {letters && (
-          <span className="bg-red-500 px-5 py-2 font-fatfrank text-2xl tracking-widest">
-            {letters}
-          </span>
-        )}
+
+      <div className="absolute bottom-44 w-full text-center z-50 text-xl pointer-events-none flex justify-center">
+        {Array.from(letters).map((letter) => {
+          return (
+            <div className="bg-red-500 w-10 h-10 font-fatfrank text-2xl tracking-widest uppercase m-2 flex justify-center items-center">
+              {letter}
+            </div>
+          );
+        })}
       </div>
       {!locationAllowed && (
         <div
           className="absolute"
           style={{
             left: 0,
-            top: 100,
+            top: 20,
             width: "100%",
             zIndex: 999,
             display: "flex",
             justifyContent: "center",
           }}
         >
-          <Button onClick={initiateUserLocation}>
+          <Button className="font-fatfrank w-40" onClick={initiateUserLocation}>
             {fetchingLocation ? <BlackWrappedSpinner /> : "Allow Location"}
           </Button>
         </div>
@@ -399,6 +397,14 @@ export default function Group({ caches: c, groupName }: Props) {
         >
           Recenter <Locate />
         </Button>
+      )}
+      {word && (
+        <div className="absolute bottom-28 w-full text-center z-50 text-xl pointer-events-none w-full text-white font-fatfrank">
+          {/* <span className="bg-black p-5 font-fatfrank w-full"> */}
+          <div className="underline">Solve</div>
+          <div style={{ fontSize: "2rem" }}>{word}</div>
+          {/* </span> */}
+        </div>
       )}
       {!airCache.loading && (
         <CacheContentModal
@@ -456,7 +462,7 @@ export const getStaticProps = async ({ params }: Params) => {
   const dbRes = await db.scan(dbparams).promise();
   let caches = dbRes.Items!;
 
-  if (groupName === "nft-nyc") caches = caches!.filter(filterOutEmptyNYC);
+  // if (groupName === "nft-nyc") caches = caches!.filter(filterOutEmptyNYC);
 
   // Do this before the buildstep to create a config then have all of the cache calls read from it
   // Note: What should it do if there are no caches?
@@ -485,7 +491,7 @@ export const getStaticProps = async ({ params }: Params) => {
 
   const mergedData = caches.map((cache) => {
     const data: any = cache;
-    if (cache.tokenId && groupName === "nft-nyc") {
+    if (cache.tokenId && isWordHunt(groupName)) {
       const nft = nycEggMeta.find(
         (nft) =>
           nft.tokenId === cache.tokenId &&

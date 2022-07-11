@@ -38,10 +38,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data | any>
 ) {
+  console.log(req.headers.authorization);
   if (!req.headers.authorization) {
     return res.status(405).json({
       error: "NO_AUTH",
-      message: "Create/Import your wallet",
+      message: "Import Wallet",
     });
   }
   try {
@@ -137,7 +138,6 @@ export default async function handler(
       },
     };
     const dbRes = await db.update(updateParams).promise();
-    console.log(dbRes);
     const mintParams = {
       MessageAttributes: {
         address: {
@@ -200,9 +200,10 @@ export default async function handler(
 
     // res.status(200).json({ tx, message: "SUCCESS" });
   } catch (e) {
+    console.log("no auth");
     return res.status(405).json({
       error: "NO_AUTH",
-      message: "Create/Import your wallet",
+      message: "Import Wallet",
     });
   }
 }

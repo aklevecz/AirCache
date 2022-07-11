@@ -6,7 +6,12 @@ import Spinner from "../Loading/Spinner";
 import Container from "./Container";
 import Sad from "../Icons/Sad";
 import AxeAnimation from "../Animations/Axe";
-import { haversineDistance, ipfsToPinata, isIpfs } from "../../libs/utils";
+import {
+  haversineDistance,
+  ipfsToPinata,
+  isIpfs,
+  isWordHunt,
+} from "../../libs/utils";
 import MapIcon from "../Icons/Map";
 import { useRouter } from "next/router";
 import AirYaytsoInterface from "../../hooks/AirCache.json";
@@ -85,6 +90,7 @@ export default function CacheContentModal({
       setError({ error: "", message: "" });
       setTxState(TxState.Idle);
       setNFT(null);
+      setFetchingLocation(false);
     } else {
       fetchCache(data.cache.id);
     }
@@ -129,7 +135,12 @@ export default function CacheContentModal({
 
   const claim = () => {
     setFetchingLocation(true);
-
+    if (!auth.user) {
+      setTxState(TxState.Error);
+      setFetchingLocation(false);
+      setError({ error: "NO_AUTH", message: "Import Wallet" });
+      return;
+    }
     if (navigator && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
@@ -149,6 +160,7 @@ export default function CacheContentModal({
               lat: position.coords.latitude,
               lng: position.coords.longitude,
             };
+            console.log("claiming");
             const res = await claimCache(
               data.cache.id,
               data.groupName,
@@ -178,6 +190,7 @@ export default function CacheContentModal({
           }
         },
         (e) => {
+          console.log("error");
           setTxState(TxState.Error);
           setError({
             message:
@@ -236,7 +249,11 @@ export default function CacheContentModal({
     <Container open={open} toggleModal={toggleModal}>
       {txState === TxState.Idle || txState === TxState.Fetching ? (
         <>
-          <div className="text-3xl font-bold text-center pb-5">{NFT.name}</div>
+          {!isWordHunt(router.query.groupName as string) && (
+            <div className="text-3xl font-bold text-center pb-5">
+              {NFT.name}
+            </div>
+          )}
           <div className="p-5">
             <img
               className="m-auto"
@@ -321,22 +338,23 @@ export default function CacheContentModal({
             )}
             {error.error === "NO_AUTH" && (
               <div>
-                <div className="text-1xl pb-5">
-                  use your email to create or import your blackbeard wallet
+                <div className="text-xl text-center pb-7">
+                  Your email is linked to a unique wallet. Type it in below and
+                  we will send you a confimation.
                 </div>
                 <input
                   autoComplete="email"
                   name="email"
                   type="email"
                   placeholder="Email"
-                  className="h-10 p-2 w-full mb-4 text-center black-beard"
-                  style={{ fontSize: 24 }}
+                  className="h-10 p-2 w-full mb-6 text-center black-beard"
+                  style={{ fontSize: 18 }}
                   onChange={onChangeEmail}
                 />
                 <Button
-                  className="m-auto w-28 block mt-0 py-3 font-bold text-2xl"
+                  className="m-auto w-32 block mt-0 py-2 px-4 font-bold text-lg"
                   disabled={auth.fetching}
-                  onClick={() => {
+                  onClick={async () => {
                     // router.push("/login");
 
                     // router.push(`/login?cache=${data.cache.id}`);
@@ -349,12 +367,12 @@ export default function CacheContentModal({
                         destination = "/" + currentGroup;
                       }
                     }
-                    auth.login(email, destination).then(() => {
-                      toggleModal();
-                    });
+                    await auth.logout();
+                    await auth.login(email, destination);
+                    toggleModal();
                   }}
                 >
-                  {auth.fetching ? <BlackWrappedSpinner /> : "Claim"}
+                  {auth.fetching ? <BlackWrappedSpinner /> : "Import"}
                 </Button>
               </div>
             )}

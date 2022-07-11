@@ -11,8 +11,9 @@ body {
   margin: 0;
   /* font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif; */
-    font-family: teimer-web, serif;
+    /* font-family: teimer-web, serif; */
     /* font-family: black-beard, sans-serif; */
+    font-family: montserrat, sans-serif;
 
   }
 html,
@@ -32,7 +33,7 @@ input {
   left:50%;
   top: 26px;
   width: 150px;
-  margin-left: -60px;
+  margin-left: -75px;
   font-weight: bold;
   transform: none;
   transform-origin: 50% 50% 0px;

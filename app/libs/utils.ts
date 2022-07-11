@@ -168,3 +168,7 @@ export const alphabetMap: { [key: number]: string } = {
   25: "Y",
   26: "Z",
 };
+
+const wordHunts = ["nft-nyc", "la"];
+
+export const isWordHunt = (hunt: string) => wordHunts.includes(hunt);

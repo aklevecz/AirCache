@@ -1,7 +1,18 @@
 import { Field, Form, Formik, FormikHelpers } from "formik";
+import * as Yup from "yup";
 import type { NextPage } from "next";
-import Thumb from "../components/Thumb";
+import { useState } from "react";
 import db from "../libs/db";
+
+// {
+// ["coindesk-austin"]: {
+//   title: "Coindesk Egg Hunt",
+//   description: "Find eggs filled with NFT Longhorns scattered around Austin!",
+//   image: `${host}/coindesk-austin-banner.png`,
+//   map_center: cityCenters.austin,
+//   icon: { useNFT: false, image: { empty: hornEgg, filled: hornEgg } },
+// }
+// }
 
 type Group = {
   name: string;
@@ -13,11 +24,24 @@ type Props = {
 
 type Values = {
   name: string;
+  description: string;
   location: string;
-  image: any;
+  markerEmpty: any;
+  markerFilled: any;
 };
 
+const uploadSchema = Yup.object().shape({
+  name: Yup.string().required(),
+  description: Yup.string().required(),
+  location: Yup.string().required(),
+  markerEmpty: Yup.mixed().required(),
+  markerFilled: Yup.mixed().required(),
+});
+
 const Home: NextPage<Props> = ({ groups }) => {
+  const [previewImgEmpty, setPreviewImgEmpty] = useState<any>(null);
+  const [previewImgFilled, setPreviewImgFilled] = useState<any>(null);
+
   if (!groups) {
     return <div>loading...</div>;
   }
@@ -34,40 +58,77 @@ const Home: NextPage<Props> = ({ groups }) => {
         <Formik
           initialValues={{
             name: "",
-            location: "",
-            image: null,
+            description: "",
+            location: "34.08326394070492,-118.21794546931355",
+            markerEmpty: null,
+            markerFilled: null,
           }}
+          validationSchema={uploadSchema}
           onSubmit={(
             values: Values,
             { setSubmitting }: FormikHelpers<Values>
           ) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2));
-              setSubmitting(false);
-            }, 500);
+            const body = new FormData();
+            body.append("name", values.name);
+            body.append("description", values.description);
+            body.append("location", values.location);
+            body.append("markerEmpty", values.markerEmpty);
+            body.append("markerFilled", values.markerFilled);
+
+            fetch("/api/upload", { method: "POST", body });
+            setSubmitting(false);
           }}
         >
           {({ setFieldValue, values }) => (
             <Form>
-              <label htmlFor="name">Name</label>
-              <Field id="name" name="name" placeholder="Name" />
-
-              <label htmlFor="location">Location</label>
-              <Field id="location" name="location" placeholder="3000,-3000" />
-
-              <label htmlFor="marker">Marker</label>
-              <input
-                id="image"
-                name="image"
-                type="file"
-                onChange={(event) => {
-                  if (event.currentTarget && event.currentTarget.files) {
-                    console.log(event.currentTarget.files[0]);
-                    setFieldValue("image", event.currentTarget.files[0]);
-                  }
-                }}
-              />
-              <Thumb file={values.image} />
+              <div>
+                <label htmlFor="name">Name</label>
+                <Field id="name" name="name" placeholder="Name" />
+              </div>
+              <div>
+                <label htmlFor="description">Description</label>
+                <Field
+                  id="description"
+                  name="description"
+                  placeholder="Description"
+                />
+              </div>
+              <div>
+                <label htmlFor="location">Location</label>
+                <Field id="location" name="location" placeholder="3000,-3000" />
+              </div>
+              <div>
+                <label htmlFor="markerEmpty">Marker Empty</label>
+                <input
+                  id="markerEmpty"
+                  name="markerEmpty"
+                  type="file"
+                  onChange={(event) => {
+                    if (event.currentTarget && event.currentTarget.files) {
+                      const i = event.currentTarget.files[0];
+                      setFieldValue("markerEmpty", i);
+                      setPreviewImgEmpty(URL.createObjectURL(i));
+                    }
+                  }}
+                />
+              </div>
+              <img src={previewImgEmpty} />
+              <div>
+                <label htmlFor="markerFilled">Marker Filled</label>
+                <input
+                  id="markerFilled"
+                  name="markerFilled"
+                  type="file"
+                  onChange={(event) => {
+                    if (event.currentTarget && event.currentTarget.files) {
+                      const i = event.currentTarget.files[0];
+                      setFieldValue("markerFilled", i);
+                      setPreviewImgFilled(URL.createObjectURL(i));
+                    }
+                  }}
+                />
+              </div>
+              <img src={previewImgFilled} />
               <button type="submit">Submit</button>
             </Form>
           )}
