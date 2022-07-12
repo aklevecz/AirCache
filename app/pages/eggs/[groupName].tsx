@@ -143,14 +143,22 @@ export default function Group({ caches: c, groupName }: Props) {
 
   const getUserLocation = () => {
     return new Promise((resolve) => {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const latLng = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-        userPositionRef.current = latLng;
-        resolve(latLng);
-      });
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const latLng = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          userPositionRef.current = latLng;
+          resolve(latLng);
+        },
+        (e) => console.log(e),
+        {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0,
+        }
+      );
     });
   };
 
@@ -172,7 +180,7 @@ export default function Group({ caches: c, groupName }: Props) {
   useEffect(() => {
     let interval: any;
     if (locationAllowed) {
-      interval = setInterval(updateUserMarker, 1000);
+      interval = setInterval(updateUserMarker, 500);
     }
 
     return () => {
