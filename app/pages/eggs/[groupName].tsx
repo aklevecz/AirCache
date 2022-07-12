@@ -155,26 +155,28 @@ export default function Group({ caches: c, groupName }: Props) {
 
   // USER LOCATION STUFF --- MAYBE MOVE INTO ITS OWN HOOK??
 
-  // const updateUserMarker = async () => {
-  //   if (userRef.current) {
-  //     const position = await getUserLocation();
-  //     if (position && userMarkerRef.current) {
-  //       userMarkerRef.current.setPosition(position as Latlng);
-  //       // map!.setCenter(position as Latlng);
-  //     }
-  //   }
-  // };
+  const updateUserMarker = async () => {
+    if (userRef.current) {
+      console.log("oilling");
+      const position = await getUserLocation();
+      if (position && userMarkerRef.current) {
+        userMarkerRef.current.setPosition(position as Latlng);
+        storage.setItem(storage.keys.user_location, JSON.stringify(position));
+        // map!.setCenter(position as Latlng);
+      }
+    }
+  };
 
-  // useEffect(() => {
-  //   let interval: any;
-  //   if (user) {
-  //     interval = setInterval(updateUserMarker, 3000);
-  //   }
+  useEffect(() => {
+    let interval: any;
+    if (locationAllowed) {
+      interval = setInterval(updateUserMarker, 1000);
+    }
 
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, [user]);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [locationAllowed]);
 
   const initiateUserLocation = () => {
     setFetchingLocation(true);
