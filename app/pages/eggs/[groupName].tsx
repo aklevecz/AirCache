@@ -57,6 +57,8 @@ export default function Group({ caches: c, groupName }: Props) {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const positionRef = useRef<any>("");
+
   const head = seoConfig[groupName] ?? {};
 
   const initMap = (map: google.maps.Map) => {
@@ -121,7 +123,6 @@ export default function Group({ caches: c, groupName }: Props) {
         web3Api
           .getAccountsCurrentLetters(auth.user.publicAddress)
           .then((letters) => {
-            console.log(letters);
             setLetters(letters);
           });
 
@@ -162,6 +163,7 @@ export default function Group({ caches: c, groupName }: Props) {
       if (position && userMarkerRef.current) {
         userMarkerRef.current.setPosition(position as Latlng);
         storage.setItem(storage.keys.user_location, JSON.stringify(position));
+        positionRef.current.innerHTML = JSON.stringify(position);
         // map!.setCenter(position as Latlng);
       }
     }
@@ -179,12 +181,15 @@ export default function Group({ caches: c, groupName }: Props) {
   }, [locationAllowed]);
 
   const initiateUserLocation = () => {
+    console.log("init");
     setFetchingLocation(true);
     return new Promise((resolve) => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           // Maybe overkill
+          console.log("prelego", userMarkerRef.current);
           if (!userMarkerRef.current) {
+            console.log("lego");
             const pos = position.coords;
             const icon = {
               url: smiler.src,
@@ -238,33 +243,33 @@ export default function Group({ caches: c, groupName }: Props) {
     }
   }, [map, user]);
 
-  useEffect(() => {
-    let id = 0;
-    if (locationAllowed) {
-      id = navigator.geolocation.watchPosition(
-        function (position) {
-          if (userMarkerRef.current && position) {
-            const latLng = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            };
-            userMarkerRef.current.setPosition(latLng as Latlng);
+  // useEffect(() => {
+  //   let id = 0;
+  //   if (locationAllowed) {
+  //     id = navigator.geolocation.watchPosition(
+  //       function (position) {
+  //         if (userMarkerRef.current && position) {
+  //           const latLng = {
+  //             lat: position.coords.latitude,
+  //             lng: position.coords.longitude,
+  //           };
+  //           userMarkerRef.current.setPosition(latLng as Latlng);
 
-            userPositionRef.current = latLng;
-            console.log("i'm tracking you!");
-          }
-        },
-        function (error) {
-          if (error.code == error.PERMISSION_DENIED)
-            console.log("you denied me :-(");
-          storage.setItem(storage.keys.has_located, JSON.stringify(false));
-        }
-      );
-    }
-    return () => {
-      navigator.geolocation.clearWatch(id);
-    };
-  }, [locationAllowed]);
+  //           userPositionRef.current = latLng;
+  //           console.log("i'm tracking you!");
+  //         }
+  //       },
+  //       function (error) {
+  //         if (error.code == error.PERMISSION_DENIED)
+  //           console.log("you denied me :-(");
+  //         storage.setItem(storage.keys.has_located, JSON.stringify(false));
+  //       }
+  //     );
+  //   }
+  //   return () => {
+  //     navigator.geolocation.clearWatch(id);
+  //   };
+  // }, [locationAllowed]);
 
   // *** END USER LOCATION STUFF --- MAYBE MOVE INTO ITS OWN HOOK?? ****
 
@@ -408,6 +413,10 @@ export default function Group({ caches: c, groupName }: Props) {
           {/* </span> */}
         </div>
       )}
+      <div
+        ref={positionRef}
+        className="absolute bottom-20 w-full text-center l-50 text-red-500 z-50"
+      ></div>
       {!airCache.loading && (
         <CacheContentModal
           open={modal.open}
