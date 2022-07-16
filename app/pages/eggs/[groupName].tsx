@@ -24,6 +24,7 @@ import { getCachesByGroup } from "../../libs/api";
 import { seoConfig } from "../../libs/config";
 import BlackWrappedSpinner from "../../components/Loading/BlackWrappedSpinner";
 import { isWordHunt } from "../../libs/utils";
+import AlphabetCTA from "../../components/Modals/AlphabetCTA";
 
 const nycDeleteList = [
   64, 71, 90, 102, 103, 97, 92, 80, 66, 60, 68, 82, 87, 99, 75, 58, 72, 79, 63,
@@ -38,6 +39,7 @@ type Props = { caches: any[]; groupName: string; nftMetadata: any };
 
 export default function Group({ caches: c, groupName, nftMetadata }: Props) {
   const modal = useModal();
+  const ctaModal = useModal();
   const [map, setMap] = useState<google.maps.Map>();
   const airCache = useAirCache(null);
   const auth = useAuth();
@@ -428,6 +430,7 @@ export default function Group({ caches: c, groupName, nftMetadata }: Props) {
         style={{ display: "none" }}
         className="absolute bottom-20 w-full text-center l-50 text-red-500 z-50"
       ></div>
+      <AlphabetCTA open={ctaModal.open} toggleModal={ctaModal.toggleModal} />
       {!airCache.loading && (
         <CacheContentModal
           open={modal.open}
