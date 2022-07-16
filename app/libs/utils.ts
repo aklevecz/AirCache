@@ -1,6 +1,8 @@
 import { ethers } from "ethers";
 import { Magic } from "magic-sdk";
+import { appKeys } from "./config";
 import { abis, AIRCACHE_ADDRESS } from "./constants";
+import storage from "./storage";
 import { Latlng } from "./types";
 
 const asin = Math.asin;
@@ -42,8 +44,7 @@ export const maticNodeOptions = {
 };
 
 export const getMumbaiProvider = () => {
-  console.log("MUMBAI");
-  const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!, {
+  const magic = new Magic(getMagicPubKey(), {
     network: maticMumBaiNodeOptions,
   });
   const provider = new ethers.providers.Web3Provider(magic.rpcProvider as any);
@@ -51,7 +52,7 @@ export const getMumbaiProvider = () => {
 };
 
 export const getMaticProvider = () => {
-  const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!, {
+  const magic = new Magic(getMagicPubKey(), {
     network: maticNodeOptions,
   });
   const provider = new ethers.providers.Web3Provider(magic.rpcProvider as any);
@@ -169,6 +170,20 @@ export const alphabetMap: { [key: number]: string } = {
   26: "Z",
 };
 
-const wordHunts = ["nft-nyc"];
+const wordHunts = ["nft-nyc", "venice"];
 
 export const isWordHunt = (hunt: string) => wordHunts.includes(hunt);
+
+export const getMagicPubKey = () => {
+  if (typeof localStorage !== "undefined") {
+    const currentGroup = storage.getItem(storage.keys.current_group);
+    if (currentGroup) {
+      const keys = appKeys[currentGroup];
+      if (keys) {
+        console.log(appKeys);
+        return keys.pub;
+      }
+    }
+  }
+  return process.env.NEXT_PUBLIC_MAGIC_PUB_KEY as string;
+};

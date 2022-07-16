@@ -1,6 +1,11 @@
 import { motion } from "framer-motion";
 import { FormEvent, useState } from "react";
-import { COCAINE_MATIC, colors, GEMS_ADDRESS } from "../../libs/constants";
+import {
+  COCAINE_MATIC,
+  colors,
+  GEMS_ADDRESS,
+  VENICE_PIZZA_MATIC,
+} from "../../libs/constants";
 import { Web3Wallet } from "../../libs/types";
 import Big from "../Button/Big";
 import Img from "../Img";
@@ -28,7 +33,8 @@ export default function Nfts({
   approve,
   message,
 }: Props) {
-  const [tokenAddress, setTokenAddress] = useState(COCAINE_MATIC);
+  console.log(VENICE_PIZZA_MATIC);
+  const [tokenAddress, setTokenAddress] = useState(VENICE_PIZZA_MATIC);
   const [toggleTokenAddress, setToggleTokenAddress] = useState(false);
 
   const tryAgain = () => {

@@ -17,6 +17,7 @@ const cityCenters = {
   hudson_river: { lat: 40.70851962382408, lng: -74.01021772654222 },
   prospect_park: { lat: 40.66103384799173, lng: -73.9698999374802 },
   la: { lat: 34.08326394070492, lng: -118.21794546931355 },
+  venice_beach: { lat: 33.9946586623243, lng: -118.48187211490418 },
 };
 
 const host =
@@ -70,5 +71,31 @@ export const seoConfig: { [key: string]: any } = {
     image: "",
     map_center: cityCenters.la,
     icons: { useNFT: false, image: { empty: emptyEgg, filled: filledEgg } },
+  },
+  ["venice"]: {
+    title: "Venice Pizza",
+    description: "Pizza for Venice",
+    image: "",
+    map_center: cityCenters.venice_beach,
+    icons: { useNFT: true, image: { emptyEgg, filled: filledEgg } },
+  },
+};
+
+export const appKeys: { [key: string]: { secret: string; pub: string } } = {
+  ["eggs"]: {
+    secret: process.env.MAGIC_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_MAGIC_PUB_KEY as string,
+  },
+  ["coindesk-austin"]: {
+    secret: process.env.HORN_MAGIC_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_HORN_MAGIC_PUB_KEY as string,
+  },
+  ["nft-nyc"]: {
+    secret: process.env.ALPHABET_CITY_MAGIC_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_ALPHABET_CITY_PUB_KEY as string,
+  },
+  ["myosin-yacht"]: {
+    secret: process.env.YACHT_MAGIC_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_YACHT_MAGIC_PUB_KEY as string,
   },
 };

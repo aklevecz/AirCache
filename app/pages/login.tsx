@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Raptor from "../components/Icons/Raptor";
 import Chest from "../assets/icons/chest-filled.png";
+import MapIcon from "../components/Icons/Map";
 
 export default function Login() {
   const auth = useAuth();
@@ -30,10 +31,11 @@ export default function Login() {
   }, [auth.user]);
   return (
     <div>
-      <div className="m-auto mt-10" style={{ width: 300 }}>
+      <div className="m-auto mt-10" style={{ width: 300, marginBottom: 18 }}>
         {/* <img src={airYaytsoLogo.src} /> */}
         {/* <Raptor /> */}
-        <img src={Chest.src} />
+        {/* <img src={Chest.src} /> */}
+        <MapIcon />
       </div>
       <LoginComponent
         login={auth.login}

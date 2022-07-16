@@ -7,6 +7,7 @@ import { AIRCACHE_ADDRESS, AIRCACHE_ADDRESS_MATIC } from "../libs/constants";
 import storage from "../libs/storage";
 import {
   delay,
+  getMagicPubKey,
   getTokenURI,
   ipfsToPinata,
   isIpfs,
@@ -68,8 +69,7 @@ export default function useWallet(address: string) {
 
   useEffect(() => {
     if (nfts && nfts.length > 0) {
-      console.log("what");
-      const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!, {
+      const magic = new Magic(getMagicPubKey(), {
         network:
           process.env.NODE_ENV === "development"
             ? maticMumBaiNodeOptions

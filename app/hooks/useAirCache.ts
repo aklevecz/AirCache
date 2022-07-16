@@ -7,6 +7,7 @@ import { abis, AIRCACHE_ADDRESS, oldContracts } from "../libs/constants";
 import { prod } from "../libs/env";
 import storage from "../libs/storage";
 import {
+  getMagicPubKey,
   ipfsToPinata,
   isIpfs,
   maticMumBaiNodeOptions,
@@ -34,7 +35,7 @@ export default function useAirCache(cacheId: string | null) {
   const [web3Ready, setWeb3Ready] = useState(false);
   useEffect(() => {
     console.log("air cache init");
-    const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!, {
+    const magic = new Magic(getMagicPubKey(), {
       network: !prod ? maticMumBaiNodeOptions : maticNodeOptions,
       // network: maticNodeOptions,
     });

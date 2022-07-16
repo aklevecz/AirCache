@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import Button from "../Button";
 import Spinner from "../Loading/Spinner";
 import eggImg from "../../assets/icons/egg.png";
+import storage from "../../libs/storage";
 
 export default function LoginRaptor({
   login,
@@ -21,10 +22,12 @@ export default function LoginRaptor({
   return (
     <div className="flex flex-col justify-center items-center">
       {/* <img src={eggImg.src} /> */}
-      <div className="text-4xl font-bold w-3/4 text-center mb-10">
+      <div className="text-4xl font-bold w-3/4 text-center mb-4">
         Import Wallet
       </div>
-
+      <div className="mb-4 max-w-md text-center">
+        Using your email we can import your unique wallet for holding NFTs
+      </div>
       <input
         autoComplete="email"
         name="email"
@@ -44,12 +47,19 @@ export default function LoginRaptor({
       <Button
         className="w-32 mt-4 font-bold"
         onClick={() => {
-          let destination = cacheId ? `/cache-${cacheId}` : "/";
+          // let destination = cacheId ? `/cache-${cacheId}` : "/";
 
-          if (claim) {
-            destination = `/claim-${claim}`;
+          // if (claim) {
+          //   destination = `/claim-${claim}`;
+          // }
+          // console.log(destination);
+          let destination = "/";
+          if (typeof localStorage !== "undefined") {
+            const currentGroup = storage.getItem(storage.keys.current_group);
+            if (currentGroup) {
+              destination = "/" + currentGroup;
+            }
           }
-          console.log(destination);
           login(email, destination);
         }}
       >

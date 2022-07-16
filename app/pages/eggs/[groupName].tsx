@@ -34,8 +34,9 @@ const nycDeleteList = [
 // Most of the things here need to wait for the map to initialize.
 // Should probably have a better loading state for understanding that
 // Or the Map should be the container and only load once it is loaded
-type Props = { caches: any[]; groupName: string };
-export default function Group({ caches: c, groupName }: Props) {
+type Props = { caches: any[]; groupName: string; nftMetadata: any };
+
+export default function Group({ caches: c, groupName, nftMetadata }: Props) {
   const modal = useModal();
   const [map, setMap] = useState<google.maps.Map>();
   const airCache = useAirCache(null);
@@ -83,8 +84,8 @@ export default function Group({ caches: c, groupName }: Props) {
           const data: any = cache;
           if (cache.tokenId) {
             // To do: too specific to NYC
-            const nft = nycEggMeta.find(
-              (nft) =>
+            const nft = nftMetadata.find(
+              (nft: any) =>
                 nft.tokenId === cache.tokenId &&
                 cache.tokenAddress === nft.tokenAddress
             );
@@ -166,12 +167,13 @@ export default function Group({ caches: c, groupName }: Props) {
 
   const updateUserMarker = async () => {
     if (userRef.current) {
-      console.log("oilling");
       const position = await getUserLocation();
       if (position && userMarkerRef.current) {
         userMarkerRef.current.setPosition(position as Latlng);
         storage.setItem(storage.keys.user_location, JSON.stringify(position));
-        positionRef.current.innerHTML = JSON.stringify(position);
+        try {
+          positionRef.current.innerHTML = JSON.stringify(position);
+        } catch (e) {}
         // map!.setCenter(position as Latlng);
       }
     }
@@ -189,15 +191,12 @@ export default function Group({ caches: c, groupName }: Props) {
   }, [locationAllowed]);
 
   const initiateUserLocation = () => {
-    console.log("init");
     setFetchingLocation(true);
     return new Promise((resolve) => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           // Maybe overkill
-          console.log("prelego", userMarkerRef.current);
           if (!userMarkerRef.current) {
-            console.log("lego");
             const pos = position.coords;
             const icon = {
               url: smiler.src,
@@ -310,6 +309,9 @@ export default function Group({ caches: c, groupName }: Props) {
     nft: any
   ) => {
     const icon = getIcon(tokenId, nft);
+    if (nft) {
+      console.log(icon);
+    }
     const cacheMarker = new google.maps.Marker({
       position: { lat, lng },
       map,
@@ -423,6 +425,7 @@ export default function Group({ caches: c, groupName }: Props) {
       )}
       <div
         ref={positionRef}
+        style={{ display: "none" }}
         className="absolute bottom-20 w-full text-center l-50 text-red-500 z-50"
       ></div>
       {!airCache.loading && (
@@ -507,20 +510,32 @@ export const getStaticProps = async ({ params }: Params) => {
   //   }
   // }
   // fs.writeFileSync("nycMeta.json", JSON.stringify(metas));
-
-  const mergedData = caches.map((cache) => {
-    const data: any = cache;
+  const mergedData = [];
+  const nftMetadata = [];
+  // const mergedData = caches.map(async (cache) => {
+  for (let i = 0; i < caches.length; i++) {
+    const cache = caches[i];
+    let data: any = cache;
     if (cache.tokenId && isWordHunt(groupName)) {
-      const nft = nycEggMeta.find(
-        (nft) =>
-          nft.tokenId === cache.tokenId &&
-          cache.tokenAddress === nft.tokenAddress
-      );
+      const meta = await web3Api.getNFTMeta(cache.tokenId, cache.tokenAddress);
+      var nft = {
+        ...meta,
+        tokenId: cache.tokenId,
+        tokenAddress: cache.tokenAddress,
+      };
+      nftMetadata.push(nft);
+      // const nft = nycEggMeta.find(
+      //   (nft) =>
+      //     nft.tokenId === cache.tokenId &&
+      //     cache.tokenAddress === nft.tokenAddress
+      // );
       data.nft = nft;
     }
-    return data;
-  });
+    mergedData.push(data);
+    // return data;
+  }
+  console.log(nftMetadata);
   return {
-    props: { caches: mergedData, groupName: params.groupName },
+    props: { caches: mergedData, groupName: params.groupName, nftMetadata },
   };
 };

@@ -5,6 +5,7 @@ import { useState } from "react";
 import useSWR from "swr";
 import api, { endpoints, getUser } from "../libs/api";
 import storage from "../libs/storage";
+import { getMagicPubKey } from "../libs/utils";
 
 export const testAddress = "0x04f6595ca4D8AC68A9D6A1eD2Cd52280BdcD7B17";
 export default function useAuth() {
@@ -18,7 +19,6 @@ export default function useAuth() {
     // logout();
     return new Promise(async (resolve) => {
       setFetching(true);
-
       let redirectURI = "https://air.yaytso.art/callback" + destination;
       if (typeof window !== "undefined") {
         redirectURI = `${window.location.protocol}//${window.location.host}/callback${destination}`;
@@ -28,7 +28,9 @@ export default function useAuth() {
       //   destination === "/"
       //     ? `?${destination.split("/")[0]}=${destination.split("/")[1]}`
       //     : "";
-      const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!, {
+      const key = getMagicPubKey();
+      console.log(key);
+      const magic = new Magic(key, {
         // extensions: [
         //   new SolanaExtension({
         //     rpcUrl: "https://api.devnet.solana.com",
@@ -42,9 +44,13 @@ export default function useAuth() {
       }
 
       const did = await magic.auth.loginWithMagicLink(config);
-      const authRequest = await api.post(endpoints.login, null, {
-        headers: { Authorization: `Bearer ${did}` },
-      });
+      const authRequest = await api.post(
+        endpoints.login,
+        { destination },
+        {
+          headers: { Authorization: `Bearer ${did}` },
+        }
+      );
       if (authRequest.status === 200) {
         console.log(await magic.user.getMetadata());
         const { token } = authRequest.data;
@@ -66,7 +72,7 @@ export default function useAuth() {
     // const logoutReq = await fetch("/api/logout");
     // if (logoutReq.ok) {
     return new Promise(async (resolve) => {
-      const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUB_KEY!);
+      const magic = new Magic(getMagicPubKey());
       await magic.user.logout();
       storage.deleteItem(storage.keys.token);
       // localStorage.clear();

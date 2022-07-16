@@ -11,11 +11,10 @@ async function main() {
   await alphabetCity.deployed();
   const owner = await alphabetCity.signer.getAddress();
   await alphabetCity.mintWord(owner, pizza);
+  await alphabetCity.mintWord(owner, pizza);
 
-  for (let i = 0; i < 11; i++) {
-    await alphabetCity.mintLetter(owner, 16);
-  }
   for (let i = 0; i < 13; i++) {
+    await alphabetCity.mintLetter(owner, 16);
     await alphabetCity.mintLetter(owner, 9);
     await alphabetCity.mintLetter(owner, 26);
     await alphabetCity.mintLetter(owner, 1);
