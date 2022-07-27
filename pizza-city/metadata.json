@@ -1,0 +1,7 @@
+{
+  "title": "LA Pizza",
+  "description": "Pizza for LA",
+  "image": "",
+  "map_center": { "lat": 34.1021603594777, "lng": -118.24306380878141 },
+  "icons": { "useNFT": true, "image": { "empty": "", "filled": "" } }
+}

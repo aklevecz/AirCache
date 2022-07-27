@@ -170,7 +170,7 @@ export const alphabetMap: { [key: number]: string } = {
   26: "Z",
 };
 
-const wordHunts = ["nft-nyc", "venice"];
+const wordHunts = ["nft-nyc", "venice", "la"];
 
 export const isWordHunt = (hunt: string) => wordHunts.includes(hunt);
 

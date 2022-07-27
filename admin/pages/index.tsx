@@ -1,8 +1,13 @@
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import type { NextPage } from "next";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import db from "../libs/db";
+import Link from "next/link";
+import Connect from "../components/Connect";
+import useWeb3Wallet from "../hooks/useWeb3Wallet";
+import { useWallet, WalletContext } from "../contexts/WalletContext";
+import { Wallet } from "ethers";
 
 // {
 // ["coindesk-austin"]: {
@@ -38,7 +43,10 @@ const uploadSchema = Yup.object().shape({
   markerFilled: Yup.mixed().required(),
 });
 
+// Should be able to edit a hunts assets and metadata
+
 const Home: NextPage<Props> = ({ groups }) => {
+  const { web3Wallet, setName } = useWallet();
   const [previewImgEmpty, setPreviewImgEmpty] = useState<any>(null);
   const [previewImgFilled, setPreviewImgFilled] = useState<any>(null);
 
@@ -46,13 +54,25 @@ const Home: NextPage<Props> = ({ groups }) => {
     return <div>loading...</div>;
   }
   return (
-    <div className="text-white">
-      <div className="border">
-        <div className="uppercase">available hunts</div>
-        {groups.map((group) => (
-          <div key={group.name}>{group.name}</div>
-        ))}
+    <div className="flex flex-col text-white">
+      <div className="flex border">
+        <div className="border">
+          <div className="uppercase underline">available hunts</div>
+          {groups.map((group) => (
+            <Link href={`/hunt/${group.name}`}>
+              <div style={{ cursor: "pointer" }} key={group.name}>
+                {group.name}
+              </div>
+            </Link>
+          ))}
+        </div>
+        {web3Wallet && web3Wallet.connected && (
+          <div>{web3Wallet && web3Wallet.metaMask.accounts[0]}</div>
+        )}
       </div>
+      {web3Wallet && !web3Wallet.connected && (
+        <Connect web3Wallet={web3Wallet} />
+      )}
       <div>
         <div className="uppercase">create hunt</div>
         <Formik

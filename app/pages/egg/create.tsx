@@ -30,7 +30,6 @@ export default function Create() {
   const createCache = async () => {
     modal.toggleModal();
     const { lat, lng } = createCachePositionRef.current;
-    console.log(lat, lng);
     setTxState(TxState.Mining);
     const success = await airCache.createCache(lat, lng);
     if (success) {

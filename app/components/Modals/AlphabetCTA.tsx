@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import Big from "../Button/Big";
-import EgglineIcon from "../Icons/Eggline";
 import Container from "./Container";
 import { ModalProps } from "./types";
 interface Props extends ModalProps {}

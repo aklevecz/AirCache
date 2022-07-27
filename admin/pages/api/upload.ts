@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable";
 import sharp from "sharp";
 import fs from "fs";
-import { db, s3 } from "./aws";
+import { cloudfront, db, s3 } from "./aws";
 
 type Data = {
   name: string;
@@ -21,10 +21,13 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
+  console.log("submitting");
   const form = new formidable.IncomingForm();
   form.parse(req, async function (err, fields, files: any) {
-    const host = `https://cdn.yaytso.art/hunt_configs/${fields.name}`;
+    const host = `https://cdn.yaytso.art`;
+    const assetHost = `${host}/${fields.name}`;
     const huntDir = `hunt_configs/${fields.name}`;
+    const assetDir = `${fields.name}`;
 
     const markerEmpty = fs.readFileSync((files.markerEmpty as any).filepath);
     sharp(markerEmpty)
@@ -33,7 +36,7 @@ export default function handler(
       .then((data) => {
         const imgParams = {
           Bucket: airYaytsoBucket,
-          Key: `${huntDir}/markerEmpty.png`,
+          Key: `${assetDir}/markerEmpty.png`,
           Body: data,
           ContentType: "image/png",
         };
@@ -49,7 +52,7 @@ export default function handler(
       .then((data) => {
         const imgParams = {
           Bucket: airYaytsoBucket,
-          Key: `${huntDir}/markerFilled.png`,
+          Key: `${assetDir}/markerFilled.png`,
           Body: data,
           ContentType: "image/png",
         };
@@ -63,8 +66,8 @@ export default function handler(
       description: fields.description,
       location: fields.location,
       icons: {
-        markerEmpty: `${host}/markerEmpty.png`,
-        markerFilled: `${host}/markerFilled.png`,
+        markerEmpty: `${assetHost}/markerEmpty.png`,
+        markerFilled: `${assetHost}/markerFilled.png`,
       },
     };
     const metaParams = {
@@ -77,13 +80,34 @@ export default function handler(
       if (err) console.log(err);
     });
 
+    const auth = { username: "ariel", email: "arielklevecz@gmail.com" };
     const putParams = {
       TableName: "air-yaytso-groups",
       Item: {
         name: fields.name,
+        creator: auth.email,
       },
     };
+    // It could just read from the configs instead of having a a discrete collection for it
+    // Though hunts should only be ownable by a particular person -- so maybe the DB is more for permission information?
     db.put(putParams).promise();
+    console.log(`${assetDir}/*`, `${huntDir}/*`);
+    var params = {
+      DistributionId: "E38T2XPXBI32ZY" /* required */,
+      InvalidationBatch: {
+        /* required */
+        CallerReference: ((fields.name as string) +
+          fields.description) as string /* required */,
+        Paths: {
+          /* required */ Quantity: 2 /* required */,
+          Items: [`/${assetDir}/*`, `/${huntDir}/*`],
+        },
+      },
+    };
+    cloudfront.createInvalidation(params, function (err, data) {
+      if (err) console.log(err, err.stack); // an error occurred
+      else console.log(data); // successful response
+    });
   });
   res.status(200).json({ name: "John Doe" });
 }

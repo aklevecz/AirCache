@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.gmnoprint {
+  display: none;
+}
+
 html,
 body {
   padding: 0;
@@ -10,7 +14,13 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
     background: #333;
 }
-
+html,
+body,
+#__next {
+  height: 100%;
+  background-color: black;
+  color: white;
+}
 a {
   color: inherit;
   text-decoration: none;
@@ -22,4 +32,14 @@ a {
 
 input {
   color: black;
+  text-align: center;
+  padding:5px 2px;
+}
+
+button {
+  background: #8b8bff;
+  opacity: .7;
+  font-size: 1.5rem;
+  padding: 5px 15px;
+  cursor: pointer;
 }

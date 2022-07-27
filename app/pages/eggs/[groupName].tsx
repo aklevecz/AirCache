@@ -430,7 +430,9 @@ export default function Group({ caches: c, groupName, nftMetadata }: Props) {
         style={{ display: "none" }}
         className="absolute bottom-20 w-full text-center l-50 text-red-500 z-50"
       ></div>
-      <AlphabetCTA open={ctaModal.open} toggleModal={ctaModal.toggleModal} />
+      {isWordHunt(groupName) && (
+        <AlphabetCTA open={ctaModal.open} toggleModal={ctaModal.toggleModal} />
+      )}
       {!airCache.loading && (
         <CacheContentModal
           open={modal.open}

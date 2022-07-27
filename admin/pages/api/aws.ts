@@ -9,4 +9,6 @@ aws.config.update({
 
 const s3 = new aws.S3();
 const db = new aws.DynamoDB.DocumentClient({ apiVersion: "2012-08-10" });
-export { db, s3 };
+var cloudfront = new aws.CloudFront({ apiVersion: "2020-05-31" });
+
+export { db, s3, cloudfront };

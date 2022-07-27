@@ -11,3 +11,20 @@ export var sqs = new AWS.SQS({ apiVersion: "2012-11-05" });
 var db = new AWS.DynamoDB.DocumentClient({ apiVersion: "2012-08-10" });
 
 export default db;
+
+const tables = {
+  groups: "air-yaytso-groups",
+};
+
+export const fetchAllGroups = async () => {
+  const params = {
+    TableName: tables.groups,
+  };
+  const response = await db.scan(params).promise();
+
+  if (response.Items) {
+    return response.Items;
+  } else {
+    return [];
+  }
+};

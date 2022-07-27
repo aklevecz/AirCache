@@ -17,6 +17,7 @@ const cityCenters = {
   hudson_river: { lat: 40.70851962382408, lng: -74.01021772654222 },
   prospect_park: { lat: 40.66103384799173, lng: -73.9698999374802 },
   la: { lat: 34.08326394070492, lng: -118.21794546931355 },
+  la_colombe: { lat: 34.1021603594777, lng: -118.24306380878141 },
   venice_beach: { lat: 33.9946586623243, lng: -118.48187211490418 },
 };
 
@@ -69,7 +70,7 @@ export const seoConfig: { [key: string]: any } = {
     title: "LA Pizza",
     description: "Pizza for LA",
     image: "",
-    map_center: cityCenters.la,
+    map_center: cityCenters.la_colombe,
     icons: { useNFT: false, image: { empty: emptyEgg, filled: filledEgg } },
   },
   ["venice"]: {
