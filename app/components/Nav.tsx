@@ -31,11 +31,12 @@ export default function Nav() {
     >
       <Link
         key={"Map"}
-        href={`/eggs/${
-          typeof localStorage !== "undefined"
-            ? storage.getItem(storage.keys.current_group)
-            : ""
-        }`}
+        href={
+          typeof localStorage !== "undefined" &&
+          storage.getItem(storage.keys.current_group)
+            ? `/eggs/${storage.getItem(storage.keys.current_group)}`
+            : "/"
+        }
       >
         <div
           style={{

@@ -103,12 +103,12 @@ export default function Group({ caches: c, groupName, nftMetadata }: Props) {
     if (map) {
       storage.setItem(storage.keys.current_group, groupName);
 
-      const locationAllowed = storage.getItem(storage.keys.has_located);
+      // const locationAllowed = storage.getItem(storage.keys.has_located);
 
-      if (locationAllowed && JSON.parse(locationAllowed)) {
-        initiateUserLocation();
-        setLocationAllowed(true);
-      }
+      // if (locationAllowed && JSON.parse(locationAllowed)) {
+      //   initiateUserLocation();
+      //   setLocationAllowed(true);
+      // }
     }
   }, [map]);
 
@@ -248,7 +248,7 @@ export default function Group({ caches: c, groupName, nftMetadata }: Props) {
 
   useEffect(() => {
     if (map && navigator.geolocation && typeof window !== "undefined" && user) {
-      initiateUserLocation();
+      // initiateUserLocation();
     }
   }, [map, user]);
 
@@ -403,7 +403,7 @@ export default function Group({ caches: c, groupName, nftMetadata }: Props) {
           }}
         >
           <Button className="font-fatfrank w-40" onClick={initiateUserLocation}>
-            {fetchingLocation ? <BlackWrappedSpinner /> : "Allow Location"}
+            {fetchingLocation ? <BlackWrappedSpinner /> : "Track My Location"}
           </Button>
         </div>
       )}

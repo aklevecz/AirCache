@@ -38,7 +38,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data | any>
 ) {
-  console.log(req.headers.authorization);
   if (!req.headers.authorization) {
     return res.status(405).json({
       error: "NO_AUTH",
@@ -82,7 +81,7 @@ export default async function handler(
 
     // return console.log(tokenAddress, "token address", ALPHABET_CITY);
     const distance = haversineDistance(userLocation, cacheLocation);
-    const isTooFar = distance > 10;
+    const isTooFar = distance > 20;
     const isAdmin =
       // user.email === "arielklevecz@gmail.com" ||
       user.email === "ariel@yaytso.art" || user.email === "teh@raptor.pizza";
@@ -90,7 +89,7 @@ export default async function handler(
     if (isTooFar && !isAdmin) {
       return res.json({
         tx: null,
-        message: "You must get closer to claim!",
+        message: `You are about ${distance} away. You must get closer to claim!`,
         error: "TOO_FAR",
       });
     }
