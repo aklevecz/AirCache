@@ -19,6 +19,7 @@ const cityCenters = {
   la: { lat: 34.08326394070492, lng: -118.21794546931355 },
   la_colombe: { lat: 34.1021603594777, lng: -118.24306380878141 },
   venice_beach: { lat: 33.9946586623243, lng: -118.48187211490418 },
+  atlantic_city: { lat: 39.363759445000795, lng: -74.43874098662849 },
 };
 
 const host =
@@ -80,6 +81,13 @@ export const seoConfig: { [key: string]: any } = {
     map_center: cityCenters.venice_beach,
     icons: { useNFT: true, image: { emptyEgg, filled: filledEgg } },
   },
+  ["only-gems"]: {
+    title: "Only Gems pass scavenger hunt",
+    description: "A hunt for Only Gems passes",
+    image: `${host}/only-gems.png`,
+    map_center: cityCenters.atlantic_city,
+    icon: { useNFT: false, image: { empty: emptyChest, filled: filledChest } },
+  },
 };
 
 export const appKeys: { [key: string]: { secret: string; pub: string } } = {
@@ -98,5 +106,9 @@ export const appKeys: { [key: string]: { secret: string; pub: string } } = {
   ["myosin-yacht"]: {
     secret: process.env.YACHT_MAGIC_SECRET_KEY as string,
     pub: process.env.NEXT_PUBLIC_YACHT_MAGIC_PUB_KEY as string,
+  },
+  ["only-gems"]: {
+    secret: process.env.ONLY_GEMS_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_ONLY_GEMS_PUB_KEY as string,
   },
 };

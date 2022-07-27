@@ -26,16 +26,16 @@ const Home = ({ groups }: Props) => {
       </div>
       <div className="text-center text-2xl mt-5 font-bold">Available Hunts</div>
       <div className="flex flex-col justify-center mt-5 pb-4 px-4">
-        {groups
-          .filter((group) => !group.name)
-          .map((group) => (
+        {Object.keys(seoConfig)
+          // .filter((group) => seoConfig[group.name])
+          .map((key) => (
             <button
               className="text-lg bg-white text-black py-2 px-4 mt-4 font-bold"
-              onClick={() => router.push(`/eggs/${group.name}`)}
-              key={group.name}
+              onClick={() => router.push(`/eggs/${key}`)}
+              key={key}
               style={{ maxWidth: 400, margin: "10px auto" }}
             >
-              {seoConfig[group.name].title}
+              {seoConfig[key].title}
             </button>
           ))}
       </div>

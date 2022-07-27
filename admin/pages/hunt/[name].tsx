@@ -83,6 +83,8 @@ export default function Hunt({ metadata }: Props) {
 
   const [selectedCache, setSelectedCache] = useState("");
 
+  const [mapCenter, setMapCenter] = useState("");
+
   const modal = useRef<any>(null);
 
   if (!router.isFallback && !metadata) {
@@ -172,7 +174,18 @@ export default function Hunt({ metadata }: Props) {
       // });
     }
   }, [map, caches.data]);
-  console.log(caches.data);
+
+  useEffect(() => {
+    try {
+      const ll = mapCenter.trim().split(",");
+      const lat = parseFloat(ll[0]);
+      const lng = parseFloat(ll[1]);
+      console.log(lat, lng);
+    } catch (e) {
+      console.log(e);
+    }
+  }, [mapCenter]);
+
   return (
     <div className="h-full w-full">
       {caches.data && (
@@ -190,6 +203,10 @@ export default function Hunt({ metadata }: Props) {
         onClick={onCreateMarker}
         className="absolute left-10 top-50 z-50"
         src={metadata.icons.markerFilled}
+      />
+      <input
+        value={mapCenter}
+        onChange={(e: any) => setMapCenter(e.currentTarget.value)}
       />
       <Map ref={mapContainerRef} />
       <button onClick={onCreate} className="absolute bottom-10 left-1/2">
@@ -215,16 +232,21 @@ type Params = {
 export const getStaticProps = async ({ params }: Params) => {
   const { name } = params;
   const url = `${HUNT_CONFIG_S3}/${name}/metadata.json`;
-  const metadata = await fetch(url)
-    .then((r) => r.json())
-    .catch((e) => {
-      console.log(`The metadata for ${name} is missing...`);
-    });
-  if (!metadata) {
-    return {
-      notFound: true,
-    };
-  }
+  // const metadata = await fetch(url)
+  //   .then((r) => r.json())
+  //   .catch((e) => {
+  //     console.log(`The metadata for ${name} is missing...`);
+  //   });
+  // if (!metadata) {
+  //   return {
+  //     notFound: true,
+  //   };
+  // }
+  const metadata = {
+    name: "only-gems",
+    creator: "ariel",
+  };
+  console.log(metadata);
   return {
     props: { metadata: metadata ?? initialMetadata },
   };

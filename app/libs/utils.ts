@@ -180,7 +180,6 @@ export const getMagicPubKey = () => {
     if (currentGroup) {
       const keys = appKeys[currentGroup];
       if (keys) {
-        console.log(appKeys);
         return keys.pub;
       }
     }

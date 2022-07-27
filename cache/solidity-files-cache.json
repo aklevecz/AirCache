@@ -1127,8 +1127,8 @@
       ]
     },
     "/Users/arielklevecz/air-cache/contracts/PizzaCity.sol": {
-      "lastModificationDate": 1658353932520,
-      "contentHash": "1f902933ba6ad10fe98189fb101d677b",
+      "lastModificationDate": 1658357031221,
+      "contentHash": "580756bf175a52bf29a24cd04db01ed8",
       "sourceName": "contracts/PizzaCity.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -1165,6 +1165,45 @@
       ],
       "artifacts": [
         "PizzaCity"
+      ]
+    },
+    "/Users/arielklevecz/air-cache/contracts/GemsPass.sol": {
+      "lastModificationDate": 1658937355755,
+      "contentHash": "e9d1eddf61d910a2801b4298926e096c",
+      "sourceName": "contracts/GemsPass.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/Strings.sol",
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "GemsPass"
       ]
     }
   }
