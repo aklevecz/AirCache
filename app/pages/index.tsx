@@ -26,16 +26,18 @@ const Home = ({ groups }: Props) => {
       </div>
       <div className="text-center text-2xl mt-5 font-bold">Available Hunts</div>
       <div className="flex flex-col justify-center mt-5 pb-4 px-4">
-        {groups.map((group) => (
-          <button
-            className="text-lg bg-white text-black py-2 px-4 mt-4 font-bold"
-            onClick={() => router.push(`/eggs/${group.name}`)}
-            key={group.name}
-            style={{ maxWidth: 400, margin: "10px auto" }}
-          >
-            {seoConfig[group.name].title}
-          </button>
-        ))}
+        {groups
+          .filter((group) => !group.name)
+          .map((group) => (
+            <button
+              className="text-lg bg-white text-black py-2 px-4 mt-4 font-bold"
+              onClick={() => router.push(`/eggs/${group.name}`)}
+              key={group.name}
+              style={{ maxWidth: 400, margin: "10px auto" }}
+            >
+              {seoConfig[group.name].title}
+            </button>
+          ))}
       </div>
       <div className="flex flex-wrap justify-center align-center">
         <ContentBlock>Claim NFTS</ContentBlock>

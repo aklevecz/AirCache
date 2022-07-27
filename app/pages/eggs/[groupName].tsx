@@ -539,7 +539,6 @@ export const getStaticProps = async ({ params }: Params) => {
     mergedData.push(data);
     // return data;
   }
-  console.log(nftMetadata);
   return {
     props: { caches: mergedData, groupName: params.groupName, nftMetadata },
   };
