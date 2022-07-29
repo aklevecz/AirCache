@@ -14,6 +14,7 @@ export const endpoints = {
   getCachesByGroup: "/api/get-caches-by-group",
   checkClaim: "/api/check-claim",
   claimSacret: "/api/claim-sacret",
+  emailSignup: "/api/on-email-signup",
 };
 
 api.interceptors.request.use(async (config: AxiosRequestConfig) => {
@@ -119,6 +120,11 @@ export const checkClaim = async (claim: string) => {
 export const claimSacret = async (sacret: string) => {
   const res = await api.post(endpoints.claimSacret, { sacret });
   return res.data;
+};
+
+export const onEmailSignup = async (email: string) => {
+  const res = await api.post(endpoints.emailSignup, { email });
+  return res;
 };
 
 export default api;

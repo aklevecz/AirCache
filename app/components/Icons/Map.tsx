@@ -1,11 +1,15 @@
-export default function MapIcon({ color = "white" }) {
+export default function MapIcon({
+  color = "white",
+  dims = "100%",
+  margin = "unset",
+}) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="100%"
-      height="100%"
+      width={dims}
+      height={dims}
       viewBox="0 0 24 24"
-      style={{ pointerEvents: "none" }}
+      style={{ pointerEvents: "none", margin }}
     >
       <path
         fill={color}
