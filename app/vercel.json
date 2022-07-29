@@ -8,7 +8,7 @@
           "value": "ncss.onlygems.io"
         }
       ],
-      "destination": "/eggs/only-gems"
+      "destination": "/eggs/only-gems/:path*"
     }
   ]
 }
