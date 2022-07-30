@@ -6,7 +6,7 @@ const nextConfig = {
       // if the host is `app.acme.com`,
       // this rewrite will be applied
       {
-        source: "/:path*",
+        source: "/",
         has: [
           {
             type: "host",
@@ -15,7 +15,7 @@ const nextConfig = {
           },
         ],
         permanent: false,
-        destination: "/eggs/only-gems/:path*",
+        destination: "/eggs/only-gems",
       },
     ];
   },
