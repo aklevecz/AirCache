@@ -14,6 +14,7 @@ const nextConfig = {
             // value: "chim.localhost",
           },
         ],
+        permanent: false,
         destination: "/eggs/only-gems/:path*",
       },
     ];
