@@ -11,8 +11,8 @@ const nextConfig = {
           has: [
             {
               type: "host",
-              // value: "ncss.onlygems.io",
-              value: "chim.localhost",
+              value: "ncss.onlygems.io",
+              // value: "chim.localhost",
             },
           ],
           destination: "/eggs/only-gems/:path*",
