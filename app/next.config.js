@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  rewrites() {
+  redirects() {
     return {
       beforeFiles: [
         // if the host is `app.acme.com`,
