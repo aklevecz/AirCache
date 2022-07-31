@@ -13,7 +13,7 @@ type Props = {
 };
 
 const ContentBlock = ({ children }: any) => (
-  <div className="flex justify-center md:justify-start align-center basis-10/12 md:basis-1/2 text-center">
+  <div className="flex justify-center md:justify-start items-center basis-10/12 md:basis-1/2 text-center">
     <div
       className="p-2 pt-5 text-4xl font-fatfrank tracking-widest md:text-7xl md:text-left md:pr-30 md:w-10/12"
       // style={{ fontSize: 40 }}
