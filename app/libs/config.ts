@@ -119,4 +119,8 @@ export const appKeys: { [key: string]: { secret: string; pub: string } } = {
     secret: process.env.ONLY_GEMS_SECRET_KEY as string,
     pub: process.env.NEXT_PUBLIC_ONLY_GEMS_PUB_KEY as string,
   },
+  helsinki: {
+    secret: process.env.HELSINKI_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_HELSINKI_PUB_KEY as string,
+  },
 };
