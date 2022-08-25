@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { ChangeEvent, useEffect, useState } from "react";
 import { endpoints, onUpdateCache } from "../../libs/api";
-import { PIZZA_CITY_MATIC } from "../../libs/constants";
+import { GEMS_MATIC, PIZZA_CITY_MATIC } from "../../libs/constants";
 import { Cache, FillTxState, TxState } from "../../libs/types";
 import web3Api from "../../libs/web3Api";
 
@@ -48,7 +48,7 @@ export default function FillCache({
   closeModal,
 }: Props) {
   const [view, setView] = useState(View.Confirm);
-  const [tokenAddress, setTokenAddress] = useState(PIZZA_CITY_MATIC);
+  const [tokenAddress, setTokenAddress] = useState(GEMS_MATIC);
   const [ownersNFTs, setOwnersNFTs] = useState([]);
   const [selectedNFT, setSelectedNFT] = useState("");
 

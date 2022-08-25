@@ -13,6 +13,8 @@ export const AIRCACHE_ADDRESS = !prod
 
 export const PIZZA_CITY_MATIC = "0xE3404a9253EA9CbF741a7fcD24d48Bb10ADED1AA";
 
+export const GEMS_MATIC = "0x93E9c3dd0Ab468Aae3D9906f8F44808e19DDD44B";
+
 export const abis = {
   tokenURI: "function tokenURI(uint256) public view returns (string memory)",
   uri: "function uri(uint256) public view returns (string memory)",

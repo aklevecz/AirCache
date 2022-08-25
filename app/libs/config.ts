@@ -20,6 +20,7 @@ const cityCenters = {
   la_colombe: { lat: 34.1021603594777, lng: -118.24306380878141 },
   venice_beach: { lat: 33.9946586623243, lng: -118.48187211490418 },
   atlantic_city: { lat: 39.363759445000795, lng: -74.43874098662849 },
+  helsinki: { lat: 60.167748266850595, lng: 24.947493587462798 },
 };
 
 const host =
@@ -86,6 +87,13 @@ export const seoConfig: { [key: string]: any } = {
     description: "A hunt for Only Gems passes",
     image: `${host}/only-gems.png`,
     map_center: cityCenters.atlantic_city,
+    icon: { useNFT: false, image: { empty: emptyChest, filled: filledChest } },
+  },
+  helsinki: {
+    title: "Helsinki",
+    description: "Helsinki",
+    image: `${host}/only-gems.png`,
+    map_center: cityCenters.helsinki,
     icon: { useNFT: false, image: { empty: emptyChest, filled: filledChest } },
   },
 };

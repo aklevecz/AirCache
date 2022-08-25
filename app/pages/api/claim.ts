@@ -83,8 +83,9 @@ export default async function handler(
     const distance = haversineDistance(userLocation, cacheLocation);
     const isTooFar = distance > 20;
     const isAdmin =
-      // user.email === "arielklevecz@gmail.com" ||
-      user.email === "ariel@yaytso.art" || user.email === "teh@raptor.pizza";
+      user.email === "arielklevecz@gmail.com" ||
+      user.email === "ariel@yaytso.art" ||
+      user.email === "teh@raptor.pizza";
     console.log(user.email, distance);
     if (isTooFar && !isAdmin) {
       return res.json({
@@ -106,6 +107,7 @@ export default async function handler(
     };
 
     const queryRes = await db.query(queryParams).promise();
+    console.log(queryRes.Items);
     if (!queryRes.Items) {
       return res.json({
         tx: null,

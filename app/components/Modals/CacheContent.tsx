@@ -56,7 +56,7 @@ export default function CacheContentModal({
   const [fetchingMeta, setFetchingMeta] = useState(false);
 
   const [email, setEmail] = useState("");
-
+  console.log(NFT);
   const onChangeEmail = (e: React.FormEvent<HTMLInputElement>) => {
     setEmail(e.currentTarget.value);
   };
