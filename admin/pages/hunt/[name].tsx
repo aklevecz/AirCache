@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import web3Api, { contract } from "../../libs/web3Api";
 import { getCachesByGroup, onCreateCache } from "../../libs/api";
 import { ethers } from "ethers";
-import { Cache, LatLng } from "../../libs/types";
+import { Cache, LatLng, TxState } from "../../libs/types";
 import useCachesByGroup from "../../hooks/useCachesByGroup";
 import Modal from "../../components/Modal/Index";
 import FillCache from "../../components/Modal/FillCache";
@@ -74,12 +74,23 @@ console.log(
 const getSelectedCache = (caches: Cache[], selectedCache: string) =>
   caches.find((cache) => cache.cacheId === selectedCache);
 
+const txMessages = {
+  [TxState.Idle]: "",
+  [TxState.Placing]: "",
+  [TxState.Signing]: "Waiting for Signature",
+  [TxState.Minting]: "Your Transaction is Being Mined",
+  [TxState.Completed]: "Your Transaction was Completed!",
+  [TxState.Error]: "Sorry, something went wrong :( Please try again...",
+};
+
 export default function Hunt({ metadata }: Props) {
   const wallet = useWallet();
   const router = useRouter();
   const caches = useCachesByGroup(metadata.name);
   const createMarkerRef = useRef<google.maps.Marker>();
   const createMarkerPositionRef = useRef<LatLng>();
+
+  const [txState, setTxState] = useState<TxState>(TxState.Idle);
 
   const [selectedCache, setSelectedCache] = useState("");
 
@@ -90,8 +101,7 @@ export default function Hunt({ metadata }: Props) {
   if (!router.isFallback && !metadata) {
     return <ErrorPage statusCode={404} />;
   }
-
-  const location = metadata ? metadata.location : "0,0";
+  const location = metadata && metadata.location ? metadata.location : "0,0";
   // Could contain this in another component to be less ugly
   const { map, mapContainerRef, createDragMarker, createStaticMarker } = useMap(
     {
@@ -99,29 +109,45 @@ export default function Hunt({ metadata }: Props) {
     }
   );
   const onCreateMarker = () => {
-    const pos = parseLocationString(location);
+    setTxState(TxState.Placing);
 
+    // const pos = parseLocationString(location);
+    const pos = map?.getCenter();
+    if (!pos) {
+      return;
+    }
+    console.log(pos.lat(), pos.lng());
     createDragMarker(
       metadata.icons.markerEmpty,
       70,
-      pos.lat,
-      pos.lng,
+      pos.lat(),
+      pos.lng(),
       createMarkerRef,
       createMarkerPositionRef
     );
   };
 
+  const resetCreateMarker = () => {
+    createMarkerRef.current!.setMap(null);
+    createMarkerPositionRef.current = undefined;
+  };
+
   const onCreate = async () => {
     // const pos = parseLocationString(metadata.location);
+    setTxState(TxState.Signing);
     const pos = createMarkerPositionRef.current;
     const provider = wallet.web3Wallet.metaMask.provider;
     if (provider && pos) {
       const groupName = metadata.name;
-      const success = await web3Api.createCache(pos.lat, pos.lng, provider);
+      const success = await web3Api.createCache(
+        pos.lat,
+        pos.lng,
+        provider,
+        setTxState
+      );
 
       if (success) {
-        createMarkerRef.current!.setMap(null);
-        createMarkerPositionRef.current = undefined;
+        resetCreateMarker();
         const cacheId = (await contract.cacheId()).toNumber();
 
         const res = await onCreateCache(
@@ -186,8 +212,22 @@ export default function Hunt({ metadata }: Props) {
     }
   }, [mapCenter]);
 
+  useEffect(() => {
+    if (txState >= TxState.Completed) {
+      setTimeout(() => {
+        resetCreateMarker();
+        setTxState(TxState.Idle);
+      }, 1000);
+    }
+  }, [txState]);
+
   return (
     <div className="h-full w-full">
+      {txState > TxState.Placing && (
+        <div className="absolute w-full h-full bg-red-400 z-50 flex justify-center items-center">
+          <div>{txMessages[txState]}</div>
+        </div>
+      )}
       {caches.data && (
         <Modal ref={modal}>
           <FillCache
@@ -196,22 +236,31 @@ export default function Hunt({ metadata }: Props) {
             provider={wallet.web3Wallet.metaMask.provider}
             huntName={metadata.name}
             mutate={caches.mutate}
+            closeModal={modal.current && modal.current.close}
           />
         </Modal>
       )}
-      <img
-        onClick={onCreateMarker}
-        className="absolute left-10 top-50 z-50"
-        src={metadata.icons.markerFilled}
-      />
-      <input
+
+      {/* <input
         value={mapCenter}
         onChange={(e: any) => setMapCenter(e.currentTarget.value)}
-      />
+      /> */}
       <Map ref={mapContainerRef} />
-      <button onClick={onCreate} className="absolute bottom-10 left-1/2">
-        Create
-      </button>
+      {txState === TxState.Idle && (
+        <div className="absolute left-1/2 bottom-10 z-50 bg-none border-white stroke-slate-50a flex flex-col">
+          <img
+            className="w-1/3 block m-auto"
+            onClick={onCreateMarker}
+            src={metadata.icons.markerFilled}
+          />
+          <div>Add a new marker</div>
+        </div>
+      )}
+      {txState === TxState.Placing && (
+        <button onClick={onCreate} className="absolute bottom-10 left-1/2">
+          Place Marker
+        </button>
+      )}
     </div>
   );
 }
@@ -232,21 +281,21 @@ type Params = {
 export const getStaticProps = async ({ params }: Params) => {
   const { name } = params;
   const url = `${HUNT_CONFIG_S3}/${name}/metadata.json`;
-  // const metadata = await fetch(url)
-  //   .then((r) => r.json())
-  //   .catch((e) => {
-  //     console.log(`The metadata for ${name} is missing...`);
-  //   });
-  // if (!metadata) {
-  //   return {
-  //     notFound: true,
-  //   };
-  // }
-  const metadata = {
-    name: "only-gems",
-    creator: "ariel",
-  };
-  console.log(metadata);
+  const metadata = await fetch(url)
+    .then((r) => r.json())
+    .catch((e) => {
+      console.log(`The metadata for ${name} is missing...`);
+    });
+  if (!metadata) {
+    return {
+      notFound: true,
+    };
+  }
+  // const metadata = {
+  //   name: "only-gems",
+  //   creator: "ariel",
+  // };
+  // console.log(metadata);
   return {
     props: { metadata: metadata ?? initialMetadata },
   };

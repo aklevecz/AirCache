@@ -17,6 +17,7 @@ export default function useAuth() {
     //   return console.error("No Window");
     // }
     // logout();
+
     return new Promise(async (resolve) => {
       setFetching(true);
       let redirectURI = "https://air.yaytso.art/callback" + destination;
@@ -29,7 +30,6 @@ export default function useAuth() {
       //     ? `?${destination.split("/")[0]}=${destination.split("/")[1]}`
       //     : "";
       const key = getMagicPubKey();
-      console.log(key);
       const magic = new Magic(key, {
         // extensions: [
         //   new SolanaExtension({

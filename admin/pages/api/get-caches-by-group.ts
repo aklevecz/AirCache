@@ -12,6 +12,7 @@ export default async function handler(
 ) {
   const { groupName } = req.query;
   console.log(groupName);
+  console.log(cacheByGroupTableName);
   const params = {
     TableName: cacheByGroupTableName,
     ExpressionAttributeValues: {

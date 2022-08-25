@@ -77,16 +77,27 @@ export default function useWeb3Wallet(): Web3Wallet {
           isConnecting: false,
         });
       });
-      window.ethereum.on("disconnect", async (e: any) => {
-        const accounts = await getAccountsMetaMask();
+      // For now, 'eth_accounts' will continue to always return an array
+      const handleAccountsChanged = (accounts: any) => {
         if (accounts.length === 0) {
           window.location.reload();
+        } else if (accounts[0] !== metaMask.accounts[0]) {
+          setMetaMask({ ...metaMask, accounts: [accounts[0]] });
+          // Do any other work!
         }
-      });
+      };
+      window.ethereum.on("accountsChanged", handleAccountsChanged);
+
+      // window.ethereum.on("disconnect", async (e: any) => {
+      //   const accounts = await getAccountsMetaMask();
+      //   if (accounts.length === 0) {
+      //     window.location.reload();
+      //   }
+      // });
     }
   }, []);
 
   const connected = metaMask.accounts.length > 0;
-
+  console.log(metaMask.accounts);
   return { metaMask, connectMetaMask, contract, connected };
 }

@@ -4,6 +4,7 @@ import formidable from "formidable";
 import sharp from "sharp";
 import fs from "fs";
 import { cloudfront, db, s3 } from "./aws";
+import { getToken } from "next-auth/jwt";
 
 type Data = {
   name: string;
@@ -17,11 +18,15 @@ export const config = {
 
 const airYaytsoBucket = "cf-simple-s3-origin-egg2-669844428319";
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
   console.log("submitting");
+  const token = await getToken({ req });
+  if (!token) {
+    return res.status(404).end();
+  }
   const form = new formidable.IncomingForm();
   form.parse(req, async function (err, fields, files: any) {
     const host = `https://cdn.yaytso.art`;
@@ -80,12 +85,13 @@ export default function handler(
       if (err) console.log(err);
     });
 
-    const auth = { username: "ariel", email: "arielklevecz@gmail.com" };
+    const email = token.email;
+
     const putParams = {
       TableName: "air-yaytso-groups",
       Item: {
         name: fields.name,
-        creator: auth.email,
+        creator: email,
       },
     };
     // It could just read from the configs instead of having a a discrete collection for it

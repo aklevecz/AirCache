@@ -1,13 +1,17 @@
-import { Field, Form, Formik, FormikHelpers } from "formik";
-import * as Yup from "yup";
 import type { NextPage } from "next";
-import { useContext, useEffect, useState } from "react";
 import db from "../libs/db";
+import { useWallet } from "../contexts/WalletContext";
+import { useSession } from "next-auth/react";
+import { unstable_getServerSession } from "next-auth";
+import Signin from "../components/Auth/Signin";
+import UserInfo from "../components/UserInfo";
+import Layout from "../components/Layout";
+import TheirHunts from "../components/TheirHunts";
+import CreateHuntForm from "../components/Forms/CreateHunt";
+import { useEffect, useState } from "react";
+import { getHuntMetadata } from "../libs/api";
+import SectionHeading from "../components/Layout/SectionHeading";
 import Link from "next/link";
-import Connect from "../components/Connect";
-import useWeb3Wallet from "../hooks/useWeb3Wallet";
-import { useWallet, WalletContext } from "../contexts/WalletContext";
-import { Wallet } from "ethers";
 
 // {
 // ["coindesk-austin"]: {
@@ -19,6 +23,16 @@ import { Wallet } from "ethers";
 // }
 // }
 
+type HuntMetadata = {
+  name: string;
+  description: string;
+  location: string;
+  icons: {
+    markerEmpty: string;
+    markerFilled: string;
+  };
+};
+
 type Group = {
   name: string;
 };
@@ -27,145 +41,98 @@ type Props = {
   groups: Group[];
 };
 
-type Values = {
-  name: string;
-  description: string;
-  location: string;
-  markerEmpty: any;
-  markerFilled: any;
-};
-
-const uploadSchema = Yup.object().shape({
-  name: Yup.string().required(),
-  description: Yup.string().required(),
-  location: Yup.string().required(),
-  markerEmpty: Yup.mixed().required(),
-  markerFilled: Yup.mixed().required(),
-});
-
 // Should be able to edit a hunts assets and metadata
 
 const Home: NextPage<Props> = ({ groups }) => {
-  const { web3Wallet, setName } = useWallet();
-  const [previewImgEmpty, setPreviewImgEmpty] = useState<any>(null);
-  const [previewImgFilled, setPreviewImgFilled] = useState<any>(null);
+  const { data: session } = useSession();
+  const [selectedHuntMetadata, setSelectedHuntMetadata] =
+    useState<HuntMetadata | null>(null);
+  const [showCreateHunt, setShowCreateHunt] = useState(false);
 
+  const toggleCreateHunt = () => {
+    setSelectedHuntMetadata(null);
+    setShowCreateHunt(!showCreateHunt);
+  };
+
+  const fetchHuntMetadata = (name: string) => {
+    setShowCreateHunt(false);
+    getHuntMetadata(name).then(setSelectedHuntMetadata);
+  };
+
+  if (!session) {
+    return <Signin />;
+  }
   if (!groups) {
     return <div>loading...</div>;
   }
+
+  const metadata = selectedHuntMetadata;
+
   return (
-    <div className="flex flex-col text-white">
-      <div className="flex border">
-        <div className="border">
-          <div className="uppercase underline">available hunts</div>
-          {groups.map((group) => (
-            <Link href={`/hunt/${group.name}`}>
-              <div style={{ cursor: "pointer" }} key={group.name}>
-                {group.name}
-              </div>
+    // <div className="flex flex-col text-white">
+    <Layout>
+      {session && <UserInfo />}
+      <div className="grid grid-cols-3 justify-center p-5 mt-10">
+        <TheirHunts
+          groups={groups}
+          toggleCreateHunt={toggleCreateHunt}
+          fetchHuntMetadata={fetchHuntMetadata}
+          selectedHunt={metadata && metadata.name}
+        />
+        {showCreateHunt && <CreateHuntForm />}
+        {metadata && (
+          <div>
+            <SectionHeading>Hunt Details</SectionHeading>
+            <div>{metadata.name}</div>
+            <div>{metadata.description}</div>
+            <div>{metadata.location}</div>
+            <div className="flex">
+              <img src={metadata.icons.markerEmpty} />{" "}
+              <img src={metadata.icons.markerFilled} />
+            </div>
+            <Link href={`/hunt/${metadata.name}`}>
+              <button>Go to Hunt Map</button>
             </Link>
-          ))}
-        </div>
-        {web3Wallet && web3Wallet.connected && (
-          <div>{web3Wallet && web3Wallet.metaMask.accounts[0]}</div>
+          </div>
         )}
       </div>
-      {web3Wallet && !web3Wallet.connected && (
-        <Connect web3Wallet={web3Wallet} />
-      )}
-      <div>
-        <div className="uppercase">create hunt</div>
-        <Formik
-          initialValues={{
-            name: "",
-            description: "",
-            location: "34.08326394070492,-118.21794546931355",
-            markerEmpty: null,
-            markerFilled: null,
-          }}
-          validationSchema={uploadSchema}
-          onSubmit={(
-            values: Values,
-            { setSubmitting }: FormikHelpers<Values>
-          ) => {
-            const body = new FormData();
-            body.append("name", values.name);
-            body.append("description", values.description);
-            body.append("location", values.location);
-            body.append("markerEmpty", values.markerEmpty);
-            body.append("markerFilled", values.markerFilled);
-
-            fetch("/api/upload", { method: "POST", body });
-            setSubmitting(false);
-          }}
-        >
-          {({ setFieldValue, values }) => (
-            <Form>
-              <div>
-                <label htmlFor="name">Name</label>
-                <Field id="name" name="name" placeholder="Name" />
-              </div>
-              <div>
-                <label htmlFor="description">Description</label>
-                <Field
-                  id="description"
-                  name="description"
-                  placeholder="Description"
-                />
-              </div>
-              <div>
-                <label htmlFor="location">Location</label>
-                <Field id="location" name="location" placeholder="3000,-3000" />
-              </div>
-              <div>
-                <label htmlFor="markerEmpty">Marker Empty</label>
-                <input
-                  id="markerEmpty"
-                  name="markerEmpty"
-                  type="file"
-                  onChange={(event) => {
-                    if (event.currentTarget && event.currentTarget.files) {
-                      const i = event.currentTarget.files[0];
-                      setFieldValue("markerEmpty", i);
-                      setPreviewImgEmpty(URL.createObjectURL(i));
-                    }
-                  }}
-                />
-              </div>
-              <img src={previewImgEmpty} />
-              <div>
-                <label htmlFor="markerFilled">Marker Filled</label>
-                <input
-                  id="markerFilled"
-                  name="markerFilled"
-                  type="file"
-                  onChange={(event) => {
-                    if (event.currentTarget && event.currentTarget.files) {
-                      const i = event.currentTarget.files[0];
-                      setFieldValue("markerFilled", i);
-                      setPreviewImgFilled(URL.createObjectURL(i));
-                    }
-                  }}
-                />
-              </div>
-              <img src={previewImgFilled} />
-              <button type="submit">Submit</button>
-            </Form>
-          )}
-        </Formik>
-      </div>
-    </div>
+    </Layout>
   );
 };
 
 export default Home;
 
-export const getStaticProps = async () => {
-  const params = {
-    TableName: "air-yaytso-groups",
+export async function getServerSideProps(context: any) {
+  const authOptions = { providers: [] };
+  const session = await unstable_getServerSession(
+    context.req as any,
+    context.res as any,
+    authOptions as any
+  );
+  let groups: any[] = [];
+  if (session && session.user) {
+    const params = {
+      TableName: "air-yaytso-groups",
+    };
+    const dbRes = await db.scan(params).promise();
+    const email = session.user.email;
+    groups = dbRes.Items!.filter((item) => item.creator === email);
+  }
+
+  return {
+    props: {
+      groups,
+    },
   };
-  const dbRes = await db.scan(params).promise();
-  const groups = dbRes.Items;
-  console.log(groups);
-  return { props: { groups } };
-};
+}
+
+// export const getStaticProps = async () => {
+//   const params = {
+//     TableName: "air-yaytso-groups",
+//   };
+//   const dbRes = await db.scan(params).promise();
+//   const token = await getToken();
+//   const groups = dbRes.Items!.filter((item) => item.creator === token?.email);
+//   console.log(groups);
+//   return { props: { groups } };
+// };

@@ -23,11 +23,16 @@ export default function Callback() {
     );
     if (authRequest.status === 200) {
       console.log("great job");
+      console.log(id);
       const { token } = authRequest.data;
       storage.setItem(storage.keys.token, token);
       mutate(endpoints.user);
       // let destination = id.replace("-", "/");
-      router.push("/eggs/" + id);
+      if (id) {
+        router.push("/eggs/" + id);
+      } else {
+        router.push("");
+      }
       // router.push("/wallet");
     }
   };

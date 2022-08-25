@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
+import { HUNT_CONFIG_S3 } from "./constants";
 // import { Magic } from "magic-sdk";
 // import storage from "./storage";
 // import { Latlng } from "./types";
@@ -28,6 +29,16 @@ api.interceptors.request.use(async (config: AxiosRequestConfig) => {
   // }
   return config;
 });
+
+export const getHuntMetadata = async (name: string) => {
+  const url = `${HUNT_CONFIG_S3}/${name}/metadata.json`;
+  const metadata = await fetch(url)
+    .then((r) => r.json())
+    .catch((e) => {
+      console.log(`The metadata for ${name} is missing...`);
+    });
+  return metadata;
+};
 
 export const getUser = async () => {
   try {

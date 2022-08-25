@@ -9,6 +9,7 @@ import {
 import { delay, ipfstoIO, ipfsToPinata, isIpfs } from "./utils";
 import { prod } from "./env";
 import { onUpdateCache } from "./api";
+import { FillTxState, TxState } from "./types";
 
 export const ALCHEMY_KEY = prod
   ? process.env.ALCHEMY_KEY
@@ -57,7 +58,8 @@ const createCache = async (
   lng: number,
   provider:
     | ethers.providers.AlchemyProvider
-    | ethers.providers.Web3Provider = alchemyProvider
+    | ethers.providers.Web3Provider = alchemyProvider,
+  callback: any
 ) => {
   const contract = new ethers.Contract(
     contractAddress,
@@ -72,14 +74,17 @@ const createCache = async (
     const lngBytes = ethers.utils.formatBytes32String(lng.toString());
     try {
       const tx = await contractSigner.createCache(latBytes, lngBytes);
+      callback(TxState.Minting);
       const receipt = await tx.wait();
       for (const event of receipt.events) {
         console.log(event);
       }
       await delay(1000);
+      callback(TxState.Completed);
       return true;
     } catch (e) {
-      alert(e);
+      callback(TxState.Error);
+      alert(JSON.stringify(e));
       console.error(e);
       return false;
     }
@@ -147,7 +152,8 @@ const fillCache = async (
   tokenAddress: string,
   provider:
     | ethers.providers.AlchemyProvider
-    | ethers.providers.Web3Provider = alchemyProvider
+    | ethers.providers.Web3Provider = alchemyProvider,
+  callback: any
 ) => {
   const contract = new ethers.Contract(
     contractAddress,
@@ -158,18 +164,24 @@ const fillCache = async (
   if (contract && signer) {
     const contractSigner = contract.connect(signer);
     try {
+      callback(FillTxState.Signing);
       const tx = await contractSigner.holdNFT(tokenAddress, tokenId, cacheId);
+      callback(FillTxState.Minting);
+
       const receipt = await tx.wait();
       let eventResponse = "";
       for (const event of receipt.events) {
         console.log(event);
         if (event.event === "NFTHeld") {
+          callback(FillTxState.Completed);
           // Refactor: Should this be optimisic or a webhook?
           eventResponse = event.event;
         }
       }
       return eventResponse;
     } catch (e) {
+      alert(JSON.stringify(e));
+      callback(FillTxState.Error);
       console.error(e);
     }
   }

@@ -43,6 +43,7 @@ export const useMap = ({ center = cityCenters.la }: Props) => {
       map,
       // icon,
       draggable: true,
+      zIndex: 999,
     });
 
     markerRef.current! = cacheMarker;
@@ -65,7 +66,6 @@ export const useMap = ({ center = cityCenters.la }: Props) => {
       origin: new google.maps.Point(0, -14),
       // anchor: new google.maps.Point(10, 0),
     };
-    console.log(position, imgUrl, map);
     const cacheMarker = new google.maps.Marker({
       position,
       map,
@@ -91,6 +91,7 @@ export const useMap = ({ center = cityCenters.la }: Props) => {
           center,
         });
         setMap(map);
+        map.setCenter(center);
       }
     });
   };
@@ -98,11 +99,11 @@ export const useMap = ({ center = cityCenters.la }: Props) => {
     initMap();
   }, [mapContainerRef]);
 
-  useEffect(() => {
-    if (map && center) {
-      map.setCenter(center);
-    }
-  }, [center, map]);
+  // useEffect(() => {
+  //   if (map && center) {
+  //     map.setCenter(center);
+  //   }
+  // }, [center, map]);
 
   return { map, mapContainerRef, createDragMarker, createStaticMarker };
 };

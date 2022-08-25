@@ -29,3 +29,20 @@ export type Cache = {
   tokenAddress: string;
   tokenId: number;
 };
+
+export enum TxState {
+  Idle,
+  Placing,
+  Signing,
+  Minting,
+  Completed,
+  Error,
+}
+
+export enum FillTxState {
+  Idle,
+  Signing,
+  Minting,
+  Completed,
+  Error,
+}

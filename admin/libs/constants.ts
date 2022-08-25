@@ -11,6 +11,8 @@ export const AIRCACHE_ADDRESS = !prod
   ? AIRCACHE_ADDRESS_MUMBAI
   : AIRCACHE_ADDRESS_MATIC;
 
+export const PIZZA_CITY_MATIC = "0xE3404a9253EA9CbF741a7fcD24d48Bb10ADED1AA";
+
 export const abis = {
   tokenURI: "function tokenURI(uint256) public view returns (string memory)",
   uri: "function uri(uint256) public view returns (string memory)",
@@ -28,3 +30,8 @@ export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 export const cacheByGroupTableName = prod
   ? "cache-by-group"
   : "cache-by-group-test";
+
+export const colors = {
+  blue: "#90bcff",
+  red: "rgb(255, 112, 112)",
+};
