@@ -92,7 +92,7 @@ export const seoConfig: { [key: string]: any } = {
   helsinki: {
     title: "Helsinki",
     description: "Helsinki",
-    image: `${host}/only-gems.png`,
+    image: `${host}/blackbeard-ogimage.png`,
     map_center: cityCenters.helsinki,
     icon: { useNFT: false, image: { empty: emptyChest, filled: filledChest } },
   },
