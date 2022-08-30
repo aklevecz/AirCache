@@ -1,13 +1,17 @@
 import { useRouter } from "next/router";
 import db from "../libs/db";
 import { seoConfig } from "../libs/config";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import trove from "../assets/icons/chest-filled.png";
 import myosin from "../assets/icons/myosin.png";
 import MapIcon from "../components/Icons/Map";
 import { onEmailSignup } from "../libs/api";
 import BlackWrappedSpinner from "../components/Loading/BlackWrappedSpinner";
 import { motion } from "framer-motion";
+
+import airYaytso from "../assets/icons/air-yaytso.svg";
+import EgglineIcon from "../components/Icons/Eggline";
+
 type Props = {
   groups: { name: string }[];
 };
@@ -28,6 +32,7 @@ const Home = ({ groups }: Props) => {
   const [email, setEmail] = useState("");
   const [fetching, setFetching] = useState(false);
   const [isSignedUp, setIsSignedUp] = useState(false);
+  const [isYaytso, setIsYaytso] = useState(false);
   const onEmailChange = (e: FormEvent<HTMLInputElement>) =>
     setEmail(e.currentTarget.value);
   const onSubmitEmail = async () => {
@@ -40,8 +45,64 @@ const Home = ({ groups }: Props) => {
     }
   };
   const router = useRouter();
-  if (!groups) {
-    return <div>loading...</div>;
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (window.location.host === "air.yaytso.art") {
+        setIsYaytso(true);
+      } else {
+        setIsYaytso(false);
+      }
+    }
+  }, []);
+  // if (!groups) {
+  //   return <div>loading...</div>;
+  // }
+
+  if (isYaytso) {
+    return (
+      <div>
+        <img className="p-5" src={airYaytso.src} />
+        <div className="w-1/2 m-auto">
+          <EgglineIcon />
+        </div>
+        <motion.div layout>
+          {!isSignedUp && (
+            <div id="section-2">
+              <div className="text-2xl font-fatfrank text-center mt-10">
+                Sign up for more info
+              </div>
+              <input
+                className="m-auto block mt-2 text-center p-2"
+                style={{ borderRadius: 10 }}
+                name="email"
+                value={email}
+                type="email"
+                placeholder="email"
+                onChange={onEmailChange}
+              />
+              <button
+                onClick={onSubmitEmail}
+                className="bg-white text-black px-5 py-2 font-fatfrank rounded-full text-xl m-auto block mt-4"
+              >
+                {fetching ? <BlackWrappedSpinner /> : "Signup"}
+              </button>
+            </div>
+          )}
+          {isSignedUp && (
+            <div
+              id="section-2"
+              className="mt-10 p-5"
+              style={{ border: "2px solid white" }}
+            >
+              <div className="text-5xl text-center font-fatfrank">
+                You're all set!
+              </div>
+            </div>
+          )}
+        </motion.div>
+      </div>
+    );
   }
   return (
     <div className="pb-20">

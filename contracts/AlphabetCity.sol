@@ -33,6 +33,7 @@ import "hardhat/console.sol";
 //   25: "Y",
 //   26: "Z",
 
+// Just make a pizza version
 contract AlphabetCity is ERC721, Ownable {
     using Strings for uint256;
     using Counters for Counters.Counter;
@@ -53,7 +54,7 @@ contract AlphabetCity is ERC721, Ownable {
     uint256[][] words = [[0]];
 
     mapping(uint256 => uint256) public tokenToLetter;
-    mapping(address => uint256[][10]) public hunterToWord;
+    mapping(address => uint256[][]) public hunterToWord;
     mapping(address => uint256) public wordOwners;
 
     mapping(uint256 => uint256) public wordIndexToTokenId;
@@ -112,6 +113,8 @@ contract AlphabetCity is ERC721, Ownable {
         address to,
         uint256 _tokenId
     ) internal virtual override {
+        // this interaction only needs to happen if it comes from a claim which originates from the owner
+        require(to == owner(), "Must be from owner");
         require(accountHasWord[to] == false, "You may only play once!");
         if (tokenIdToWordIndex[_tokenId] > 0) {
             console.log("this is a word");

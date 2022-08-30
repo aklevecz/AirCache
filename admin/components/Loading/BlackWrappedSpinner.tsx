@@ -1,3 +1,12 @@
+declare global {
+  namespace JSX {
+    interface StyleHTMLAttributes<T extends HTMLStyleElement> {
+      jsx?: boolean;
+      global?: boolean;
+    }
+  }
+}
+
 export default function BlackWrappedSpinner() {
   return (
     <div className="bg-black rounded-full">

@@ -5,6 +5,7 @@ import { mutate } from "swr";
 import api, { endpoints } from "../libs/api";
 import storage from "../libs/storage";
 
+// DEPRECATED?
 export default function Callback() {
   const router = useRouter();
 
