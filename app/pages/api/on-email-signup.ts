@@ -19,12 +19,13 @@ export default async function handler(
     //   req.headers.authorization as string,
     //   JWT_SECRET
     // );
-    const { email } = req.body;
+    const { email, environment } = req.body;
     const TableName = "blackbeard-emails";
     const params = {
       TableName,
       Item: {
         email,
+        environment,
       },
     };
     const dbRes = await db.put(params).promise();

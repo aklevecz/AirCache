@@ -37,7 +37,7 @@ const Home = ({ groups }: Props) => {
     setEmail(e.currentTarget.value);
   const onSubmitEmail = async () => {
     setFetching(true);
-    const res = await onEmailSignup(email);
+    const res = await onEmailSignup(email, isYaytso ? "yaytso" : "blackbeard");
     setFetching(false);
     console.log(res);
     if (res.status === 200) {

@@ -122,8 +122,8 @@ export const claimSacret = async (sacret: string) => {
   return res.data;
 };
 
-export const onEmailSignup = async (email: string) => {
-  const res = await api.post(endpoints.emailSignup, { email });
+export const onEmailSignup = async (email: string, environment: string) => {
+  const res = await api.post(endpoints.emailSignup, { email, environment });
   return res;
 };
 
