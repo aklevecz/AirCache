@@ -21,6 +21,8 @@ const cityCenters = {
   venice_beach: { lat: 33.9946586623243, lng: -118.48187211490418 },
   atlantic_city: { lat: 39.363759445000795, lng: -74.43874098662849 },
   helsinki: { lat: 60.167748266850595, lng: 24.947493587462798 },
+  barcelona: { lat: 41.4042128, lng: 2.1750039 },
+  toronto: { lat: 43.657195, lng: -79.38517 },
 };
 
 const host =
@@ -95,6 +97,20 @@ export const seoConfig: { [key: string]: any } = {
     image: `${host}/blackbeard-ogimage.png`,
     map_center: cityCenters.helsinki,
     icon: { useNFT: false, image: { empty: emptyChest, filled: filledChest } },
+  },
+  barcelona: {
+    title: "Barcelona",
+    description: "Hunting for treasure in Barcelona",
+    image: `${host}/blackbeard-ogimage.png`,
+    map_center: cityCenters.barcelona,
+    icon: { useNFT: true, image: { empty: emptyChest, filled: filledChest } },
+  },
+  toronto: {
+    title: "Toronto",
+    description: "Hunting for treasure in Toronto",
+    image: `${host}/blackbeard-ogimage.png`,
+    map_center: cityCenters.toronto,
+    icon: { useNFT: true, image: { empty: emptyChest, filled: filledChest } },
   },
 };
 
