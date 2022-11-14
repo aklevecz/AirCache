@@ -12,9 +12,10 @@ import { onUpdateCache } from "./api";
 import { FillTxState, TxState } from "./types";
 
 export const ALCHEMY_KEY = prod
-  ? process.env.ALCHEMY_KEY
-  : process.env.ALCHEMY_KEY_MUMBAI;
+  ? process.env.NEXT_PUBLIC_ALCHEMY_KEY
+  : process.env.NEXT_PUBLIC_ALCHEMY_KEY_MUMBAI;
 const network = prod ? "matic" : "maticmum";
+console.log("HELLO", prod, network, ALCHEMY_KEY);
 export const alchemyProvider = new ethers.providers.AlchemyProvider(
   network,
   ALCHEMY_KEY

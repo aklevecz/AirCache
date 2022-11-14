@@ -16,9 +16,10 @@ import { alphabetMap, delay, ipfstoIO, ipfsToPinata, isIpfs } from "./utils";
 import { prod } from "./env";
 
 export const ALCHEMY_KEY = prod
-  ? process.env.ALCHEMY_KEY
-  : process.env.ALCHEMY_KEY_MUMBAI;
+  ? process.env.NEXT_PUBLIC_ALCHEMY_KEY
+  : process.env.NEXT_PUBLIC_ALCHEMY_KEY_MUMBAI;
 const network = prod ? "matic" : "maticmum";
+console.log("HEYYYYY");
 export const provider = new ethers.providers.AlchemyProvider(
   network,
   ALCHEMY_KEY
