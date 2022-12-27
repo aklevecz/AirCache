@@ -86,7 +86,8 @@ const txMessages = {
 export default function Hunt({ metadata }: Props) {
   const wallet = useWallet();
   const router = useRouter();
-  const caches = useCachesByGroup(metadata.name);
+  // dumb
+  const caches = useCachesByGroup(metadata ? metadata.name : "");
   const createMarkerRef = useRef<google.maps.Marker>();
   const createMarkerPositionRef = useRef<LatLng>();
 
@@ -98,7 +99,8 @@ export default function Hunt({ metadata }: Props) {
 
   const modal = useRef<any>(null);
 
-  if (!router.isFallback && !metadata) {
+  // if (!router.isFallback && !metadata) {
+  if (!metadata) {
     return <ErrorPage statusCode={404} />;
   }
   const location = metadata && metadata.location ? metadata.location : "0,0";
@@ -116,7 +118,6 @@ export default function Hunt({ metadata }: Props) {
     if (!pos) {
       return;
     }
-    console.log(pos.lat(), pos.lng());
     createDragMarker(
       metadata.icons.markerEmpty,
       70,
@@ -267,6 +268,7 @@ export default function Hunt({ metadata }: Props) {
 
 export async function getStaticPaths() {
   const hunts = await fetchAllGroups();
+
   return {
     paths: hunts.map((hunt) => `/hunt/${hunt.name}`) ?? [],
     fallback: true,
@@ -295,7 +297,6 @@ export const getStaticProps = async ({ params }: Params) => {
   //   name: "only-gems",
   //   creator: "ariel",
   // };
-  // console.log(metadata);
   return {
     props: { metadata: metadata ?? initialMetadata },
   };
