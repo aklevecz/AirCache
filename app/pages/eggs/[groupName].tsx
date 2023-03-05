@@ -1,7 +1,7 @@
 import axios from "axios";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import eggIcon from "../../assets/icons/egg2.png";
 import blankEggIcon from "../../assets/icons/egg.png";
 import { Map } from "../../components/Map/Component";
@@ -10,7 +10,11 @@ import CacheContentModal from "../../components/Modals/CacheContent";
 import useAirCache from "../../hooks/useAirCache";
 import useAuth from "../../hooks/useAuth";
 import useModal from "../../hooks/useModal";
-import { AIRCACHE_ADDRESS, cacheByGroupTableName } from "../../libs/constants";
+import {
+  AIRCACHE_ADDRESS,
+  cacheByGroupTableName,
+  CDN_HOST,
+} from "../../libs/constants";
 import db from "../../libs/db";
 import storage from "../../libs/storage";
 import { Latlng } from "../../libs/types";
@@ -20,7 +24,7 @@ import Locate from "../../components/Icons/Locate";
 import web3Api from "../../libs/web3Api";
 
 import nycEggMeta from "../../nycMeta.json";
-import { getCachesByGroup } from "../../libs/api";
+import { fetchHuntMeta, getCachesByGroup } from "../../libs/api";
 import { seoConfig } from "../../libs/config";
 import BlackWrappedSpinner from "../../components/Loading/BlackWrappedSpinner";
 import { isWordHunt } from "../../libs/utils";
@@ -35,9 +39,19 @@ const nycDeleteList = [
 // Most of the things here need to wait for the map to initialize.
 // Should probably have a better loading state for understanding that
 // Or the Map should be the container and only load once it is loaded
-type Props = { caches: any[]; groupName: string; nftMetadata: any };
+type Props = {
+  caches: any[];
+  groupName: string;
+  nftMetadata: any;
+  huntMeta: any;
+};
 
-export default function Group({ caches: c, groupName, nftMetadata }: Props) {
+export default function Group({
+  caches: c,
+  groupName,
+  nftMetadata,
+  huntMeta,
+}: Props) {
   const modal = useModal();
   const ctaModal = useModal();
   const [map, setMap] = useState<google.maps.Map>();
@@ -62,8 +76,29 @@ export default function Group({ caches: c, groupName, nftMetadata }: Props) {
 
   const positionRef = useRef<any>("");
 
-  const head = seoConfig[groupName] ?? {};
-
+  // const head = seoConfig[groupName] ?? {};
+  const head = useMemo(() => {
+    let head = huntMeta;
+    if (head) {
+      head.title = head.name;
+      const latLngSplit = head.location.split(", ");
+      const lat = parseFloat(latLngSplit[0]);
+      const lng = parseFloat(latLngSplit[1]);
+      head.map_center = { lat, lng };
+      const { markerEmpty, markerFilled } = head.icons;
+      head.icon = {
+        image: {
+          empty: { src: markerEmpty },
+          filled: { src: markerFilled },
+        },
+      };
+    }
+    if (!head) {
+      head = seoConfig[groupName] ?? {};
+    }
+    return head;
+  }, [groupName]);
+  // console.log(head);
   const initMap = (map: google.maps.Map) => {
     setMap(map);
   };
@@ -539,7 +574,15 @@ export const getStaticProps = async ({ params }: Params) => {
     mergedData.push(data);
     // return data;
   }
+  console.log("gorup", groupName);
+  const huntMeta = await fetchHuntMeta(groupName);
+  console.log("META", huntMeta);
   return {
-    props: { caches: mergedData, groupName: params.groupName, nftMetadata },
+    props: {
+      caches: mergedData,
+      groupName: params.groupName,
+      nftMetadata,
+      huntMeta,
+    },
   };
 };

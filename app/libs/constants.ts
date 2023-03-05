@@ -95,3 +95,5 @@ export const colors = {
 export const cacheByGroupTableName = prod
   ? "cache-by-group"
   : "cache-by-group-test";
+
+export const CDN_HOST = "https://cdn.yaytso.art";

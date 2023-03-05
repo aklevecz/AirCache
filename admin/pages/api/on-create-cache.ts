@@ -34,7 +34,7 @@ export default async function handler(
         tokenAddress: ZERO_ADDRESS,
       },
     };
-    console.log(params, "API PARAMS");
+
     const dbRes = await db.put(params).promise();
 
     res.status(200).json({ dbRes });

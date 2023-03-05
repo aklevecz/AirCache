@@ -13,7 +13,6 @@ import Success from "../components/Manager/Success";
 import web3Api from "../libs/web3Api";
 import { useRouter } from "next/router";
 import { getCachesByGroup, onUpdateCache } from "../libs/api";
-import { cache } from "swr/dist/utils/config";
 
 enum View {
   Connect,

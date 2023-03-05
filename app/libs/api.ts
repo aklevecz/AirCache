@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { Magic } from "magic-sdk";
+import { CDN_HOST } from "./constants";
 import storage from "./storage";
 import { Latlng } from "./types";
 
@@ -128,3 +129,11 @@ export const onEmailSignup = async (email: string, environment: string) => {
 };
 
 export default api;
+
+// CDN?
+export const fetchHuntMeta = async (huntName: string) => {
+  const res = await axios.get(
+    `${CDN_HOST}/hunt_configs/${huntName}/metadata.json`
+  );
+  return res.data;
+};
