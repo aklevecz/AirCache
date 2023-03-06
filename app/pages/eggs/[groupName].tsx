@@ -574,8 +574,12 @@ export const getStaticProps = async ({ params }: Params) => {
     mergedData.push(data);
     // return data;
   }
-  console.log("gorup", groupName);
-  const huntMeta = await fetchHuntMeta(groupName);
+  let huntMeta = null
+  try {
+   huntMeta = await fetchHuntMeta(groupName);
+  } catch(e) {
+
+  }
   console.log("META", huntMeta);
   return {
     props: {
