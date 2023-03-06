@@ -25,6 +25,7 @@
     "formik": "^2.2.9",
     "framer-motion": "^6.3.0",
     "jsonwebtoken": "^8.5.1",
+    "libphonenumber-js": "^1.10.21",
     "localforage": "^1.10.0",
     "magic-sdk": "^8.1.1",
     "next": "12.1.5",

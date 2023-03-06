@@ -23,16 +23,16 @@ export default function LoginRaptor({
     <div className="flex flex-col justify-center items-center">
       {/* <img src={eggImg.src} /> */}
       <div className="text-4xl font-bold w-3/4 text-center mb-4">
-        Import Wallet
+        signin
       </div>
       <div className="mb-4 max-w-md text-center">
-        Using your email we can import your unique wallet for holding NFTs
+        punch in your phone number & I'll send you an text
       </div>
       <input
         autoComplete="email"
         name="email"
         type="email"
-        placeholder="Email"
+        placeholder="##########"
         className="h-10 p-2 w-64"
         onChange={onChange}
         value={email}
@@ -42,7 +42,7 @@ export default function LoginRaptor({
         layout
         className="text-1xl font-bold w-4/5 text-center m-4"
       >
-        You will be sent a verification link
+        You will be sent a verification code
       </motion.div>
       <Button
         className="w-32 mt-4 font-bold"

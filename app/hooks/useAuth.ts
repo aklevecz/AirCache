@@ -6,6 +6,7 @@ import useSWR from "swr";
 import api, { endpoints, getUser } from "../libs/api";
 import storage from "../libs/storage";
 import { getMagicPubKey } from "../libs/utils";
+import parsePhoneNumber from 'libphonenumber-js'
 
 export const testAddress = "0x04f6595ca4D8AC68A9D6A1eD2Cd52280BdcD7B17";
 export default function useAuth() {
@@ -37,13 +38,13 @@ export default function useAuth() {
         //   }),
         // ],
       });
-      const config: any = { email };
-
+      const config: any = { phoneNumber: parsePhoneNumber(email, 'US')!.number };
       if (!window.location.href.includes("192")) {
         config.redirectURI = redirectURI;
       }
 
-      const did = await magic.auth.loginWithMagicLink(config);
+      // const did = await magic.auth.loginWithMagicLink(config);
+      const did = await magic.auth.loginWithSMS(config)
       const authRequest = await api.post(
         endpoints.login,
         { destination },

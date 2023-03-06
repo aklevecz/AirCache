@@ -32,44 +32,29 @@ const Home = ({ groups }: Props) => {
   const [email, setEmail] = useState("");
   const [fetching, setFetching] = useState(false);
   const [isSignedUp, setIsSignedUp] = useState(false);
-  const [isYaytso, setIsYaytso] = useState(false);
   const onEmailChange = (e: FormEvent<HTMLInputElement>) =>
     setEmail(e.currentTarget.value);
-  const onSubmitEmail = async () => {
-    setFetching(true);
-    const res = await onEmailSignup(email, isYaytso ? "yaytso" : "blackbeard");
-    setFetching(false);
-    console.log(res);
-    if (res.status === 200) {
-      setIsSignedUp(true);
-    }
-  };
+  // const onSubmitEmail = async () => {
+  //   setFetching(true);
+  //   const res = await onEmailSignup(email, "yaytso");
+  //   setFetching(false);
+  //   console.log(res);
+  //   if (res.status === 200) {
+  //     setIsSignedUp(true);
+  //   }
+  // };
   const router = useRouter();
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      if (window.location.host === "air.yaytso.art") {
-        setIsYaytso(true);
-      } else {
-        setIsYaytso(false);
-      }
-    }
-  }, []);
-  // if (!groups) {
-  //   return <div>loading...</div>;
-  // }
-
-  if (isYaytso) {
     return (
       <div>
-        <img className="p-5" src={airYaytso.src} />
-        <div className="w-1/2 m-auto">
+        <img className="p-5 max-w-lg m-auto" src={airYaytso.src} />
+        <div className="w-1/2 m-auto max-w-sm">
           <EgglineIcon />
         </div>
         <motion.div layout>
           {!isSignedUp && (
             <div id="section-2">
-              <div className="text-2xl font-fatfrank text-center mt-10">
+              {/* <div className="text-2xl font-fatfrank text-center mt-10">
                 Sign up for more info
               </div>
               <input
@@ -80,12 +65,12 @@ const Home = ({ groups }: Props) => {
                 type="email"
                 placeholder="email"
                 onChange={onEmailChange}
-              />
+              /> */}
               <button
-                onClick={onSubmitEmail}
+                onClick={() => {setFetching(true);router.push('/eggs/fools')}}
                 className="bg-white text-black px-5 py-2 font-fatfrank rounded-full text-xl m-auto block mt-4"
               >
-                {fetching ? <BlackWrappedSpinner /> : "Signup"}
+                {fetching ? <BlackWrappedSpinner /> : "Go To Fools Hunt"}
               </button>
             </div>
           )}
@@ -103,74 +88,7 @@ const Home = ({ groups }: Props) => {
         </motion.div>
       </div>
     );
-  }
-  return (
-    <div className="pb-20">
-      <div className="text-center text-5xl mt-5 font-fatfrank tracking-widest">
-        BLACKBEARD
-      </div>
-
-      <div
-        id="section-1"
-        className="mt-5 flex flex-col md:flex-row md:flex-wrap md:align-center"
-      >
-        <div className="md:basis-1/2">
-          <img src={trove.src} className="w-3/5 m-auto " />
-        </div>
-        <ContentBlock>HUNT FOR NFTS</ContentBlock>
-        <div className="m-auto p-10 md:basis-1/2">
-          <MapIcon dims={"200px"} margin="auto" />
-        </div>
-        <ContentBlock>EXPLORE THE WORLD</ContentBlock>
-      </div>
-      <motion.div layout>
-        {!isSignedUp && (
-          <div id="section-2">
-            <div className="text-2xl font-fatfrank text-center mt-10">
-              Sign up for more info
-            </div>
-            <input
-              className="m-auto block mt-2 text-center p-2"
-              style={{ borderRadius: 10 }}
-              name="email"
-              value={email}
-              type="email"
-              placeholder="email"
-              onChange={onEmailChange}
-            />
-            <button
-              onClick={onSubmitEmail}
-              className="bg-white text-black px-5 py-2 font-fatfrank rounded-full text-xl m-auto block mt-4"
-            >
-              {fetching ? <BlackWrappedSpinner /> : "Signup"}
-            </button>
-          </div>
-        )}
-        {isSignedUp && (
-          <div
-            id="section-2"
-            className="mt-10 p-5"
-            style={{ border: "2px solid white" }}
-          >
-            <div className="text-5xl text-center font-fatfrank">
-              You're all set!
-            </div>
-          </div>
-        )}
-      </motion.div>
-      <div id="section-3" className="mt-10">
-        <div className="flex justify-center align-center basis-10/12 md:basis-1/2 text-center">
-          <div
-            className="p-2 pt-5 text-4xl font-fatfrank tracking-widest md:text-7xl  md:pr-30 md:w-10/12"
-            // style={{ fontSize: 40 }}
-          >
-            Powered by myosin
-          </div>
-        </div>
-        <img className="block m-auto" src={myosin.src} />
-      </div>
-    </div>
-  );
+  
 };
 
 export default Home;

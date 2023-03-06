@@ -138,7 +138,7 @@ export default function CacheContentModal({
     if (!auth.user) {
       setTxState(TxState.Error);
       setFetchingLocation(false);
-      setError({ error: "NO_AUTH", message: "Import Wallet" });
+      setError({ error: "NO_AUTH", message: "Sign in" });
       return;
     }
     if (navigator && navigator.geolocation) {
@@ -228,7 +228,7 @@ export default function CacheContentModal({
     return (
       <Container open={open} toggleModal={toggleModal}>
         <div className="text-3xl font-bold text-center pb-5">
-          The NFT is gone... Someone got here first!{" "}
+          Nothing here... Someone got here first!{" "}
           {process.env.NODE_ENV === "development" ? data.cache.id : ""}
         </div>
         <div className="w-3/4 m-auto p-10">
@@ -339,14 +339,13 @@ export default function CacheContentModal({
             {error.error === "NO_AUTH" && (
               <div>
                 <div className="text-xl text-center pb-7">
-                  Your email is linked to a unique wallet. Type it in below and
-                  we will send you a confimation.
+                  Sign in with sms in order to claim
                 </div>
                 <input
                   autoComplete="email"
                   name="email"
                   type="email"
-                  placeholder="Email"
+                  placeholder="##########"
                   className="h-10 p-2 w-full mb-6 text-center black-beard"
                   style={{ fontSize: 18 }}
                   onChange={onChangeEmail}

@@ -166,7 +166,17 @@ const fillCache = async (
     const contractSigner = contract.connect(signer);
     try {
       callback(FillTxState.Signing);
-      const tx = await contractSigner.holdNFT(tokenAddress, tokenId, cacheId);
+      const fees = await fetch(
+        `https://polygon-mainnet.g.alchemyapi.io/v2/` +
+          "Lxf62YcgEvOlb2EN6cZaRG4rvD92usKy",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: '{"jsonrpc":"2.0","method":"eth_gasPrice","params":[],"id":1}',
+        }
+      ).then((response) => response.json());
+      console.log(fees.result)
+      const tx = await contractSigner.holdNFT(tokenAddress, tokenId, cacheId, {gasPrice:fees.result, gasLimit:"146274"});
       callback(FillTxState.Minting);
 
       const receipt = await tx.wait();
