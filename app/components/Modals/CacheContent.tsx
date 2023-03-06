@@ -371,7 +371,7 @@ export default function CacheContentModal({
                     toggleModal();
                   }}
                 >
-                  {auth.fetching ? <BlackWrappedSpinner /> : "Import"}
+                  {auth.fetching ? <BlackWrappedSpinner /> : "Signin"}
                 </Button>
               </div>
             )}

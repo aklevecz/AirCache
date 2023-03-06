@@ -68,7 +68,7 @@ export default function LoginRaptor({
             <Spinner />
           </div>
         ) : (
-          "Claim"
+          "Signin"
         )}
       </Button>
 
