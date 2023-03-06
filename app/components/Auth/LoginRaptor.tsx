@@ -31,7 +31,7 @@ export default function LoginRaptor({
       <input
         autoComplete="email"
         name="email"
-        type="email"
+        type="tel"
         placeholder="##########"
         className="h-10 p-2 w-64"
         onChange={onChange}

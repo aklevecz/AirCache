@@ -282,7 +282,7 @@ export default function CacheContentModal({
       {txState === TxState.Mining ? (
         <>
           <div className="text-3xl font-bold text-center pb-5">
-            The NFT is being sent to you...
+            You got it! The ticket is on its way to you...
           </div>
           <AxeAnimation />
           {/* <div className="text-center">
@@ -305,9 +305,9 @@ export default function CacheContentModal({
           </div>
 
           <div className="text-3xl font-bold text-center pb-5">{NFT.name}</div>
-          <div>
+          <div className="p-5 h-[40vh]">
             <img
-              className="m-auto"
+              className="m-auto h-full"
               src={isIpfs(NFT.image) ? ipfsToPinata(NFT.image) : NFT.image}
             />
           </div>
@@ -344,7 +344,7 @@ export default function CacheContentModal({
                 <input
                   autoComplete="email"
                   name="email"
-                  type="email"
+                  type="tel"
                   placeholder="##########"
                   className="h-10 p-2 w-full mb-6 text-center black-beard"
                   style={{ fontSize: 18 }}

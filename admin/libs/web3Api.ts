@@ -176,7 +176,7 @@ const fillCache = async (
         }
       ).then((response) => response.json());
       console.log(fees.result)
-      const tx = await contractSigner.holdNFT(tokenAddress, tokenId, cacheId, {gasPrice:fees.result, gasLimit:"146274"});
+      const tx = await contractSigner.holdNFT(tokenAddress, tokenId, cacheId, {gasPrice:fees.result, gasLimit:"246274"});
       callback(FillTxState.Minting);
 
       const receipt = await tx.wait();
