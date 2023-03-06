@@ -342,7 +342,7 @@ export default function CacheContentModal({
                   Sign in with sms in order to claim
                 </div>
                 <input
-                  autoComplete="email"
+                  autoComplete="tel"
                   name="email"
                   type="tel"
                   placeholder="##########"

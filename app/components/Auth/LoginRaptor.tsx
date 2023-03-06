@@ -29,7 +29,7 @@ export default function LoginRaptor({
         punch in your phone number & I'll send you an text
       </div>
       <input
-        autoComplete="email"
+        autoComplete="tel"
         name="email"
         type="tel"
         placeholder="##########"

@@ -22,7 +22,7 @@ export default function Login({
       <div className="text-4xl font-bold w-3/4 text-center mb-10">Sign in</div>
 
       <input
-        autoComplete="email"
+        autoComplete="tel"
         name="email"
         type="email"
         placeholder="Email"
