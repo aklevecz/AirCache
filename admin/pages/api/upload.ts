@@ -81,9 +81,7 @@ export default async function handler(
       Body: JSON.stringify(metadata),
       ContentType: "application/json",
     };
-    s3.upload(metaParams, {}, (err, data) => {
-      if (err) console.log(err);
-    });
+    await s3.upload(metaParams).promise()
 
     const email = token.email;
 

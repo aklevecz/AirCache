@@ -8,7 +8,7 @@ import UserInfo from "../components/UserInfo";
 import Layout from "../components/Layout";
 import TheirHunts from "../components/TheirHunts";
 import CreateHuntForm from "../components/Forms/CreateHunt";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { getHuntMetadata } from "../libs/api";
 import SectionHeading from "../components/Layout/SectionHeading";
 import Link from "next/link";
@@ -49,6 +49,7 @@ const Home: NextPage<Props> = ({ groups }) => {
     useState<HuntMetadata | null>(null);
   const [showCreateHunt, setShowCreateHunt] = useState(false);
 
+  const [huntForm, setHuntForm] = useState<HuntMetadata | null>(null)
   const toggleCreateHunt = () => {
     setSelectedHuntMetadata(null);
     setShowCreateHunt(!showCreateHunt);
@@ -59,14 +60,38 @@ const Home: NextPage<Props> = ({ groups }) => {
     getHuntMetadata(name).then(setSelectedHuntMetadata);
   };
 
+  const metadata = selectedHuntMetadata;
+
+const onChange = (e:FormEvent<HTMLInputElement>) => {
+  const key = e.currentTarget.name.split('hunt-')[1]
+  if (key && huntForm)
+  setHuntForm({...huntForm, [key]:e.currentTarget.value})
+}
+
+const updateHunt = () => {
+  if (huntForm) {
+
+  const body = new FormData();
+  body.append("name", huntForm.name);
+  body.append("description", huntForm.description);
+  body.append("location", huntForm.location);
+  body.append("markerEmpty", huntForm.icons.markerEmpty);
+  body.append("markerFilled", huntForm.icons.markerFilled);
+
+  fetch("/api/update", { method: "POST", body });
+  }
+}
+
+useEffect(() => {
+  setHuntForm(metadata)
+},[metadata])
+
   if (!session) {
     return <Signin />;
   }
   if (!groups) {
     return <div>loading...</div>;
   }
-
-  const metadata = selectedHuntMetadata;
 
   return (
     // <div className="flex flex-col text-white">
@@ -83,9 +108,9 @@ const Home: NextPage<Props> = ({ groups }) => {
         {metadata && (
           <div>
             <SectionHeading>Hunt Details</SectionHeading>
-            <div>{metadata.name}</div>
-            <div>{metadata.description}</div>
-            <div>{metadata.location}</div>
+            <input onChange={onChange} name="hunt-name" value={huntForm?.name}/>
+            <input onChange={onChange} name="hunt-description" value={huntForm?.description}/>
+            <input onChange={onChange} name="hunt-location" value={huntForm?.location}/>
             <div className="flex">
               <img src={metadata.icons.markerEmpty} />{" "}
               <img src={metadata.icons.markerFilled} />
@@ -93,6 +118,7 @@ const Home: NextPage<Props> = ({ groups }) => {
             <Link href={`/hunt/${metadata.name}`}>
               <button>Go to Hunt Map</button>
             </Link>
+            <button onClick={updateHunt}>Update hunt info</button>
           </div>
         )}
       </div>
