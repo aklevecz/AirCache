@@ -81,11 +81,11 @@ export default function useWallet(address: string) {
       (async () => {
         const uris: any[] = [];
         console.log("nft loop");
-        for (let i = 0; i < nfts.length; i++) {
+        const nftLengthPagination = 10
+        for (let i = 0; i < nftLengthPagination; i++) {
           const nft = nfts[i];
           const storageKey = `${nft.tokenId}-${nft.contractAddress}`;
           let uri = await storage.getItem(storageKey);
-          console.log(uri, nft);
           if (!uri) {
             uri = await getTokenURI(
               parseInt(nft.tokenId),

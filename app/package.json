@@ -27,7 +27,7 @@
     "jsonwebtoken": "^8.5.1",
     "libphonenumber-js": "^1.10.21",
     "localforage": "^1.10.0",
-    "magic-sdk": "^8.1.1",
+    "magic-sdk": "^13.6.0",
     "next": "12.1.5",
     "react": "18.0.0",
     "react-cool-inview": "^3.0.1",

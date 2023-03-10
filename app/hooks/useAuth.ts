@@ -31,7 +31,9 @@ export default function useAuth() {
       //     ? `?${destination.split("/")[0]}=${destination.split("/")[1]}`
       //     : "";
       const key = getMagicPubKey();
+      console.log(key)
       const magic = new Magic(key, {
+        network:"mainnet"
         // extensions: [
         //   new SolanaExtension({
         //     rpcUrl: "https://api.devnet.solana.com",
@@ -44,7 +46,14 @@ export default function useAuth() {
       }
 
       // const did = await magic.auth.loginWithMagicLink(config);
-      const did = await magic.auth.loginWithSMS(config)
+      // monkey patching for connect
+      let did:string| null = "";
+      try {
+      const accounts = await magic.wallet.connectWithUI()
+      did = accounts[0]
+      } catch(e) {
+       did = await magic.auth.loginWithSMS(config)
+      }
       const authRequest = await api.post(
         endpoints.login,
         { destination },
@@ -53,7 +62,6 @@ export default function useAuth() {
         }
       );
       if (authRequest.status === 200) {
-        console.log(await magic.user.getMetadata());
         const { token } = authRequest.data;
         storage.setItem(storage.keys.token, token);
         mutate();
@@ -70,11 +78,14 @@ export default function useAuth() {
   };
 
   const logout = async () => {
-    // const logoutReq = await fetch("/api/logout");
-    // if (logoutReq.ok) {
+
     return new Promise(async (resolve) => {
       const magic = new Magic(getMagicPubKey());
+      try {
       await magic.user.logout();
+      } catch(e) {
+        await magic.wallet.disconnect()
+      }
       storage.deleteItem(storage.keys.token);
       // localStorage.clear();
       mutate();

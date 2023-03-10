@@ -25,6 +25,7 @@ export default function Login() {
     if (auth.user) {
       goHome();
     } else {
+      console.log("LOGGING OUT")
       // I don't know why I need to do this otherwise magic barfs about cookies and locks up the renders
       auth.logout();
     }

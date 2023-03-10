@@ -135,6 +135,7 @@ export default function Group({
   };
 
   useEffect(() => {
+    console.log(groupName)
     if (map) {
       storage.setItem(storage.keys.current_group, groupName);
 

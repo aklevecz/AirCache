@@ -146,5 +146,9 @@ export const appKeys: { [key: string]: { secret: string; pub: string } } = {
   CYAdventures:{
     secret:process.env.FOOLS_SECRET_KEY as string,
     pub: process.env.NEXT_PUBLIC_FOOLS_PUB_KEY as string
+  },
+  thepark:{
+    secret:process.env.THEPARK_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_THEPARK_PUB_KEY as string
   }
 };

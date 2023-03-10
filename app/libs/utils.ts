@@ -177,6 +177,7 @@ export const isWordHunt = (hunt: string) => wordHunts.includes(hunt);
 export const getMagicPubKey = () => {
   if (typeof localStorage !== "undefined") {
     const currentGroup = storage.getItem(storage.keys.current_group);
+    console.log(currentGroup)
     if (currentGroup) {
       const keys = appKeys[currentGroup];
       if (keys) {
