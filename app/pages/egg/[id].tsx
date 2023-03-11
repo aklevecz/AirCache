@@ -134,18 +134,18 @@ const Cache: NextPage = (props: any) => {
 
 export default Cache;
 
-export async function getStaticPaths() {
-  const caches = await web3Api.getAllCaches();
-  return {
-    paths: caches.map((cache) => `/egg/${cache.id.toNumber()}`) ?? [],
-    fallback: true,
-  };
-}
+// export async function getStaticPaths() {
+//   const caches = await web3Api.getAllCaches();
+//   return {
+//     paths: caches.map((cache) => `/egg/${cache.id.toNumber()}`) ?? [],
+//     fallback: true,
+//   };
+// }
 
 type Params = {
   params: any;
 };
-export const getStaticProps = async ({ params }: Params) => {
+export const getServerSideProps = async ({ params }: Params) => {
   const cache = await web3Api.getCache(parseInt(params.id));
   const { id, lat, lng, tokenId, tokenAddress, contractAddress } = cache;
   const tokenIdNumber = tokenId.toNumber();

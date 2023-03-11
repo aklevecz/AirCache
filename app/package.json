@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "gen": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' ./scripts/genCacheData.ts"
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.14.1",
@@ -20,6 +21,7 @@
     "axios": "^0.26.1",
     "bip39": "^3.0.4",
     "clsx": "^1.1.1",
+    "dotenv": "^16.0.3",
     "ed25519-hd-key": "^1.2.0",
     "ethers": "^5.6.4",
     "formik": "^2.2.9",

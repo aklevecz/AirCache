@@ -501,87 +501,13 @@ type Params = {
   params: any;
 };
 
-const filterOutEmptyNYC = (cache: any) => {
-  if (nycDeleteList.includes(parseInt(cache!.cacheId))) {
-    return false;
-  }
-  return true;
-};
-
 export const getStaticProps = async ({ params }: Params) => {
   let { groupName } = params;
-
-  //patch
-  // groupName = groupName === "myosin-yacht" ? "blackbeard" : groupName;
-
-  const dbparams = {
-    TableName: "cache-by-group",
-    ExpressionAttributeValues: {
-      ":g": groupName,
-    },
-    // IndexName: "groupName-index",
-    FilterExpression: "groupName = :g",
-  };
-  const dbRes = await db.scan(dbparams).promise();
-  let caches = dbRes.Items!;
-
-  // if (groupName === "nft-nyc") caches = caches!.filter(filterOutEmptyNYC);
-
-  // Do this before the buildstep to create a config then have all of the cache calls read from it
-  // Note: What should it do if there are no caches?
-  // if (caches) {
-  //   for (let i = 0; i < caches.length; i++) {
-  //     const cacheData = await web3Api.getCache(caches[i].cacheId);
-  //     caches[i].tokenAddress = cacheData.tokenAddress;
-  //     caches[i].tokenId = cacheData.tokenId.toNumber();
-  //   }
-  // }
-  // fs.writeFileSync("./data.json", JSON.stringify(caches));
-
-  // const metas = [];
-  // for (let i = 0; i < nycEggData.length; i++) {
-  //   const egg = nycEggData[i];
-  //   if (egg.tokenId) {
-  //     const meta = await web3Api.getNFTMeta(egg.tokenId, egg.tokenAddress);
-  //     metas.push({
-  //       ...meta,
-  //       tokenId: egg.tokenId,
-  //       tokenAddress: egg.tokenAddress,
-  //     });
-  //   }
-  // }
-  // fs.writeFileSync("nycMeta.json", JSON.stringify(metas));
-  const mergedData = [];
-  const nftMetadata = [];
-  // const mergedData = caches.map(async (cache) => {
-  for (let i = 0; i < caches.length; i++) {
-    const cache = caches[i];
-    let data: any = cache;
-    if (cache.tokenId && isWordHunt(groupName)) {
-      const meta = await web3Api.getNFTMeta(cache.tokenId, cache.tokenAddress);
-      var nft = {
-        ...meta,
-        tokenId: cache.tokenId,
-        tokenAddress: cache.tokenAddress,
-      };
-      nftMetadata.push(nft);
-      // const nft = nycEggMeta.find(
-      //   (nft) =>
-      //     nft.tokenId === cache.tokenId &&
-      //     cache.tokenAddress === nft.tokenAddress
-      // );
-      data.nft = nft;
-    }
-    mergedData.push(data);
-    // return data;
-  }
-  let huntMeta = null
-  try {
-   huntMeta = await fetchHuntMeta(groupName);
-  } catch(e) {
-
-  }
-  console.log("META", huntMeta);
+  const data:any = await import('../../libs/allHuntData.json')
+  console.log(groupName)
+  const mergedData= data[groupName].caches
+  const nftMetadata = data[groupName].nftMetadata
+  const huntMeta = data[groupName].metadata 
   return {
     props: {
       caches: mergedData,
@@ -591,3 +517,10 @@ export const getStaticProps = async ({ params }: Params) => {
     },
   };
 };
+
+// const filterOutEmptyNYC = (cache: any) => {
+//   if (nycDeleteList.includes(parseInt(cache!.cacheId))) {
+//     return false;
+//   }
+//   return true;
+// };

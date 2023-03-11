@@ -1,9 +1,47 @@
 import { ethers } from "ethers";
 import { Magic } from "magic-sdk";
-import { appKeys } from "./config";
+// import { appKeys } from "./config";
 import { abis, AIRCACHE_ADDRESS } from "./constants";
 import storage from "./storage";
 import { Latlng } from "./types";
+export const appKeys: { [key: string]: { secret: string; pub: string } } = {
+  ["eggs"]: {
+    secret: process.env.MAGIC_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_MAGIC_PUB_KEY as string,
+  },
+  ["coindesk-austin"]: {
+    secret: process.env.HORN_MAGIC_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_HORN_MAGIC_PUB_KEY as string,
+  },
+  ["nft-nyc"]: {
+    secret: process.env.ALPHABET_CITY_MAGIC_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_ALPHABET_CITY_PUB_KEY as string,
+  },
+  ["myosin-yacht"]: {
+    secret: process.env.YACHT_MAGIC_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_YACHT_MAGIC_PUB_KEY as string,
+  },
+  ["only-gems"]: {
+    secret: process.env.ONLY_GEMS_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_ONLY_GEMS_PUB_KEY as string,
+  },
+  helsinki: {
+    secret: process.env.HELSINKI_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_HELSINKI_PUB_KEY as string,
+  },
+  fools: {
+    secret:process.env.FOOLS_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_FOOLS_PUB_KEY as string
+  },
+  CYAdventures:{
+    secret:process.env.FOOLS_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_FOOLS_PUB_KEY as string
+  },
+  thepark:{
+    secret:process.env.THEPARK_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_THEPARK_PUB_KEY as string
+  }
+};
 
 const asin = Math.asin;
 const cos = Math.cos;
