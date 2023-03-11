@@ -48,7 +48,7 @@ export default function FillCache({
   closeModal,
 }: Props) {
   const [view, setView] = useState(View.Confirm);
-  const [tokenAddress, setTokenAddress] = useState("0x93E9c3dd0Ab468Aae3D9906f8F44808e19DDD44B");
+  const [tokenAddress, setTokenAddress] = useState<string>("");
   const [ownersNFTs, setOwnersNFTs] = useState([]);
   const [selectedNFT, setSelectedNFT] = useState("");
 
@@ -56,7 +56,7 @@ export default function FillCache({
 
   const nextView = () => setView(view + 1);
 
-  const onTokenAddressChange = (e: ChangeEvent<HTMLInputElement>) =>
+  const onTokenAddressChange = (e: ChangeEvent<HTMLInputElement>) => 
     setTokenAddress(e.currentTarget.value);
 
   // This could be lifted up

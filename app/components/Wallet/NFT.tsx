@@ -14,7 +14,6 @@ export default function NFT({ nft }: any) {
   useEffect(() => {
     if (inView) {
       localforage.getItem(nft.image).then((blob: any) => {
-        console.log(blob);
         if (imgRef.current) {
           if (blob) {
             imgRef.current.src = URL.createObjectURL(blob);
@@ -40,7 +39,7 @@ export default function NFT({ nft }: any) {
       <div className="text-center font-bold text-2xl mt-4">{nft.name}</div>
       <div className="">
         <img ref={imgRef} className="m-auto p-5 mb-4" />
-        <a
+        {/* <a
           className="bg-polygon px-6 py-2 rounded-full flex items-center justify-around w-40 m-auto"
           target="_blank"
           rel="noreferrer"
@@ -50,7 +49,7 @@ export default function NFT({ nft }: any) {
           <div className="w-4">
             <Polygon fill="white" />
           </div>
-        </a>
+        </a> */}
       </div>
     </div>
   );

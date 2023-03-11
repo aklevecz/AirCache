@@ -86,7 +86,8 @@ export default async function handler(
     const isAdmin =
       user.email === "arielklevecz@gmail.com" ||
       user.email === "ariel@yaytso.art" ||
-      user.email === "teh@raptor.pizza";
+      user.email === "teh@raptor.pizza" ||
+      user.phoneNumber === "+14159671642";
     console.log(user.email, distance);
     if (isTooFar && !isAdmin) {
       return res.json({
