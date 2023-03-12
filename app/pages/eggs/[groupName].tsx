@@ -29,6 +29,7 @@ import { seoConfig } from "../../libs/config";
 import BlackWrappedSpinner from "../../components/Loading/BlackWrappedSpinner";
 import { isWordHunt } from "../../libs/utils";
 import AlphabetCTA from "../../components/Modals/AlphabetCTA";
+import WordsUI from "../../components/WordsUI";
 
 const nycDeleteList = [
   64, 71, 90, 102, 103, 97, 92, 80, 66, 60, 68, 82, 87, 99, 75, 58, 72, 79, 63,
@@ -288,35 +289,6 @@ export default function Group({
     }
   }, [map, user]);
 
-  // useEffect(() => {
-  //   let id = 0;
-  //   if (locationAllowed) {
-  //     id = navigator.geolocation.watchPosition(
-  //       function (position) {
-  //         if (userMarkerRef.current && position) {
-  //           const latLng = {
-  //             lat: position.coords.latitude,
-  //             lng: position.coords.longitude,
-  //           };
-  //           userMarkerRef.current.setPosition(latLng as Latlng);
-
-  //           userPositionRef.current = latLng;
-  //           console.log("i'm tracking you!");
-  //         }
-  //       },
-  //       function (error) {
-  //         if (error.code == error.PERMISSION_DENIED)
-  //           console.log("you denied me :-(");
-  //         storage.setItem(storage.keys.has_located, JSON.stringify(false));
-  //       }
-  //     );
-  //   }
-  //   return () => {
-  //     navigator.geolocation.clearWatch(id);
-  //   };
-  // }, [locationAllowed]);
-
-  // *** END USER LOCATION STUFF --- MAYBE MOVE INTO ITS OWN HOOK?? ****
 
   const getIcon = (tokenId: number, nft: any) => {
     let icon = {
@@ -359,8 +331,6 @@ export default function Group({
 
     (cacheMarker as any).cacheId = id;
 
-    // SOLANA
-    // - if Solana then also send the token information here (or in the modal?)
     cacheMarker.addListener("click", () => {
       modal.toggleModal({
         cache: {
@@ -417,15 +387,7 @@ export default function Group({
         <meta name="twitter:text:title" content={head.title} />
       </Head>
 
-      <div className="absolute bottom-44 w-full text-center z-50 text-xl pointer-events-none flex justify-center">
-        {Array.from(letters).map((letter) => {
-          return (
-            <div className="bg-red-500 w-10 h-10 font-fatfrank text-2xl tracking-widest uppercase m-2 flex justify-center items-center">
-              {letter}
-            </div>
-          );
-        })}
-      </div>
+
       {!locationAllowed && (
         <div
           className="absolute"
@@ -453,22 +415,13 @@ export default function Group({
           Recenter <Locate />
         </Button>
       )}
-      {word && (
-        <div className="absolute bottom-28 w-full text-center z-50 text-xl pointer-events-none w-full text-white font-fatfrank">
-          {/* <span className="bg-black p-5 font-fatfrank w-full"> */}
-          <div className="underline">Solve</div>
-          <div style={{ fontSize: "2rem" }}>{word}</div>
-          {/* </span> */}
-        </div>
-      )}
+
       <div
         ref={positionRef}
         style={{ display: "none" }}
         className="absolute bottom-20 w-full text-center l-50 text-red-500 z-50"
       ></div>
-      {isWordHunt(groupName) && (
-        <AlphabetCTA open={ctaModal.open} toggleModal={ctaModal.toggleModal} />
-      )}
+
       {!airCache.loading && (
         <CacheContentModal
           open={modal.open}
@@ -478,6 +431,7 @@ export default function Group({
           data={modal.data}
         />
       )}
+      <WordsUI ctaModal={ctaModal} isWordHunt={isWordHunt(groupName)} letters={letters} word={word}/>
     </>
   );
 }
@@ -504,7 +458,6 @@ type Params = {
 export const getStaticProps = async ({ params }: Params) => {
   let { groupName } = params;
   const data:any = await import('../../libs/allHuntData.json')
-  console.log(groupName)
   const mergedData= data[groupName].caches
   const nftMetadata = data[groupName].nftMetadata
   const huntMeta = data[groupName].metadata 
