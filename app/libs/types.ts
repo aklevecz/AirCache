@@ -24,3 +24,12 @@ export type Web3Wallet = {
   connectMetaMask: () => Promise<boolean>;
   contract: ethers.Contract | null;
 };
+
+
+export type HuntMeta = {
+  name:string;
+  location:string;
+  title:string;
+  description:string;
+  image:string;
+}

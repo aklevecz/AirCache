@@ -99,3 +99,8 @@ export const cacheByGroupTableName = prod
   : "cache-by-group-test";
 
 export const CDN_HOST = "https://cdn.yaytso.art";
+
+const nycDeleteList = [
+  64, 71, 90, 102, 103, 97, 92, 80, 66, 60, 68, 82, 87, 99, 75, 58, 72, 79, 63,
+  109,
+];
