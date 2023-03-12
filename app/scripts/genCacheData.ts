@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
 import fs from "fs"
+import { Command } from 'commander';
 dotenv.config({path:'./.env.local'})
 import db from "../libs/db"
 import { cacheByGroupTableName } from "../libs/constants";
@@ -20,6 +21,12 @@ type Cache = {
     tokenAddress?:string;
 }
 
+// a function for just updating the metadata instead of everything
+// skip the word hunts
+const program = new Command();
+program.option('--word-hunts <flag>').parse()
+const options = program.opts()
+console.log(options)
 async function main() {
     const allCachesByGroup = await db
     .scan({ TableName: cacheByGroupTableName })
@@ -41,7 +48,7 @@ async function main() {
         const nftMetadata = [];
         for (const cache of caches){
       let data: any = cache;
-      if (cache.tokenId && isWordHunt(cache.groupName)) {
+      if (options.wordHunts && cache.tokenId && isWordHunt(cache.groupName)) {
         // for having metadata about the NFT at the map marker level
         const meta = await web3Api.getNFTMeta(cache.tokenId, cache.tokenAddress!);
         var nft = {
@@ -56,6 +63,7 @@ async function main() {
       let huntMeta = null;
       try {
            huntMeta = await fetchHuntMeta(groupName);
+           console.log(huntMeta)
       }catch(e) {
 
       }

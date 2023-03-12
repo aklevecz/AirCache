@@ -120,8 +120,6 @@ export default function CacheContentModal({
   };
 
   useEffect(() => {
-    // Solana
-    // I'm not sure what this listener will be, maybe it will be optimisic
     if (airCache.contract && airCache.signer && auth.user && open && NFT) {
       console.log("Listening to NFT Dropped");
       airCache.contract.on("NFTDropped", detectWinner);
@@ -161,6 +159,7 @@ export default function CacheContentModal({
               lng: position.coords.longitude,
             };
             console.log("claiming");
+            // if (data.cache.taskQueue or data.cache.local)
             const res = await claimCache(
               data.cache.id,
               data.groupName,
