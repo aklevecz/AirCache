@@ -27,6 +27,7 @@ type HuntMetadata = {
   name: string;
   description: string;
   location: string;
+  magicLinkType: "connect" | "auth";
   icons: {
     markerEmpty: string;
     markerFilled: string;
@@ -45,11 +46,10 @@ type Props = {
 
 const Home: NextPage<Props> = ({ groups }) => {
   const { data: session } = useSession();
-  const [selectedHuntMetadata, setSelectedHuntMetadata] =
-    useState<HuntMetadata | null>(null);
+  const [selectedHuntMetadata, setSelectedHuntMetadata] = useState<HuntMetadata | null>(null);
   const [showCreateHunt, setShowCreateHunt] = useState(false);
 
-  const [huntForm, setHuntForm] = useState<HuntMetadata | null>(null)
+  const [huntForm, setHuntForm] = useState<HuntMetadata | null>(null);
   const toggleCreateHunt = () => {
     setSelectedHuntMetadata(null);
     setShowCreateHunt(!showCreateHunt);
@@ -62,29 +62,29 @@ const Home: NextPage<Props> = ({ groups }) => {
 
   const metadata = selectedHuntMetadata;
 
-const onChange = (e:FormEvent<HTMLInputElement>) => {
-  const key = e.currentTarget.name.split('hunt-')[1]
-  if (key && huntForm)
-  setHuntForm({...huntForm, [key]:e.currentTarget.value})
-}
+  const onChange = (e: FormEvent<HTMLInputElement>) => {
+    const key = e.currentTarget.name.split("hunt-")[1];
+    if (key && huntForm) setHuntForm({ ...huntForm, [key]: e.currentTarget.value });
+  };
 
-const updateHunt = () => {
-  if (huntForm) {
+  const updateHunt = () => {
+    console.log(huntForm);
+    if (huntForm) {
+      const body = new FormData();
+      body.append("name", huntForm.name);
+      body.append("description", huntForm.description);
+      body.append("location", huntForm.location);
+      body.append("magicLinkType", huntForm.magicLinkType);
+      body.append("markerEmpty", huntForm.icons.markerEmpty);
+      body.append("markerFilled", huntForm.icons.markerFilled);
 
-  const body = new FormData();
-  body.append("name", huntForm.name);
-  body.append("description", huntForm.description);
-  body.append("location", huntForm.location);
-  body.append("markerEmpty", huntForm.icons.markerEmpty);
-  body.append("markerFilled", huntForm.icons.markerFilled);
+      fetch("/api/update", { method: "POST", body });
+    }
+  };
 
-  fetch("/api/update", { method: "POST", body });
-  }
-}
-
-useEffect(() => {
-  setHuntForm(metadata)
-},[metadata])
+  useEffect(() => {
+    setHuntForm(metadata);
+  }, [metadata]);
 
   if (!session) {
     return <Signin />;
@@ -108,12 +108,12 @@ useEffect(() => {
         {metadata && (
           <div>
             <SectionHeading>Hunt Details</SectionHeading>
-            <input onChange={onChange} name="hunt-name" value={huntForm?.name}/>
-            <input onChange={onChange} name="hunt-description" value={huntForm?.description}/>
-            <input onChange={onChange} name="hunt-location" value={huntForm?.location}/>
+            <input onChange={onChange} name="hunt-name" value={huntForm?.name} />
+            <input onChange={onChange} name="hunt-description" value={huntForm?.description} />
+            <input onChange={onChange} name="hunt-location" value={huntForm?.location} />
+            <input onChange={onChange} name="hunt-magicLinkType" value={huntForm?.magicLinkType} />
             <div className="flex">
-              <img src={metadata.icons.markerEmpty} />{" "}
-              <img src={metadata.icons.markerFilled} />
+              <img src={metadata.icons.markerEmpty} /> <img src={metadata.icons.markerFilled} />
             </div>
             <Link href={`/hunt/${metadata.name}`}>
               <button>Go to Hunt Map</button>
@@ -130,11 +130,7 @@ export default Home;
 
 export async function getServerSideProps(context: any) {
   const authOptions = { providers: [] };
-  const session = await unstable_getServerSession(
-    context.req as any,
-    context.res as any,
-    authOptions as any
-  );
+  const session = await unstable_getServerSession(context.req as any, context.res as any, authOptions as any);
   let groups: any[] = [];
   if (session && session.user) {
     const params = {

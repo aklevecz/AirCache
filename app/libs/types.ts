@@ -25,11 +25,18 @@ export type Web3Wallet = {
   contract: ethers.Contract | null;
 };
 
-
 export type HuntMeta = {
-  name:string;
-  location:string;
-  title:string;
-  description:string;
-  image:string;
-}
+  name: string;
+  location: string;
+  title: string;
+  description: string;
+  image: string;
+};
+
+export type NFT = {
+  name: string;
+  description: string;
+  image: string;
+  tokenAddress: string;
+  tokenId: string;
+};

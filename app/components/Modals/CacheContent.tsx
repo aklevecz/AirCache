@@ -1,24 +1,17 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { claimCache } from "../../libs/api";
-import Button from "../Button";
 import Spinner from "../Loading/Spinner";
 import Container from "./Container";
-import Sad from "../Icons/Sad";
-import AxeAnimation from "../Animations/Axe";
-import {
-  haversineDistance,
-  ipfsToPinata,
-  isIpfs,
-  isWordHunt,
-} from "../../libs/utils";
-import MapIcon from "../Icons/Map";
 import { useRouter } from "next/router";
 import AirYaytsoInterface from "../../hooks/AirCache.json";
 import { provider } from "../../libs/web3Api";
-import storage from "../../libs/storage";
-import BlackWrappedSpinner from "../Loading/BlackWrappedSpinner";
-import { cache } from "swr/dist/utils/config";
+import NothingHere from "../CacheContent/NothingHere";
+import { NFT } from "../../libs/types";
+import Claim from "../CacheContent/Claim";
+import Mining from "../CacheContent/Mining";
+import Complete from "../CacheContent/Complete";
+import Error from "../CacheContent/Error";
 
 enum TxState {
   Idle,
@@ -40,36 +33,19 @@ type Props = {
   auth: any;
   data: any;
 };
-export default function CacheContentModal({
-  open,
-  toggleModal,
-  airCache,
-  auth,
-  data,
-}: Props) {
+export default function CacheContentModal({ open, toggleModal, airCache, auth, data }: Props) {
   const router = useRouter();
-  const [NFT, setNFT] = useState<any>(null);
+  const [NFT, setNFT] = useState<NFT | null>(null);
   const [txState, setTxState] = useState<TxState>(TxState.Idle);
   const [txHash, setTxHash] = useState("");
   const [error, setError] = useState({ error: "", message: "" });
   const [fetchingLocation, setFetchingLocation] = useState(false);
   const [fetchingMeta, setFetchingMeta] = useState(false);
 
-  const [email, setEmail] = useState("");
-  console.log(NFT);
-  const onChangeEmail = (e: React.FormEvent<HTMLInputElement>) => {
-    setEmail(e.currentTarget.value);
-  };
-
+  // Could be in a different hook oriented around the cache fetch and claim
   const fetchCache = async (cacheId: number) => {
     setFetchingMeta(true);
-    // Solana
-    // if Solana get token data from incoming data or from db
-    const contract = new ethers.Contract(
-      data.cache.contractAddress,
-      AirYaytsoInterface.abi,
-      provider
-    );
+    const contract = new ethers.Contract(data.cache.contractAddress, AirYaytsoInterface.abi, provider);
     const cache = await airCache.getCache(data.cache.id, contract);
     const tokenId = cache.tokenId;
     if (!tokenId) {
@@ -85,29 +61,23 @@ export default function CacheContentModal({
     }
   };
 
+  const reset = () => {
+    setError({ error: "", message: "" });
+    setTxState(TxState.Idle);
+    setNFT(null);
+    setFetchingLocation(false);
+  };
+
   useEffect(() => {
     if (!open) {
-      setError({ error: "", message: "" });
-      setTxState(TxState.Idle);
-      setNFT(null);
-      setFetchingLocation(false);
+      reset();
     } else {
       fetchCache(data.cache.id);
     }
   }, [open, data]);
 
-  const detectWinner = (
-    cacheId: any,
-    winner: any,
-    tokenAddress: any,
-    tokenId: any,
-    event: any
-  ) => {
-    if (
-      winner === auth.user.publicAddress &&
-      tokenAddress == NFT.tokenAddress &&
-      tokenId == NFT.tokenId
-    ) {
+  const detectWinner = (cacheId: any, winner: any, tokenAddress: any, tokenId: any, event: any) => {
+    if (winner === auth.user.publicAddress && tokenAddress == NFT?.tokenAddress && tokenId == NFT?.tokenId) {
       console.log(event);
       // could update cache db here
       setTxState(TxState.Complete);
@@ -163,7 +133,7 @@ export default function CacheContentModal({
             const res = await claimCache(
               data.cache.id,
               data.groupName,
-              NFT.tokenAddress,
+              NFT!.tokenAddress,
               data.cache.location,
               userLocation,
               {
@@ -182,8 +152,7 @@ export default function CacheContentModal({
           } catch (e) {
             setTxState(TxState.Error);
             setError({
-              message:
-                "Something weird happened while checking your location, maybe try logging in again?",
+              message: "Something weird happened while checking your location, maybe try logging in again?",
               error: "NO_AUTH",
             });
           }
@@ -199,22 +168,16 @@ export default function CacheContentModal({
         }
       );
     } else {
-      alert(
-        "This browser does not support location services, or you have turned them off"
-      );
+      alert("This browser does not support location services, or you have turned them off");
     }
   };
 
   // gross because im smashing the data call into toggleModal-- I should probably just clear the data when it is toggled off
-  const loading =
-    typeof data !== "object" || data === null || data.clientX || fetchingMeta;
+  const loading = typeof data !== "object" || data === null || data.clientX || fetchingMeta;
   if (loading) {
     return (
       <Container open={open} toggleModal={toggleModal}>
-        <div
-          className="flex justify-center items-center"
-          style={{ height: 200 }}
-        >
+        <div className="flex justify-center items-center" style={{ height: 200 }}>
           <Spinner />
         </div>
       </Container>
@@ -226,159 +189,20 @@ export default function CacheContentModal({
   if (empty) {
     return (
       <Container open={open} toggleModal={toggleModal}>
-        <div className="text-3xl font-bold text-center pb-5">
-          Nothing here... Someone got here first!{" "}
-          {process.env.NODE_ENV === "development" ? data.cache.id : ""}
-        </div>
-        <div className="w-3/4 m-auto p-10">
-          <Sad />
-        </div>
-        <Button
-          onClick={() => {
-            toggleModal();
-          }}
-          className="m-auto w-28 block mt-5 py-3 font-bold text-2xl"
-        >
-          Ok
-        </Button>
+        <NothingHere toggleModal={toggleModal} data={data} />
       </Container>
     );
   }
   return (
     <Container open={open} toggleModal={toggleModal}>
       {txState === TxState.Idle || txState === TxState.Fetching ? (
-        <>
-          {!isWordHunt(router.query.groupName as string) && (
-            <div className="text-3xl font-bold text-center pb-5">
-              {NFT.name}
-            </div>
-          )}
-          <div className="p-5 h-[40vh]">
-            <img
-              className="m-auto h-full"
-              src={isIpfs(NFT.image) ? ipfsToPinata(NFT.image) : NFT.image}
-            />
-          </div>
-          <Button
-            className="m-auto w-28 block mt-5 py-3 font-bold text-2xl"
-            onClick={claim}
-          >
-            <div className="flex justify-center items-center">
-              {/* {txState !== TxState.Fetching ? ( */}
-              {!fetchingLocation ? (
-                "Claim"
-              ) : (
-                <div className="bg-black rounded-full">
-                  <Spinner />
-                </div>
-              )}
-            </div>
-          </Button>
-        </>
+        <Claim NFT={NFT} claim={claim} fetching={fetchingLocation} groupName={router.query.groupName as string} />
       ) : (
         <></>
       )}
-      {txState === TxState.Mining ? (
-        <>
-          <div className="text-3xl font-bold text-center pb-5">
-            You got it! The ticket is on its way to you...
-          </div>
-          <AxeAnimation />
-          {/* <div className="text-center">
-            <a
-              target={"_blank"}
-              className="text-polygon"
-              href={`https://mumbai.polygonscan.com/tx/${txHash}`}
-            >
-              Polyscan Tx
-            </a>
-          </div> */}
-        </>
-      ) : (
-        <></>
-      )}
-      {txState === TxState.Complete ? (
-        <>
-          <div className="text-4xl font-bold text-center pb-5">
-            Your new item!
-          </div>
-
-          <div className="text-3xl font-bold text-center pb-5">{NFT.name}</div>
-          <div className="p-5 h-[40vh]">
-            <img
-              className="m-auto h-full"
-              src={isIpfs(NFT.image) ? ipfsToPinata(NFT.image) : NFT.image}
-            />
-          </div>
-          <Button
-            onClick={toggleModal}
-            className="w-20 font-bold m-auto block text-2xl mt-10"
-          >
-            Ok
-          </Button>
-        </>
-      ) : (
-        <></>
-      )}
-      {txState === TxState.Error ? (
-        <>
-          <div className="text-3xl font-bold text-center pb-5">
-            {error.message}
-          </div>
-          <div className="max-w-xs px-2 m-auto">
-            {error.error === "TOO_FAR" && <MapIcon />}
-            {error.error === "TOO_FAR" && (
-              <Button
-                onClick={toggleModal}
-                className="w-20 font-bold m-auto block text-2xl mt-10"
-              >
-                Ok
-              </Button>
-            )}
-            {error.error === "NO_AUTH" && (
-              <div>
-                <div className="text-xl text-center pb-7">
-                  Sign in with sms in order to claim
-                </div>
-                <input
-                  autoComplete="tel"
-                  name="email"
-                  type="tel"
-                  placeholder="##########"
-                  className="h-10 p-2 w-full mb-6 text-center black-beard"
-                  style={{ fontSize: 18 }}
-                  onChange={onChangeEmail}
-                />
-                <Button
-                  className="m-auto w-32 block mt-0 py-2 px-4 font-bold text-lg"
-                  disabled={auth.fetching}
-                  onClick={async () => {
-                    // router.push("/login");
-
-                    // router.push(`/login?cache=${data.cache.id}`);
-                    let destination = "/";
-                    if (typeof localStorage !== "undefined") {
-                      const currentGroup = storage.getItem(
-                        storage.keys.current_group
-                      );
-                      if (currentGroup) {
-                        destination = "/" + currentGroup;
-                      }
-                    }
-                    await auth.logout();
-                    await auth.login(email, destination);
-                    toggleModal();
-                  }}
-                >
-                  {auth.fetching ? <BlackWrappedSpinner /> : "Signin"}
-                </Button>
-              </div>
-            )}
-          </div>
-        </>
-      ) : (
-        <></>
-      )}
+      {txState === TxState.Mining ? <Mining /> : <></>}
+      {txState === TxState.Complete ? <Complete NFT={NFT} toggleModal={toggleModal} /> : <></>}
+      {txState === TxState.Error ? <Error error={error} toggleModal={toggleModal} /> : <></>}
     </Container>
   );
 }

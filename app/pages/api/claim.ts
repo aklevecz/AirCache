@@ -3,21 +3,12 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { ethers } from "ethers";
 import { haversineDistance } from "../../libs/utils";
 import AWS from "aws-sdk";
-import {
-  ALPHABET_CITY,
-  ALPHABET_CITY_MUMBAI,
-  cacheByGroupTableName,
-  ZERO_ADDRESS,
-} from "../../libs/constants";
+import { ALPHABET_CITY, cacheByGroupTableName, ZERO_ADDRESS } from "../../libs/constants";
 import web3Api from "../../libs/web3Api";
-import { update } from "lodash";
 
 const ALCHEMY_KEY = process.env.ALCHEMY_KEY_MUMBAI;
 const PP2 = process.env.PP2 as string;
-const defaultProvider = new ethers.providers.AlchemyProvider(
-  "maticmum",
-  ALCHEMY_KEY
-);
+const defaultProvider = new ethers.providers.AlchemyProvider("maticmum", ALCHEMY_KEY);
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
 type Data = {
@@ -30,14 +21,10 @@ AWS.config.update({
   accessKeyId: process.env.AWS_S3_ACCESS_KEY,
   secretAccessKey: process.env.AWS_S3_SECRET_KEY,
 });
-const sqsUrl =
-  "https://sqs.us-west-1.amazonaws.com/669844428319/air-yaytso.fifo";
+const sqsUrl = "https://sqs.us-west-1.amazonaws.com/669844428319/air-yaytso.fifo";
 var sqs = new AWS.SQS({ apiVersion: "2012-11-05" });
 var db = new AWS.DynamoDB.DocumentClient({ apiVersion: "2012-08-10" });
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data | any>
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<Data | any>) {
   if (!req.headers.authorization) {
     return res.status(405).json({
       error: "NO_AUTH",
@@ -45,10 +32,7 @@ export default async function handler(
     });
   }
   try {
-    const user = (await jwt.verify(
-      req.headers.authorization as string,
-      JWT_SECRET
-    )) as JwtPayload;
+    const user = (await jwt.verify(req.headers.authorization as string, JWT_SECRET)) as JwtPayload;
 
     if (!user.publicAddress) {
       res.status(404);
@@ -59,21 +43,13 @@ export default async function handler(
     // Check if the cache actually has a token
 
     // The reference from cacheId to location or vice versa should be in a db or something
-    const {
-      cacheId,
-      groupName,
-      userLocation,
-      cacheLocation,
-      navigator,
-      tokenAddress,
-    } = req.body;
+    const { cacheId, groupName, userLocation, cacheLocation, navigator, tokenAddress } = req.body;
     if (tokenAddress === ALPHABET_CITY) {
       const hasWord = await web3Api.accountHasWord(user.publicAddress);
       if (hasWord) {
         return res.json({
           tx: null,
-          message:
-            "You have already won a word! Let someone else have a chance :)",
+          message: "You have already won a word! Let someone else have a chance :)",
           error: "FAIL",
         });
       }
@@ -82,7 +58,6 @@ export default async function handler(
     // return console.log(tokenAddress, "token address", ALPHABET_CITY);
     const distance = haversineDistance(userLocation, cacheLocation);
     const isTooFar = distance > 20;
-    console.log(user)
     const isAdmin =
       user.email === "arielklevecz@gmail.com" ||
       user.email === "ariel@yaytso.art" ||
@@ -92,7 +67,7 @@ export default async function handler(
     if (isTooFar && !isAdmin) {
       return res.json({
         tx: null,
-        message: `You are about ${distance} away. You must get closer to claim!`,
+        message: `You are about ${Math.round(distance)}m away. You must get closer to claim!`,
         error: "TOO_FAR",
       });
     }
@@ -152,9 +127,7 @@ export default async function handler(
         },
       },
       MessageBody: `Dropping Egg from ${cacheId} to ${user.publicAddress}`,
-      MessageDeduplicationId: `${user.publicAddress}-${cacheId}-${
-        Math.random() * 100
-      }`, // Required for FIFO queues
+      MessageDeduplicationId: `${user.publicAddress}-${cacheId}-${Math.random() * 100}`, // Required for FIFO queues
       MessageGroupId: "yaytso-air-drop", // Required for FIFO queues
       QueueUrl: sqsUrl,
     };
@@ -169,7 +142,7 @@ export default async function handler(
         var params = {
           TableName: "air-yaytso-claims",
           Item: {
-            phoneNumber:user.phoneNumber,
+            phoneNumber: user.phoneNumber,
             email: user.email,
             wallet: user.publicAddress,
             cacheId: cacheId.toString(),

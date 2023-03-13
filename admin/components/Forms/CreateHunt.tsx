@@ -7,6 +7,7 @@ type Values = {
   name: string;
   description: string;
   location: string;
+  magicLinkType: string;
   markerEmpty: any;
   markerFilled: any;
 };
@@ -15,6 +16,7 @@ const uploadSchema = Yup.object().shape({
   name: Yup.string().required(),
   description: Yup.string().required(),
   location: Yup.string().required(),
+  magicLinkType: Yup.string().required(),
   markerEmpty: Yup.mixed().required(),
   markerFilled: Yup.mixed().required(),
 });
@@ -31,18 +33,17 @@ export default function CreateHuntForm() {
           name: "",
           description: "",
           location: "",
+          magicLinkType: "",
           markerEmpty: null,
           markerFilled: null,
         }}
         validationSchema={uploadSchema}
-        onSubmit={(
-          values: Values,
-          { setSubmitting }: FormikHelpers<Values>
-        ) => {
+        onSubmit={(values: Values, { setSubmitting }: FormikHelpers<Values>) => {
           const body = new FormData();
           body.append("name", values.name);
           body.append("description", values.description);
           body.append("location", values.location);
+          body.append("magicLinkType", values.magicLinkType);
           body.append("markerEmpty", values.markerEmpty);
           body.append("markerFilled", values.markerFilled);
 
@@ -58,15 +59,15 @@ export default function CreateHuntForm() {
             </div>
             <div className="field-container">
               <label htmlFor="description">Description</label>
-              <Field
-                id="description"
-                name="description"
-                placeholder="Description"
-              />
+              <Field id="description" name="description" placeholder="Description" />
             </div>
             <div className="field-container">
               <label htmlFor="location">Location</label>
               <Field id="location" name="location" placeholder="3000,-3000" />
+            </div>
+            <div className="field-container">
+              <label htmlFor="magicLinkType">Magic Link Type</label>
+              <Field id="magicLinkType" name="magicLinkType" placeholder="connect or auth" />
             </div>
             <div className="field-container">
               <label htmlFor="markerEmpty">Marker Empty</label>

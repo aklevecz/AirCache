@@ -1,53 +1,50 @@
-import dotenv from 'dotenv'
-import fs from "fs"
-import { Command } from 'commander';
-dotenv.config({path:'./.env.local'})
-import db from "../libs/db"
+import dotenv from "dotenv";
+import fs from "fs";
+import { Command } from "commander";
+dotenv.config({ path: "./.env.local" });
+import db from "../libs/db";
 import { cacheByGroupTableName } from "../libs/constants";
-import web3Api from "../libs/web3Api"
-import { fetchHuntMeta } from '../libs/api';
+import web3Api from "../libs/web3Api";
+import { fetchHuntMeta } from "../libs/api";
 const wordHunts = ["nft-nyc", "venice", "la"];
 
 export const isWordHunt = (hunt: string) => wordHunts.includes(hunt);
 
 type Cache = {
-    note:string;
-    lng:string;
-    lat:string;
-    cacheId:string;
-    groupName:string;
-    address:string
-    tokenId?:number;
-    tokenAddress?:string;
-}
+  note: string;
+  lng: string;
+  lat: string;
+  cacheId: string;
+  groupName: string;
+  address: string;
+  tokenId?: number;
+  tokenAddress?: string;
+};
 
 // a function for just updating the metadata instead of everything
 // skip the word hunts
 const program = new Command();
-program.option('--word-hunts <flag>').parse()
-const options = program.opts()
-console.log(options)
+program.option("--word-hunts").parse();
+const options = program.opts();
 async function main() {
-    const allCachesByGroup = await db
-    .scan({ TableName: cacheByGroupTableName })
-    .promise();
+  const allCachesByGroup = await db.scan({ TableName: cacheByGroupTableName }).promise();
 
-    const caches = allCachesByGroup.Items! as Cache[]
+  const caches = allCachesByGroup.Items! as Cache[];
 
-    const cachesByGroupName = caches.reduce((pv:{[key:string]:Cache[]}, cv) => {
-        const caches = pv[cv.groupName] || []
-        
-         pv[cv.groupName] = [...caches, cv]
-         return pv
-    },{})
+  const cachesByGroupName = caches.reduce((pv: { [key: string]: Cache[] }, cv) => {
+    const caches = pv[cv.groupName] || [];
 
+    pv[cv.groupName] = [...caches, cv];
+    return pv;
+  }, {});
 
-    const allHuntData:any = {}
-    for (const [groupName, caches] of Object.entries(cachesByGroupName)) {
-        const mergedData = [];
-        const nftMetadata = [];
-        for (const cache of caches){
+  const allHuntData: any = {};
+  for (const [groupName, caches] of Object.entries(cachesByGroupName)) {
+    const mergedData = [];
+    const nftMetadata = [];
+    for (const cache of caches) {
       let data: any = cache;
+      console.log(options);
       if (options.wordHunts && cache.tokenId && isWordHunt(cache.groupName)) {
         // for having metadata about the NFT at the map marker level
         const meta = await web3Api.getNFTMeta(cache.tokenId, cache.tokenAddress!);
@@ -62,24 +59,18 @@ async function main() {
       }
       let huntMeta = null;
       try {
-           huntMeta = await fetchHuntMeta(groupName);
-           console.log(huntMeta)
-      }catch(e) {
-
-      }
+        huntMeta = await fetchHuntMeta(groupName);
+        // console.log(huntMeta);
+      } catch (e) {}
 
       mergedData.push(data);
       allHuntData[groupName] = {
-        caches:mergedData,
+        caches: mergedData,
         nftMetadata: nftMetadata || [],
-        metadata:huntMeta
-      }
+        metadata: huntMeta,
+      };
     }
-    }
-    fs.writeFileSync('./libs/allHuntData.json', JSON.stringify(allHuntData))
+  }
+  fs.writeFileSync("./libs/allHuntData.json", JSON.stringify(allHuntData));
 }
-main()
-
-
-
-
+main();

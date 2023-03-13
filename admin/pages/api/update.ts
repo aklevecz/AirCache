@@ -18,10 +18,7 @@ export const config = {
 
 const airYaytsoBucket = "cf-simple-s3-origin-egg2-669844428319";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   console.log("submitting");
   const token = await getToken({ req });
   if (!token) {
@@ -33,12 +30,12 @@ export default async function handler(
     const assetHost = `${host}/${fields.name}`;
     const huntDir = `hunt_configs/${fields.name}`;
     const assetDir = `${fields.name}`;
-
-
+    console.log(fields.magicLinkType);
     const metadata = {
       name: fields.name,
       description: fields.description,
       location: fields.location,
+      magicLinkType: fields.magicLinkType,
       icons: {
         markerEmpty: `${assetHost}/markerEmpty.png`,
         markerFilled: `${assetHost}/markerFilled.png`,
@@ -50,14 +47,15 @@ export default async function handler(
       Body: JSON.stringify(metadata),
       ContentType: "application/json",
     };
-    await s3.upload(metaParams).promise()
+    await s3.upload(metaParams).promise();
 
     console.log(`${assetDir}/*`, `${huntDir}/*`);
     var params = {
       DistributionId: "E38T2XPXBI32ZY" /* required */,
       InvalidationBatch: {
         /* required */
-        CallerReference: ((fields.name as string) +Date.now().toString()+
+        CallerReference: ((fields.name as string) +
+          Date.now().toString() +
           fields.description) as string /* required */,
         Paths: {
           /* required */ Quantity: 2 /* required */,

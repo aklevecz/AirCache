@@ -30,17 +30,17 @@ export const appKeys: { [key: string]: { secret: string; pub: string } } = {
     pub: process.env.NEXT_PUBLIC_HELSINKI_PUB_KEY as string,
   },
   fools: {
-    secret:process.env.FOOLS_SECRET_KEY as string,
-    pub: process.env.NEXT_PUBLIC_FOOLS_PUB_KEY as string
+    secret: process.env.FOOLS_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_FOOLS_PUB_KEY as string,
   },
-  CYAdventures:{
-    secret:process.env.FOOLS_SECRET_KEY as string,
-    pub: process.env.NEXT_PUBLIC_FOOLS_PUB_KEY as string
+  CYAdventures: {
+    secret: process.env.FOOLS_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_FOOLS_PUB_KEY as string,
   },
-  thepark:{
-    secret:process.env.THEPARK_SECRET_KEY as string,
-    pub: process.env.NEXT_PUBLIC_THEPARK_PUB_KEY as string
-  }
+  thepark: {
+    secret: process.env.THEPARK_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_THEPARK_PUB_KEY as string,
+  },
 };
 
 const asin = Math.asin;
@@ -71,8 +71,7 @@ export function haversineDistance(a: Latlng, b: Latlng) {
 }
 
 export const maticMumBaiNodeOptions = {
-  rpcUrl:
-    "https://polygon-mumbai.g.alchemy.com/v2/e9f3zs2O-BVmBkCXfZEUI-xmdt6wpzz9", // Polygon RPC URL
+  rpcUrl: "https://polygon-mumbai.g.alchemy.com/v2/e9f3zs2O-BVmBkCXfZEUI-xmdt6wpzz9", // Polygon RPC URL
   chainId: 80001, // Polygon chain id
 };
 
@@ -103,11 +102,7 @@ export const getTokenURI = async (
   provider: ethers.providers.Provider
 ): Promise<string> => {
   console.log(provider);
-  const tokenContract = new ethers.Contract(
-    tokenAddress,
-    [abis.tokenURI, abis.uri],
-    provider
-  );
+  const tokenContract = new ethers.Contract(tokenAddress, [abis.tokenURI, abis.uri], provider);
   let uri;
   try {
     uri = await tokenContract.tokenURI(tokenId);
@@ -118,28 +113,18 @@ export const getTokenURI = async (
   return uri;
 };
 
-export const approveToken = async (
-  tokenId: number,
-  tokenAddress: string,
-  signer: ethers.Signer
-) => {
+export const approveToken = async (tokenId: number, tokenAddress: string, signer: ethers.Signer) => {
   console.log(signer);
-  const tokenContract = new ethers.Contract(
-    tokenAddress,
-    [abis.approve],
-    signer
-  );
+  const tokenContract = new ethers.Contract(tokenAddress, [abis.approve], signer);
   const tx = await tokenContract.approve(AIRCACHE_ADDRESS, tokenId);
   console.log(tx);
 };
 
 const IPFS_IO = "https://ipfs.io";
 const PINATA = "https://gateway.pinata.cloud";
-export const ipfsToPinata = (uri: string) =>
-  uri.replace("ipfs://", `${PINATA}/ipfs/`);
+export const ipfsToPinata = (uri: string) => uri.replace("ipfs://", `${PINATA}/ipfs/`);
 
-export const ipfstoIO = (uri: string) =>
-  uri.replace("ipfs://", `${IPFS_IO}/ipfs/`);
+export const ipfstoIO = (uri: string) => uri.replace("ipfs://", `${IPFS_IO}/ipfs/`);
 
 export const isIpfs = (uri: string) => {
   return uri.slice(0, 7) === "ipfs://";
@@ -212,16 +197,20 @@ const wordHunts = ["nft-nyc", "venice", "la"];
 
 export const isWordHunt = (hunt: string) => wordHunts.includes(hunt);
 
-export const getMagicPubKey = () => {
-  if (typeof localStorage !== "undefined") {
-    const currentGroup = storage.getItem(storage.keys.current_group);
-    console.log(currentGroup)
-    if (currentGroup) {
-      const keys = appKeys[currentGroup];
-      if (keys) {
-        return keys.pub;
-      }
+export const getMagicPubKey = (groupName?: string) => {
+  const currentGroup = groupName
+    ? groupName
+    : typeof localStorage !== "undefined"
+    ? storage.getItem(storage.keys.current_group)
+    : null;
+  // if (typeof localStorage !== "undefined") {
+  // const currentGroup = storage.getItem(storage.keys.current_group);
+  if (currentGroup) {
+    const keys = appKeys[currentGroup];
+    if (keys) {
+      return keys.pub;
     }
   }
+  // }
   return process.env.NEXT_PUBLIC_MAGIC_PUB_KEY as string;
 };

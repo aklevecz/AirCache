@@ -5,9 +5,7 @@ import CacheContentModal from "../../components/Modals/CacheContent";
 import useAirCache from "../../hooks/useAirCache";
 import useAuth from "../../hooks/useAuth";
 import useModal from "../../hooks/useModal";
-import {
-  cacheByGroupTableName,
-} from "../../libs/constants";
+import { cacheByGroupTableName } from "../../libs/constants";
 import db from "../../libs/db";
 import storage from "../../libs/storage";
 import { Latlng } from "../../libs/types";
@@ -22,7 +20,6 @@ import HeadHunt from "../../components/Head/Hunt";
 import useUserLocation from "../../hooks/useUserLocation";
 import useCacheMarkers from "../../hooks/useCacheMarkers";
 
-
 // Notes:
 // Most of the things here need to wait for the map to initialize.
 // Should probably have a better loading state for understanding that
@@ -34,12 +31,7 @@ type Props = {
   huntMeta: any;
 };
 
-export default function Group({
-  caches: c,
-  groupName,
-  nftMetadata,
-  huntMeta,
-}: Props) {
+export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: Props) {
   const modal = useModal();
   const ctaModal = useModal();
   const airCache = useAirCache(null);
@@ -48,13 +40,17 @@ export default function Group({
   const [map, setMap] = useState<google.maps.Map>();
   const userPositionRef = useRef<any>(null);
   const positionRef = useRef<any>("");
-  const {locationAllowed, fetchingLocation, initiateUserLocation} = useUserLocation(userPositionRef, positionRef, map)
-  
-  useCacheMarkers(groupName, map, c, huntMeta, nftMetadata, modal)
+  const { locationAllowed, fetchingLocation, initiateUserLocation } = useUserLocation(
+    userPositionRef,
+    positionRef,
+    map
+  );
+
+  useCacheMarkers(groupName, map, c, huntMeta, nftMetadata, modal);
 
   const { user } = auth;
 
-  const {word, letters} = useAlphabetCity()
+  const { word, letters } = useAlphabetCity();
 
   const initMap = (map: google.maps.Map) => {
     setMap(map);
@@ -70,8 +66,6 @@ export default function Group({
     map!.setCenter(userPositionRef.current as Latlng);
   };
 
- 
-
   useEffect(() => {
     if (map && navigator.geolocation && typeof window !== "undefined" && user) {
       // initiateUserLocation();
@@ -80,21 +74,17 @@ export default function Group({
 
   return (
     <>
-      <HeadHunt mapMeta={huntMeta}/>
+      <HeadHunt mapMeta={huntMeta} />
       <Map initMap={initMap} map={map} user={auth.user} />
       {locationAllowed && (
-        <Button
-          onClick={centerMap}
-          className="recenter-button"
-          style={{ display: "flex" }}
-        >
+        <Button onClick={centerMap} className="recenter-button" style={{ display: "flex" }}>
           Recenter <Locate />
         </Button>
       )}
       {!locationAllowed && (
-          <Button className="recenter-button" onClick={initiateUserLocation}>
-            {fetchingLocation ? <BlackWrappedSpinner /> : "Use Location"}
-          </Button>
+        <Button className="recenter-button" onClick={initiateUserLocation}>
+          {fetchingLocation ? <BlackWrappedSpinner /> : "Use Location"}
+        </Button>
       )}
       <div
         ref={positionRef}
@@ -111,15 +101,13 @@ export default function Group({
           data={modal.data}
         />
       )}
-      <WordsUI ctaModal={ctaModal} isWordHunt={isWordHunt(groupName)} letters={letters} word={word}/>
+      <WordsUI ctaModal={ctaModal} isWordHunt={isWordHunt(groupName)} letters={letters} word={word} />
     </>
   );
 }
 
 export async function getStaticPaths() {
-  const allCachesByGroup = await db
-    .scan({ TableName: cacheByGroupTableName })
-    .promise();
+  const allCachesByGroup = await db.scan({ TableName: cacheByGroupTableName }).promise();
 
   const caches = allCachesByGroup.Items!.map((cache) => {
     return cache.groupName;
@@ -137,10 +125,10 @@ type Params = {
 
 export const getStaticProps = async ({ params }: Params) => {
   let { groupName } = params;
-  const data:any = await import('../../libs/allHuntData.json')
-  const mergedData= data[groupName].caches
-  const nftMetadata = data[groupName].nftMetadata
-  const huntMeta = data[groupName].metadata 
+  const data: any = await import("../../libs/allHuntData.json");
+  const mergedData = data[groupName].caches;
+  const nftMetadata = data[groupName].nftMetadata;
+  const huntMeta = data[groupName].metadata;
   return {
     props: {
       caches: mergedData,

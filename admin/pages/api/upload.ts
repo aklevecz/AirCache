@@ -18,10 +18,7 @@ export const config = {
 
 const airYaytsoBucket = "cf-simple-s3-origin-egg2-669844428319";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   console.log("submitting");
   const token = await getToken({ req });
   if (!token) {
@@ -70,6 +67,7 @@ export default async function handler(
       name: fields.name,
       description: fields.description,
       location: fields.location,
+      magicLinkType: fields.magicLinkType,
       icons: {
         markerEmpty: `${assetHost}/markerEmpty.png`,
         markerFilled: `${assetHost}/markerFilled.png`,
@@ -81,7 +79,7 @@ export default async function handler(
       Body: JSON.stringify(metadata),
       ContentType: "application/json",
     };
-    await s3.upload(metaParams).promise()
+    await s3.upload(metaParams).promise();
 
     const email = token.email;
 
@@ -100,8 +98,7 @@ export default async function handler(
       DistributionId: "E38T2XPXBI32ZY" /* required */,
       InvalidationBatch: {
         /* required */
-        CallerReference: ((fields.name as string) +
-          fields.description) as string /* required */,
+        CallerReference: ((fields.name as string) + fields.description) as string /* required */,
         Paths: {
           /* required */ Quantity: 2 /* required */,
           Items: [`/${assetDir}/*`, `/${huntDir}/*`],
