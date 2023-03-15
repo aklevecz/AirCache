@@ -48,7 +48,9 @@ export default function useCacheMarkers(
           const data: any = cache;
           if (cache.tokenId) {
             const nft = nftMetadata.find(
-              (nft: any) => nft.tokenId === cache.tokenId && cache.tokenAddress === nft.tokenAddress
+              (nft: any) =>
+                nft.tokenId === cache.tokenId &&
+                cache.tokenAddress === nft.tokenAddress
             );
             data.nft = nft;
           }
@@ -63,6 +65,7 @@ export default function useCacheMarkers(
     // To do: Naive and does not scale
   }, [modal.open, groupName]);
 
+  // Definition for the icon of a marker
   const getIcon = (tokenId: number, nft: any) => {
     let icon = {
       url: tokenId ? eggIcon.src : blankEggIcon.src,
@@ -70,7 +73,9 @@ export default function useCacheMarkers(
     };
     if (mapMeta.icon && mapMeta.icon.image) {
       icon = {
-        url: tokenId ? mapMeta.icon.image.filled.src : mapMeta.icon.image.empty.src,
+        url: tokenId
+          ? mapMeta.icon.image.filled.src
+          : mapMeta.icon.image.empty.src,
         scaledSize: new google.maps.Size(40, 40),
       };
     } else {
@@ -123,7 +128,9 @@ export default function useCacheMarkers(
       if (markersRef.current.length === 0) map.setCenter(mapMeta.map_center);
       const markers: any[] = [];
       caches.forEach((cache) => {
-        const markerExists = markersRef.current.find((marker) => marker.cacheId === cache.cacheId);
+        const markerExists = markersRef.current.find(
+          (marker) => marker.cacheId === cache.cacheId
+        );
         if (markerExists) {
           const icon = getIcon(cache.tokenId, cache.nft);
           markerExists.setIcon(icon);

@@ -25,6 +25,8 @@ const sqsUrl = "https://sqs.us-west-1.amazonaws.com/669844428319/air-yaytso.fifo
 var sqs = new AWS.SQS({ apiVersion: "2012-11-05" });
 var db = new AWS.DynamoDB.DocumentClient({ apiVersion: "2012-08-10" });
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data | any>) {
+  console.log(req.headers);
+  console.log(res.getHeader("frogbitch"));
   if (!req.headers.authorization) {
     return res.status(405).json({
       error: "NO_AUTH",
