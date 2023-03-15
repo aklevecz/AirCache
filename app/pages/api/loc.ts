@@ -5,5 +5,12 @@ type Data = any;
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data | any>) {
   const loc = res.getHeader("loc");
   const device = res.getHeader("device");
-  return res.send(JSON.stringify(loc) + JSON.stringify(device));
+  let data: any = { loc: { lat: 1, lng: 2 }, device: { mobile: "dog" } };
+  if (device && device !== "{}") {
+    data.device = JSON.parse(device as string);
+  }
+  if (loc && loc !== "{}") {
+    data.loc = JSON.parse(loc as string);
+  }
+  return res.json(data);
 }
