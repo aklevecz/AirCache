@@ -3,10 +3,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 type Data = any;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data | any>) {
-  // @ts-ignore
-  const loc = res.headers["loc"];
-  // @ts-ignore
-  const device = res.headers["device"];
+  const loc = res.getHeader("loc");
+  const device = res.getHeader("device");
+  console.log(loc, device);
   let data: any = { loc: { lat: 1, lng: 2 }, device: { mobile: "dog" } };
   if (device && device !== "{}") {
     data.device = JSON.parse(device as string);
