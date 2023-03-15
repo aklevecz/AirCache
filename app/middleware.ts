@@ -6,8 +6,8 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   const { device } = userAgent(request);
   const response = NextResponse.next();
-  response.headers.set("loc", JSON.stringify(request.geo));
-  response.headers.set("device", JSON.stringify(device));
+  response.headers.set("loc", JSON.stringify({ country: "FROG" }));
+  response.headers.set("device", JSON.stringify({ mobile: true }));
 
   return response;
 }
