@@ -4,12 +4,11 @@ import type { NextRequest } from "next/server";
 
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
+  const { nextUrl } = request;
   const { device } = userAgent(request);
-  const response = NextResponse.next();
-  response.headers.set("loc", JSON.stringify({ country: "FROG" }));
-  response.headers.set("device", JSON.stringify({ mobile: true }));
-
-  return response;
+  nextUrl.searchParams.set("device", JSON.stringify(device));
+  nextUrl.searchParams.set("loc", JSON.stringify(request.geo));
+  return NextResponse.rewrite(nextUrl);
 }
 
 // See "Matching Paths" below to learn more
