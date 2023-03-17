@@ -25,14 +25,12 @@ module.exports = {
   },
   networks: {
     matic: {
-      url:
-        "https://polygon-mainnet.g.alchemy.com/v2/" + process.env.ALCHEMY_KEY,
-      accounts: [process.env.PP2],
+      url: "https://polygon-mainnet.g.alchemy.com/v2/" + process.env.ALCHEMY_KEY,
+      accounts: [process.env.PRIVATE_KEY],
     },
     rinkeby: {
       url: `https://rinkeby.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
     matic_mum: {
       url: "https://rpc-mumbai.maticvigil.com",

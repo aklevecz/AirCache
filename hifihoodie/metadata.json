@@ -1,0 +1,6 @@
+{
+  "name": "{{COLOR}} x HiFiHoodie",
+  "description": "{{COLOR}} x HiFiHoodie",
+  "image": "{{IMAGE_URL}}",
+  "attributes": [{ "trait_type": "Color", "value": "{{COLOR}}" }]
+}

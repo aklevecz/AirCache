@@ -25,10 +25,7 @@ const cityCenters = {
   toronto: { lat: 43.657195, lng: -79.38517 },
 };
 
-const host =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:3000"
-    : "https://air.yaytso.art";
+const host = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://air.yaytso.art";
 
 export const seoConfig: { [key: string]: any } = {
   ["coindesk-austin"]: {
@@ -47,8 +44,7 @@ export const seoConfig: { [key: string]: any } = {
   },
   ["myosin-yacht"]: {
     title: "Hunting for Treasure in the Hudson",
-    description:
-      "Gems and Jewelry hidden in treasure troves strewn about the Hudson!",
+    description: "Gems and Jewelry hidden in treasure troves strewn about the Hudson!",
     image: `${host}/blackbeard-ogimage.png`,
     map_center: cityCenters.hudson_river,
     icon: { useNFT: false, image: { empty: emptyChest, filled: filledChest } },
@@ -140,15 +136,19 @@ export const appKeys: { [key: string]: { secret: string; pub: string } } = {
     pub: process.env.NEXT_PUBLIC_HELSINKI_PUB_KEY as string,
   },
   fools: {
-    secret:process.env.FOOLS_SECRET_KEY as string,
-    pub: process.env.NEXT_PUBLIC_FOOLS_PUB_KEY as string
+    secret: process.env.FOOLS_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_FOOLS_PUB_KEY as string,
   },
-  CYAdventures:{
-    secret:process.env.FOOLS_SECRET_KEY as string,
-    pub: process.env.NEXT_PUBLIC_FOOLS_PUB_KEY as string
+  CYAdventures: {
+    secret: process.env.FOOLS_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_FOOLS_PUB_KEY as string,
   },
-  thepark:{
-    secret:process.env.THEPARK_SECRET_KEY as string,
-    pub: process.env.NEXT_PUBLIC_THEPARK_PUB_KEY as string
-  }
+  thepark: {
+    secret: process.env.THEPARK_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_THEPARK_PUB_KEY as string,
+  },
+  hifihoodies: {
+    secret: process.env.HIFIHOODIES_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_HIFIHOODIES_PUB_KEY as string,
+  },
 };
