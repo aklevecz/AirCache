@@ -6,7 +6,7 @@ import { Latlng } from "./types";
 const api = axios.create();
 
 const endpoints = {
-  getNfts: "api/get-owner-nfts",
+  getNfts: "/api/get-owner-nfts",
 };
 
 // api.interceptors.request.use(async (config: AxiosRequestConfig) => {
@@ -22,20 +22,17 @@ const endpoints = {
 
 export const getOwnerNfts = async (owner: string, tokenAddress?: string) => {
   try {
-    const response = await api
-      .get(endpoints.getNfts, { params: { owner, tokenAddress } })
-      .catch((error) => {
-        if (error.response) {
-          const err = error.response.data;
-          console.log(err);
-          // return { data: { tx: null, message: err.message, error: err.error } };
-        }
-      });
+    const response = await api.get(endpoints.getNfts, { params: { owner, tokenAddress } }).catch((error) => {
+      if (error.response) {
+        const err = error.response.data;
+        console.log(err);
+        // return { data: { tx: null, message: err.message, error: err.error } };
+      }
+    });
     if (response) {
       const data = Object.keys(response.data).map((key) => {
         return response.data[key];
       });
-      console.log(data);
       return data;
     }
   } catch (e) {

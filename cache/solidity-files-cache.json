@@ -1315,6 +1315,46 @@
       "artifacts": [
         "HiFiHoodies"
       ]
+    },
+    "/Users/arielklevecz/air-cache/contracts/MagicMap.sol": {
+      "lastModificationDate": 1679454336113,
+      "contentHash": "fa55b9e51672dcca7d835d0327bb53d0",
+      "sourceName": "contracts/MagicMap.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "erc721a/contracts/ERC721A.sol",
+        "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol",
+        "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "MagicMap"
+      ]
     }
   }
 }

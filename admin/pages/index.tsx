@@ -28,6 +28,8 @@ type HuntMetadata = {
   description: string;
   location: string;
   magicLinkType: "connect" | "auth";
+  huntType: "claim" | "word" | "prog";
+  contract: string;
   icons: {
     markerEmpty: string;
     markerFilled: string;
@@ -77,6 +79,8 @@ const Home: NextPage<Props> = ({ groups }) => {
       body.append("magicLinkType", huntForm.magicLinkType);
       body.append("markerEmpty", huntForm.icons.markerEmpty);
       body.append("markerFilled", huntForm.icons.markerFilled);
+      body.append("huntType", huntForm.huntType);
+      body.append("contract", huntForm.contract);
 
       fetch("/api/update", { method: "POST", body });
     }
@@ -112,6 +116,8 @@ const Home: NextPage<Props> = ({ groups }) => {
             <input onChange={onChange} name="hunt-description" value={huntForm?.description} />
             <input onChange={onChange} name="hunt-location" value={huntForm?.location} />
             <input onChange={onChange} name="hunt-magicLinkType" value={huntForm?.magicLinkType} />
+            <input onChange={onChange} name="hunt-huntType" value={huntForm?.huntType} />
+            <input onChange={onChange} name="hunt-contract" value={huntForm?.contract} />
             <div className="flex">
               <img src={metadata.icons.markerEmpty} /> <img src={metadata.icons.markerFilled} />
             </div>

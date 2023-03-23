@@ -14,6 +14,7 @@ export const endpoints = {
   onUpdateCache: "/api/on-update-cache",
   getCachesByGroup: "/api/get-caches-by-group",
   checkClaim: "/api/check-claim",
+  claimVoucher: "/api/claim-voucher",
   claimSacret: "/api/claim-sacret",
   emailSignup: "/api/on-email-signup",
 };
@@ -74,6 +75,36 @@ export const claimCache = async (
   }
 };
 
+export const claimVoucher = async (
+  tokenAddress: string,
+  tokenType: string,
+  cacheLocation: Latlng,
+  userLocation: Latlng,
+  navigator: any
+) => {
+  console.log(tokenAddress, tokenType);
+  try {
+    const response = await api
+      .post(endpoints.claimVoucher, {
+        tokenAddress,
+        tokenType,
+        cacheLocation,
+        userLocation,
+        navigator,
+      })
+      .catch((error) => {
+        if (error.response) {
+          const err = error.response.data;
+          return { data: { tx: null, message: err.message, error: err.error } };
+        }
+      });
+    return response && response.data;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};
+
 export const onCreateCache = (
   groupName: string,
   cacheId: number,
@@ -92,12 +123,7 @@ export const onCreateCache = (
   });
 };
 
-export const onUpdateCache = (
-  cacheId: string,
-  tokenId: number,
-  tokenAddress: string,
-  groupName: string
-) => {
+export const onUpdateCache = (cacheId: string, tokenId: number, tokenAddress: string, groupName: string) => {
   const res = api.post(endpoints.onUpdateCache, {
     cacheId,
     tokenId,
@@ -132,8 +158,6 @@ export default api;
 
 // CDN?
 export const fetchHuntMeta = async (huntName: string) => {
-  const res = await axios.get(
-    `${CDN_HOST}/hunt_configs/${huntName}/metadata.json`
-  );
+  const res = await axios.get(`${CDN_HOST}/hunt_configs/${huntName}/metadata.json`);
   return res.data;
 };

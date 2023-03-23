@@ -9,10 +9,7 @@ import { env } from "process";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 const AIR_CACHE_FIRST_BLOCK = 27696596;
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<any>
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
   // if (!req.headers.authorization) return res.status(405).end();
   try {
     //   const user = (await jwt.verify(
@@ -20,16 +17,13 @@ export default async function handler(
     //     JWT_SECRET
     //   )) as JwtPayload;
     const { owner, tokenAddress } = req.query;
-    const tokenContractQuery = tokenAddress
-      ? "&contractAddresses[]=" + tokenAddress
-      : "";
+    const tokenContractQuery = tokenAddress ? "&contractAddresses[]=" + tokenAddress : "";
     const network = prod ? "mainnet" : "mumbai";
     const maticurl = `https://polygon-${network}.g.alchemyapi.io/v2/${ALCHEMY_KEY}/getNFTs/`;
     // const mumurl =
     //   "https://polygon-mumbai.g.alchemy.com/v2/" +
     //   process.env.ALCHEMY_KEY_MUMBAI;
     const url = maticurl;
-    console.log(maticurl);
     const queryNFTs = async (pageKey?: string) => {
       const pageKeyQuery = pageKey ? `&pageKey=${pageKey}` : "";
       const config = {
@@ -43,7 +37,6 @@ export default async function handler(
     let pageKey = "";
     while (nfts.length === 0) {
       const data = await queryNFTs(pageKey);
-      data.ownedNfts.map(console.log);
       const filteredOwned = data.ownedNfts.filter((n: any) => n.title);
       pageKey = data.pageKey;
       nfts.push(...filteredOwned);

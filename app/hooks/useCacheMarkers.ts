@@ -48,9 +48,7 @@ export default function useCacheMarkers(
           const data: any = cache;
           if (cache.tokenId) {
             const nft = nftMetadata.find(
-              (nft: any) =>
-                nft.tokenId === cache.tokenId &&
-                cache.tokenAddress === nft.tokenAddress
+              (nft: any) => nft.tokenId === cache.tokenId && cache.tokenAddress === nft.tokenAddress
             );
             data.nft = nft;
           }
@@ -71,16 +69,17 @@ export default function useCacheMarkers(
       url: tokenId ? eggIcon.src : blankEggIcon.src,
       scaledSize: new google.maps.Size(40, 40),
     };
+
+    // Marker from the map metadata
     if (mapMeta.icon && mapMeta.icon.image) {
       icon = {
-        url: tokenId
-          ? mapMeta.icon.image.filled.src
-          : mapMeta.icon.image.empty.src,
+        url: tokenId ? mapMeta.icon.image.filled.src : mapMeta.icon.image.empty.src,
         scaledSize: new google.maps.Size(40, 40),
       };
     } else {
     }
 
+    // Custom marker from the NFT metadata
     if (nft) {
       icon.url = nft.image;
     }
@@ -94,7 +93,9 @@ export default function useCacheMarkers(
     contractAddress: string,
     tokenId: number,
     tokenAddress: string,
-    nft: any
+    nft: any,
+    // @todo CHANGE
+    index: number
   ) => {
     const icon = getIcon(tokenId, nft);
     const cacheMarker = new google.maps.Marker({
@@ -107,6 +108,7 @@ export default function useCacheMarkers(
     (cacheMarker as any).cacheId = id;
 
     cacheMarker.addListener("click", () => {
+      console.log(index);
       modal.toggleModal({
         cache: {
           id,
@@ -114,6 +116,10 @@ export default function useCacheMarkers(
           location: { lat, lng },
           callback: refreshMarkers,
         },
+        huntType: huntMeta.huntType,
+        progContract: huntMeta.contract,
+        // @todo CHANGE
+        progContractTokenType: index + 1,
         groupName,
         NFT: {},
       });
@@ -127,10 +133,8 @@ export default function useCacheMarkers(
     if (caches && caches.length && map) {
       if (markersRef.current.length === 0) map.setCenter(mapMeta.map_center);
       const markers: any[] = [];
-      caches.forEach((cache) => {
-        const markerExists = markersRef.current.find(
-          (marker) => marker.cacheId === cache.cacheId
-        );
+      caches.forEach((cache, index) => {
+        const markerExists = markersRef.current.find((marker) => marker.cacheId === cache.cacheId);
         if (markerExists) {
           const icon = getIcon(cache.tokenId, cache.nft);
           markerExists.setIcon(icon);
@@ -144,7 +148,9 @@ export default function useCacheMarkers(
           cache.address ?? AIRCACHE_ADDRESS,
           cache.tokenId,
           cache.tokenAddress,
-          cache.nft
+          cache.nft,
+          // @todo CHANGE
+          index
         );
         markers.push(marker);
       });

@@ -10,6 +10,8 @@ type Values = {
   magicLinkType: string;
   markerEmpty: any;
   markerFilled: any;
+  huntType: string;
+  contract: string;
 };
 
 const uploadSchema = Yup.object().shape({
@@ -36,6 +38,8 @@ export default function CreateHuntForm() {
           magicLinkType: "",
           markerEmpty: null,
           markerFilled: null,
+          huntType: "",
+          contract: "",
         }}
         validationSchema={uploadSchema}
         onSubmit={(values: Values, { setSubmitting }: FormikHelpers<Values>) => {
@@ -46,6 +50,8 @@ export default function CreateHuntForm() {
           body.append("magicLinkType", values.magicLinkType);
           body.append("markerEmpty", values.markerEmpty);
           body.append("markerFilled", values.markerFilled);
+          body.append("huntType", values.huntType);
+          body.append("contract", values.contract);
 
           fetch("/api/upload", { method: "POST", body });
           setSubmitting(false);
@@ -68,6 +74,14 @@ export default function CreateHuntForm() {
             <div className="field-container">
               <label htmlFor="magicLinkType">Magic Link Type</label>
               <Field id="magicLinkType" name="magicLinkType" placeholder="connect or auth" />
+            </div>
+            <div className="field-container">
+              <label htmlFor="huntType">Hunt Type</label>
+              <Field id="huntType" name="huntType" placeholder="claim | word | prog" />
+            </div>
+            <div className="field-container">
+              <label htmlFor="contract">Contract</label>
+              <Field id="contract" name="contract" placeholder="contract" />
             </div>
             <div className="field-container">
               <label htmlFor="markerEmpty">Marker Empty</label>

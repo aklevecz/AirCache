@@ -7,7 +7,7 @@ import { parseLocationString } from "../../libs/utils";
 import ErrorPage from "next/error";
 import useWeb3Wallet from "../../hooks/useWeb3Wallet";
 import { useWallet } from "../../contexts/WalletContext";
-import { useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import web3Api, { contract } from "../../libs/web3Api";
 import { getCachesByGroup, onCreateCache } from "../../libs/api";
 import { ethers } from "ethers";
@@ -60,16 +60,8 @@ type Props = {
 //     createCachePositionRef.current = { lat, lng };
 //   });
 // };
-console.log(
-  ethers.utils.parseBytes32String(
-    "0x33342e3038333236333934303730343932000000000000000000000000000000"
-  )
-);
-console.log(
-  ethers.utils.parseBytes32String(
-    "0x2d3131382e323137393435343639333133353500000000000000000000000000"
-  )
-);
+console.log(ethers.utils.parseBytes32String("0x33342e3038333236333934303730343932000000000000000000000000000000"));
+console.log(ethers.utils.parseBytes32String("0x2d3131382e323137393435343639333133353500000000000000000000000000"));
 
 const getSelectedCache = (caches: Cache[], selectedCache: string) =>
   caches.find((cache) => cache.cacheId === selectedCache);
@@ -105,11 +97,19 @@ export default function Hunt({ metadata }: Props) {
   }
   const location = metadata && metadata.location ? metadata.location : "0,0";
   // Could contain this in another component to be less ugly
-  const { map, mapContainerRef, createDragMarker, createStaticMarker } = useMap(
-    {
-      center: parseLocationString(location),
-    }
-  );
+  const { map, mapContainerRef, createDragMarker, createStaticMarker } = useMap({
+    center: parseLocationString(location),
+  });
+
+  const onLocationStringChange = (e: FormEvent<HTMLInputElement>) => {
+    const splitPos = e.currentTarget.value.trim().split(",");
+    const lat = parseFloat(splitPos[0]);
+    const lng = parseFloat(splitPos[1]);
+    createMarkerPositionRef.current = { lat, lng };
+    createMarkerRef.current!.setPosition({ lat, lng });
+    console.log(createMarkerPositionRef.current);
+  };
+
   const onCreateMarker = () => {
     setTxState(TxState.Placing);
 
@@ -118,14 +118,7 @@ export default function Hunt({ metadata }: Props) {
     if (!pos) {
       return;
     }
-    createDragMarker(
-      metadata.icons.markerEmpty,
-      70,
-      pos.lat(),
-      pos.lng(),
-      createMarkerRef,
-      createMarkerPositionRef
-    );
+    createDragMarker(metadata.icons.markerEmpty, 70, pos.lat(), pos.lng(), createMarkerRef, createMarkerPositionRef);
   };
 
   const resetCreateMarker = () => {
@@ -140,25 +133,13 @@ export default function Hunt({ metadata }: Props) {
     const provider = wallet.web3Wallet.metaMask.provider;
     if (provider && pos) {
       const groupName = metadata.name;
-      const success = await web3Api.createCache(
-        pos.lat,
-        pos.lng,
-        provider,
-        setTxState
-      );
+      const success = await web3Api.createCache(pos.lat, pos.lng, provider, setTxState);
 
       if (success) {
         resetCreateMarker();
         const cacheId = (await contract.cacheId()).toNumber();
 
-        const res = await onCreateCache(
-          groupName,
-          cacheId,
-          pos.lat,
-          pos.lng,
-          AIRCACHE_ADDRESS,
-          ""
-        );
+        const res = await onCreateCache(groupName, cacheId, pos.lat, pos.lng, AIRCACHE_ADDRESS, "");
         console.log(res);
         caches.mutate();
       }
@@ -171,9 +152,7 @@ export default function Hunt({ metadata }: Props) {
       caches.data.caches.forEach((cache: Cache) => {
         const isCacheFilled = cache.tokenId;
         createStaticMarker(
-          isCacheFilled
-            ? metadata.icons.markerFilled
-            : metadata.icons.markerEmpty,
+          isCacheFilled ? metadata.icons.markerFilled : metadata.icons.markerEmpty,
           70,
           {
             lat: parseFloat(cache.lat),
@@ -225,10 +204,13 @@ export default function Hunt({ metadata }: Props) {
   return (
     <div className="h-full w-full">
       {txState > TxState.Placing && (
-        <div className="absolute w-full h-full bg-red-400 z-50 flex justify-center items-center">
+        <div className="absolute w-1/2 h-1/2 bg-red-400 z-50 flex justify-center items-center">
           <div>{txMessages[txState]}</div>
         </div>
       )}
+      <div className="absolute left-10 top-10 z-50">
+        <input onChange={onLocationStringChange} />
+      </div>
       {caches.data && (
         <Modal ref={modal}>
           <FillCache
@@ -249,11 +231,7 @@ export default function Hunt({ metadata }: Props) {
       <Map ref={mapContainerRef} />
       {txState === TxState.Idle && (
         <div className="absolute left-1/2 bottom-10 z-50 bg-none border-white stroke-slate-50a flex flex-col">
-          <img
-            className="w-1/3 block m-auto"
-            onClick={onCreateMarker}
-            src={metadata.icons.markerFilled}
-          />
+          <img className="w-1/3 block m-auto" onClick={onCreateMarker} src={metadata.icons.markerFilled} />
           <div>Add a new marker</div>
         </div>
       )}

@@ -36,7 +36,6 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
   const ctaModal = useModal();
   const airCache = useAirCache(null);
   const auth = useAuth();
-
   const [map, setMap] = useState<google.maps.Map>();
   const userPositionRef = useRef<any>(null);
   const positionRef = useRef<any>("");

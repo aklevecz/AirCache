@@ -1,10 +1,11 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
-import { claimCache } from "../../libs/api";
+import { claimCache, claimVoucher } from "../../libs/api";
 import Spinner from "../Loading/Spinner";
 import Container from "./Container";
 import { useRouter } from "next/router";
 import AirYaytsoInterface from "../../hooks/AirCache.json";
+import MagicMapInterface from "../../hooks/MagicMap.json";
 import { provider } from "../../libs/web3Api";
 import NothingHere from "../CacheContent/NothingHere";
 import { NFT } from "../../libs/types";
@@ -12,6 +13,8 @@ import Claim from "../CacheContent/Claim";
 import Mining from "../CacheContent/Mining";
 import Complete from "../CacheContent/Complete";
 import Error from "../CacheContent/Error";
+import { getMaticProvider } from "../../libs/utils";
+import { getOwnerNfts } from "../../libs/managerApi";
 
 enum TxState {
   Idle,
@@ -42,6 +45,12 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
   const [fetchingLocation, setFetchingLocation] = useState(false);
   const [fetchingMeta, setFetchingMeta] = useState(false);
 
+  // this could be a SWR hook
+  const [tokenTypes, setTokenTypes] = useState<any[]>([]);
+
+  // @todo make this more flexible, huntTypes?
+  const isProgHunt = data && data.huntType === "prog";
+
   // Could be in a different hook oriented around the cache fetch and claim
   const fetchCache = async (cacheId: number) => {
     setFetchingMeta(true);
@@ -61,6 +70,18 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
     }
   };
 
+  const cacheMapSlot = 1;
+  const fetchProgNFT = async () => {
+    setFetchingMeta(true);
+    const contract = new ethers.Contract(data.progContract, MagicMapInterface.abi, provider);
+    console.log(data);
+    const tokenURI = await contract.tokenURI(data.progContractTokenType || 1);
+    // @todo replace
+    const metadata = await fetch(tokenURI).then((r) => r.json());
+    setFetchingMeta(false);
+    setNFT(metadata);
+  };
+
   const reset = () => {
     setError({ error: "", message: "" });
     setTxState(TxState.Idle);
@@ -68,11 +89,41 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
     setFetchingLocation(false);
   };
 
+  const checkOwnership = async () => {
+    setFetchingMeta(true);
+    const nfts = await getOwnerNfts(auth.user.publicAddress, data.progContract);
+    // metadata should have token type
+    const uris: string[] = [];
+    const tokenTypes = nfts?.map((nft) => {
+      uris.push(nft.tokenUri.gateway);
+      // @todo CHANGE
+      return parseInt(nft.tokenUri.gateway.split("metadata/")[1].split(".json")[0]) + 1;
+    });
+    console.log(tokenTypes, data.progContractTokenType);
+    if (tokenTypes?.includes(data.progContractTokenType)) {
+      console.log("hello");
+      setFetchingMeta(false);
+      return;
+    }
+    // URI to show
+    const uri = uris.find((uri) => uri.includes(`${data.progContractTokenType - 1}`));
+    if (uri) {
+      const metadata = await fetch(uri).then((r) => r.json());
+      setNFT(metadata);
+    }
+    setTokenTypes(tokenTypes || []);
+    setFetchingMeta(false);
+  };
   useEffect(() => {
     if (!open) {
       reset();
     } else {
-      fetchCache(data.cache.id);
+      if (isProgHunt) {
+        checkOwnership();
+        // fetchProgNFT();
+      } else {
+        fetchCache(data.cache.id);
+      }
     }
   }, [open, data]);
 
@@ -89,6 +140,7 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
     //   console.log(event);
   };
 
+  // This doesn't support prog
   useEffect(() => {
     if (airCache.contract && airCache.signer && auth.user && open && NFT) {
       console.log("Listening to NFT Dropped");
@@ -128,26 +180,70 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
               lat: position.coords.latitude,
               lng: position.coords.longitude,
             };
-            console.log("claiming");
+
             // if (data.cache.taskQueue or data.cache.local)
-            const res = await claimCache(
-              data.cache.id,
-              data.groupName,
-              NFT!.tokenAddress,
-              data.cache.location,
-              userLocation,
-              {
-                timestamp,
-                o,
+
+            // This could be different more flexible
+            if (!isProgHunt) {
+              const res = await claimCache(
+                data.cache.id,
+                data.groupName,
+                NFT!.tokenAddress,
+                data.cache.location,
+                userLocation,
+                {
+                  timestamp,
+                  o,
+                }
+              );
+              setFetchingLocation(false);
+              setTxState(TxState.Mining);
+              if (res.tx) {
+                setTxHash(res.tx.hash);
+              } else {
+                setTxState(TxState.Error);
+                setError({ message: res.message, error: res.error });
               }
-            );
-            setFetchingLocation(false);
-            setTxState(TxState.Mining);
-            if (res.tx) {
-              setTxHash(res.tx.hash);
             } else {
-              setTxState(TxState.Error);
-              setError({ message: res.message, error: res.error });
+              console.log(data.progContract);
+              // is prog hunt
+              const res = await claimVoucher(
+                data.progContract,
+                data.progContractTokenType,
+                data.cache.location,
+                userLocation,
+                { timestamp, o }
+              );
+              if (!res.signature) {
+                setTxState(TxState.Error);
+                setError({ message: res.message, error: res.error });
+                return;
+              }
+              const { nftData, signature } = res;
+              const provider = getMaticProvider();
+              const contract = new ethers.Contract(data.progContract, MagicMapInterface.abi, provider);
+              const signer = await provider.getSigner();
+              const magicMap = contract.connect(signer);
+              try {
+                const tx = await magicMap.discover(nftData, signature).catch(console.log);
+                setTxState(TxState.Mining);
+                setFetchingLocation(false);
+                const receipt = await tx.wait();
+                for (const event of receipt.events) {
+                  if ((event.event = "Transfer")) {
+                    setTxState(TxState.Complete);
+                    // I don't think i need to grab the args
+                    // auth.user.publicAddress === event.args.to
+                    // const tokenId = event.args.tokenId.toNumber()
+                  }
+                }
+              } catch (e) {
+                setTxState(TxState.Error);
+                setError({
+                  message: "Your transaction failed :(",
+                  error: "NO_AUTH",
+                });
+              }
             }
           } catch (e) {
             setTxState(TxState.Error);

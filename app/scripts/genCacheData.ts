@@ -4,6 +4,8 @@ import { Command } from "commander";
 dotenv.config({ path: "./.env.local" });
 import db from "../libs/db";
 import { cacheByGroupTableName } from "../libs/constants";
+
+// this eventually imports config.ts and borks this
 import web3Api from "../libs/web3Api";
 import { fetchHuntMeta } from "../libs/api";
 const wordHunts = ["nft-nyc", "venice", "la"];
@@ -47,6 +49,7 @@ async function main() {
       console.log(options);
       if (options.wordHunts && cache.tokenId && isWordHunt(cache.groupName)) {
         // for having metadata about the NFT at the map marker level
+        // need to import this another way
         const meta = await web3Api.getNFTMeta(cache.tokenId, cache.tokenAddress!);
         var nft = {
           ...meta,

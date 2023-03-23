@@ -16,6 +16,7 @@
     "@solana/spl-token": "^0.2.0",
     "@solana/web3.js": "^1.43.4",
     "@types/google.maps": "^3.48.6",
+    "alchemy-sdk": "^2.6.1",
     "autoprefixer": "^10.4.4",
     "aws-sdk": "^2.1123.0",
     "axios": "^0.26.1",

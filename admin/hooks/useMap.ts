@@ -54,12 +54,7 @@ export const useMap = ({ center = cityCenters.la }: Props) => {
     });
   };
 
-  const createStaticMarker = (
-    imgUrl: string,
-    scale = 70,
-    position: LatLng,
-    callback: () => void
-  ) => {
+  const createStaticMarker = (imgUrl: string, scale = 70, position: LatLng, callback: () => void) => {
     const icon = {
       url: imgUrl,
       scaledSize: new google.maps.Size(scale, scale),

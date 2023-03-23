@@ -68,6 +68,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       description: fields.description,
       location: fields.location,
       magicLinkType: fields.magicLinkType,
+      huntType: fields.huntType,
       icons: {
         markerEmpty: `${assetHost}/markerEmpty.png`,
         markerFilled: `${assetHost}/markerFilled.png`,
