@@ -9,17 +9,14 @@ type Data = {
   dbRes: any;
 };
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   // if (!req.headers.authorization) return res.status(405).end();
   try {
     // const user = await jwt.verify(
     //   req.headers.authorization as string,
     //   JWT_SECRET
     // );
-    const { groupName, cacheId, lat, lng, address, note } = req.body;
+    const { groupName, cacheId, lat, lng, address, note, tokenId } = req.body;
     const TableName = cacheByGroupTableName;
     const params = {
       TableName,
@@ -30,7 +27,7 @@ export default async function handler(
         lng: lng.toString(),
         address,
         note,
-        tokenId: 0,
+        tokenId: tokenId || 0,
         tokenAddress: ZERO_ADDRESS,
       },
     };

@@ -13,8 +13,9 @@ import Claim from "../CacheContent/Claim";
 import Mining from "../CacheContent/Mining";
 import Complete from "../CacheContent/Complete";
 import Error from "../CacheContent/Error";
-import { getMaticProvider } from "../../libs/utils";
+import { getMaticProvider, ipfsToPinata, isIpfs } from "../../libs/utils";
 import { getOwnerNfts } from "../../libs/managerApi";
+import Button from "../Button";
 
 enum TxState {
   Idle,
@@ -45,11 +46,14 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
   const [fetchingLocation, setFetchingLocation] = useState(false);
   const [fetchingMeta, setFetchingMeta] = useState(false);
 
+  // @note PROG NFT STUFF
   // this could be a SWR hook
   const [tokenTypes, setTokenTypes] = useState<any[]>([]);
-
+  const [hasAlreadyCollected, setHasAlreadyCollected] = useState(false);
   // @todo make this more flexible, huntTypes?
   const isProgHunt = data && data.huntType === "prog";
+
+  // END PROG NFT STUFF
 
   // Could be in a different hook oriented around the cache fetch and claim
   const fetchCache = async (cacheId: number) => {
@@ -99,11 +103,12 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
       // @todo CHANGE
       return parseInt(nft.tokenUri.gateway.split("metadata/")[1].split(".json")[0]) + 1;
     });
-    console.log(tokenTypes, data.progContractTokenType);
+
+    // if they already collected the nft
     if (tokenTypes?.includes(data.progContractTokenType)) {
-      console.log("hello");
-      setFetchingMeta(false);
-      return;
+      // setFetchingMeta(false);
+      setHasAlreadyCollected(true);
+      // return;
     }
     // URI to show
     const uri = uris.find((uri) => uri.includes(`${data.progContractTokenType - 1}`));
@@ -276,6 +281,21 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
         <div className="flex justify-center items-center" style={{ height: 200 }}>
           <Spinner />
         </div>
+      </Container>
+    );
+  }
+
+  if (hasAlreadyCollected && NFT) {
+    return (
+      <Container open={open} toggleModal={toggleModal}>
+        <div className="text-3xl font-bold text-center pb-5">{NFT.name}</div>
+        <div className="p-5 h-[40vh]">
+          <img className="m-auto h-full" src={isIpfs(NFT.image) ? ipfsToPinata(NFT.image) : NFT.image} />
+        </div>
+        <div className="text-3xl font-bold text-center pb-5">You already got this NFT!</div>
+        <Button className="m-auto w-28 block mt-5 py-3 font-bold text-2xl" onClick={toggleModal}>
+          Ok
+        </Button>
       </Container>
     );
   }

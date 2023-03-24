@@ -8,6 +8,7 @@ import { cacheByGroupTableName } from "../libs/constants";
 // this eventually imports config.ts and borks this
 import web3Api from "../libs/web3Api";
 import { fetchHuntMeta } from "../libs/api";
+import axios from "axios";
 const wordHunts = ["nft-nyc", "venice", "la"];
 
 export const isWordHunt = (hunt: string) => wordHunts.includes(hunt);
@@ -33,20 +34,26 @@ async function main() {
 
   const caches = allCachesByGroup.Items! as Cache[];
 
-  const cachesByGroupName = caches.reduce((pv: { [key: string]: Cache[] }, cv) => {
-    const caches = pv[cv.groupName] || [];
+  const cachesByGroupName = caches
+    .filter((cache) => cache.groupName === "prog")
+    .reduce((pv: { [key: string]: Cache[] }, cv) => {
+      const caches = pv[cv.groupName] || [];
 
-    pv[cv.groupName] = [...caches, cv];
-    return pv;
-  }, {});
+      pv[cv.groupName] = [...caches, cv];
+      return pv;
+    }, {});
 
   const allHuntData: any = {};
   for (const [groupName, caches] of Object.entries(cachesByGroupName)) {
+    let huntMeta = null;
+    try {
+      huntMeta = await fetchHuntMeta(groupName);
+      // console.log(huntMeta);
+    } catch (e) {}
     const mergedData = [];
     const nftMetadata = [];
     for (const cache of caches) {
       let data: any = cache;
-      console.log(options);
       if (options.wordHunts && cache.tokenId && isWordHunt(cache.groupName)) {
         // for having metadata about the NFT at the map marker level
         // need to import this another way
@@ -60,11 +67,18 @@ async function main() {
 
         data.nft = nft;
       }
-      let huntMeta = null;
-      try {
-        huntMeta = await fetchHuntMeta(groupName);
-        // console.log(huntMeta);
-      } catch (e) {}
+      if (huntMeta.huntType === "prog") {
+        // const dir = huntMeta.groupName
+        const dir = "magicmap";
+        const uri = `https://cdn.yaytso.art/${dir}/metadata/${cache.tokenId}.json`;
+        const meta = (await axios.get(uri)).data;
+        var nft = {
+          ...meta,
+          tokenId: cache.tokenId,
+          tokenAddress: huntMeta.contract,
+        };
+        data.nft = nft;
+      }
 
       mergedData.push(data);
       allHuntData[groupName] = {

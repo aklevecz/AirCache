@@ -86,6 +86,8 @@ export default function Hunt({ metadata }: Props) {
   const [txState, setTxState] = useState<TxState>(TxState.Idle);
 
   const [selectedCache, setSelectedCache] = useState("");
+  const [givenTokenId, setGivenTokenId] = useState("");
+  const [note, setNote] = useState("");
 
   const [mapCenter, setMapCenter] = useState("");
 
@@ -107,7 +109,14 @@ export default function Hunt({ metadata }: Props) {
     const lng = parseFloat(splitPos[1]);
     createMarkerPositionRef.current = { lat, lng };
     createMarkerRef.current!.setPosition({ lat, lng });
-    console.log(createMarkerPositionRef.current);
+  };
+
+  const onTokenIdChange = (e: FormEvent<HTMLInputElement>) => {
+    setGivenTokenId(e.currentTarget.value);
+  };
+
+  const onNoteChange = (e: FormEvent<HTMLInputElement>) => {
+    setNote(e.currentTarget.value);
   };
 
   const onCreateMarker = () => {
@@ -139,7 +148,7 @@ export default function Hunt({ metadata }: Props) {
         resetCreateMarker();
         const cacheId = (await contract.cacheId()).toNumber();
 
-        const res = await onCreateCache(groupName, cacheId, pos.lat, pos.lng, AIRCACHE_ADDRESS, "");
+        const res = await onCreateCache(groupName, cacheId, pos.lat, pos.lng, AIRCACHE_ADDRESS, note, givenTokenId);
         console.log(res);
         caches.mutate();
       }
@@ -208,8 +217,10 @@ export default function Hunt({ metadata }: Props) {
           <div>{txMessages[txState]}</div>
         </div>
       )}
-      <div className="absolute left-10 top-10 z-50">
-        <input onChange={onLocationStringChange} />
+      <div className="absolute flex flex-col gap-4 left-10 top-10 z-50">
+        <input placeholder="lat, lng" onChange={onLocationStringChange} />
+        <input placeholder="given token id" onChange={onTokenIdChange} />
+        <input placeholder="note" onChange={onNoteChange} />
       </div>
       {caches.data && (
         <Modal ref={modal}>

@@ -59,7 +59,8 @@ export default function useCacheMarkers(
   };
 
   useEffect(() => {
-    if (!modal.open && groupName) refreshMarkers();
+    // don't refresh markers if prog -- or refresh them in a different way to show personal progression
+    if (!modal.open && groupName && huntMeta.huntType !== "prog") refreshMarkers();
     // To do: Naive and does not scale
   }, [modal.open, groupName]);
 
@@ -81,6 +82,7 @@ export default function useCacheMarkers(
 
     // Custom marker from the NFT metadata
     if (nft) {
+      console.log(nft);
       icon.url = nft.image;
     }
     return icon;
@@ -134,6 +136,7 @@ export default function useCacheMarkers(
       if (markersRef.current.length === 0) map.setCenter(mapMeta.map_center);
       const markers: any[] = [];
       caches.forEach((cache, index) => {
+        console.log(cache.tokenId, cache);
         const markerExists = markersRef.current.find((marker) => marker.cacheId === cache.cacheId);
         if (markerExists) {
           const icon = getIcon(cache.tokenId, cache.nft);

@@ -58,7 +58,8 @@ export const onCreateCache = (
   lat: number,
   lng: number,
   address: string,
-  note: string
+  note: string,
+  tokenId: string
 ) => {
   const res = api.post(endpoints.onCreateCache, {
     groupName,
@@ -67,16 +68,12 @@ export const onCreateCache = (
     lng,
     address,
     note,
+    tokenId,
   });
   return res;
 };
 
-export const onUpdateCache = async (
-  cacheId: string,
-  tokenId: number,
-  tokenAddress: string,
-  groupName: string
-) => {
+export const onUpdateCache = async (cacheId: string, tokenId: number, tokenAddress: string, groupName: string) => {
   const res = await api.post(endpoints.onUpdateCache, {
     cacheId,
     tokenId,
