@@ -35,7 +35,7 @@ async function main() {
   const caches = allCachesByGroup.Items! as Cache[];
 
   const cachesByGroupName = caches
-    .filter((cache) => cache.groupName === "magicmap")
+    // .filter((cache) => cache.groupName === "magicmap")
     .reduce((pv: { [key: string]: Cache[] }, cv) => {
       const caches = pv[cv.groupName] || [];
 

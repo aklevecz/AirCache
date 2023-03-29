@@ -36,7 +36,7 @@ type Props = {
   };
   auth: any;
   data: any;
-  updateCollected: () => void;
+  updateCollected?: () => void;
 };
 export default function CacheContentModal({ open, toggleModal, airCache, auth, data, updateCollected }: Props) {
   const router = useRouter();
@@ -238,7 +238,7 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
                 for (const event of receipt.events) {
                   if ((event.event = "Transfer")) {
                     setTxState(TxState.Complete);
-                    updateCollected();
+                    updateCollected && updateCollected();
                     // I don't think i need to grab the args
                     // auth.user.publicAddress === event.args.to
                     // const tokenId = event.args.tokenId.toNumber()
