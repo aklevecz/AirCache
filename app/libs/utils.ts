@@ -96,11 +96,7 @@ export const getMaticProvider = () => {
   return provider;
 };
 
-export const getTokenURI = async (
-  tokenId: number,
-  tokenAddress: string,
-  provider: ethers.providers.Provider
-): Promise<string> => {
+export const getTokenURI = async (tokenId: number, tokenAddress: string, provider: ethers.providers.Provider): Promise<string> => {
   console.log(provider);
   const tokenContract = new ethers.Contract(tokenAddress, [abis.tokenURI, abis.uri], provider);
   let uri;
@@ -198,16 +194,14 @@ const wordHunts = ["nft-nyc", "venice", "la"];
 export const isWordHunt = (hunt: string) => wordHunts.includes(hunt);
 
 export const getMagicPubKey = (groupName?: string) => {
-  const currentGroup = groupName
-    ? groupName
-    : typeof localStorage !== "undefined"
-    ? storage.getItem(storage.keys.current_group)
-    : null;
+  const currentGroup = groupName ? groupName : typeof localStorage !== "undefined" ? storage.getItem(storage.keys.current_group) : null;
   // if (typeof localStorage !== "undefined") {
   // const currentGroup = storage.getItem(storage.keys.current_group);
   if (currentGroup) {
     const keys = appKeys[currentGroup];
     if (keys) {
+      if (!keys.pub) return process.env.NEXT_PUBLIC_MAGIC_PUB_KEY as string;
+
       return keys.pub;
     }
   }

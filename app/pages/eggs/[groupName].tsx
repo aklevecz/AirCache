@@ -8,7 +8,7 @@ import useModal from "../../hooks/useModal";
 import { cacheByGroupTableName } from "../../libs/constants";
 import db from "../../libs/db";
 import storage from "../../libs/storage";
-import { Latlng } from "../../libs/types";
+import { Latlng, NFT } from "../../libs/types";
 import Button from "../../components/Button";
 import Locate from "../../components/Icons/Locate";
 
@@ -19,6 +19,7 @@ import useAlphabetCity from "../../hooks/useAlphabetCity";
 import HeadHunt from "../../components/Head/Hunt";
 import useUserLocation from "../../hooks/useUserLocation";
 import useCacheMarkers from "../../hooks/useCacheMarkers";
+import useProgression from "../../hooks/useProgression";
 
 // Notes:
 // Most of the things here need to wait for the map to initialize.
@@ -39,13 +40,12 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
   const [map, setMap] = useState<google.maps.Map>();
   const userPositionRef = useRef<any>(null);
   const positionRef = useRef<any>("");
-  const { locationAllowed, fetchingLocation, initiateUserLocation } = useUserLocation(
-    userPositionRef,
-    positionRef,
-    map
-  );
+  const { locationAllowed, fetchingLocation, initiateUserLocation } = useUserLocation(userPositionRef, positionRef, map);
 
-  useCacheMarkers(groupName, map, c, huntMeta, nftMetadata, modal);
+  const { collected, updateCollected } = useProgression();
+
+  // how to update marker after fetching the token
+  useCacheMarkers(groupName, map, c, huntMeta, nftMetadata, modal, collected);
 
   const { user } = auth;
 
@@ -74,6 +74,15 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
   return (
     <>
       <HeadHunt mapMeta={huntMeta} />
+      <div className="absolute l-2 t-2 z-10">
+        {collected.map((nft: NFT) => {
+          return (
+            <div key={nft.name + nft.tokenId} className="w-12 h-12">
+              <img src={nft.image} />
+            </div>
+          );
+        })}
+      </div>
       <Map initMap={initMap} map={map} user={auth.user} />
       {locationAllowed && (
         <Button onClick={centerMap} className="recenter-button" style={{ display: "flex" }}>
@@ -85,11 +94,7 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
           {fetchingLocation ? <BlackWrappedSpinner /> : "Use Location"}
         </Button>
       )}
-      <div
-        ref={positionRef}
-        style={{ display: "none" }}
-        className="absolute bottom-20 w-full text-center l-50 text-red-500 z-50"
-      ></div>
+      <div ref={positionRef} style={{ display: "none" }} className="absolute bottom-20 w-full text-center l-50 text-red-500 z-50"></div>
 
       {!airCache.loading && (
         <CacheContentModal
@@ -98,6 +103,7 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
           airCache={airCache}
           auth={auth}
           data={modal.data}
+          updateCollected={updateCollected}
         />
       )}
       <WordsUI ctaModal={ctaModal} isWordHunt={isWordHunt(groupName)} letters={letters} word={word} />

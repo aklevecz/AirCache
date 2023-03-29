@@ -42,8 +42,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       nfts.push(...filteredOwned);
       if (!pageKey) break;
     }
-    console.log("done");
-    console.log(nfts);
     res.status(200).json({ ...nfts });
   } catch (e) {
     console.log(e);

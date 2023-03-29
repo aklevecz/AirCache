@@ -22,14 +22,7 @@ type Props = {
   singleCache?: boolean;
 };
 
-export default function Map({
-  markerPosition,
-  caches,
-  toggleModal,
-  showEmpty,
-  user,
-  singleCache = false,
-}: Props) {
+export default function Map({ markerPosition, caches, toggleModal, showEmpty, user, singleCache = false }: Props) {
   const [map, setMap] = useState<google.maps.Map>();
   const mapContainer = useRef<HTMLDivElement>(null);
 
@@ -38,13 +31,7 @@ export default function Map({
   const userMarkerRef = useRef<google.maps.Marker | null>(null);
   const markerRefs = useRef<any>([]);
 
-  const createCacheMarker = (
-    lat: number,
-    lng: number,
-    id: number,
-    contractAddress: string,
-    NFT: any
-  ) => {
+  const createCacheMarker = (lat: number, lng: number, id: number, contractAddress: string, NFT: any) => {
     const icon = {
       url: eggIcon.src,
       scaledSize: new google.maps.Size(40, 40),
@@ -91,13 +78,7 @@ export default function Map({
         // const lng = ethers.utils.parseBytes32String(caches[i].lng);
         const lat = caches[i].lat;
         const lng = caches[i].lng;
-        createCacheMarker(
-          parseFloat(lat),
-          parseFloat(lng),
-          id,
-          caches[i].contractAddress,
-          caches[i].NFT
-        );
+        createCacheMarker(parseFloat(lat), parseFloat(lng), id, caches[i].contractAddress, caches[i].NFT);
         if (singleCache) {
           console.log("SETTING CACHE CENTER");
           map.setCenter({
@@ -114,9 +95,7 @@ export default function Map({
     loader.load().then(() => {
       if (mapContainer.current) {
         const last_location = storage.getItem(storage.keys.user_location);
-        const center = last_location
-          ? JSON.parse(last_location)
-          : { lat: SF_COORDS.lat, lng: SF_COORDS.lng };
+        const center = last_location ? JSON.parse(last_location) : { lat: SF_COORDS.lat, lng: SF_COORDS.lng };
         const map = new google.maps.Map(mapContainer.current, {
           zoom: 15,
           styles: darkMap,
@@ -185,7 +164,7 @@ export default function Map({
             //   lng: pos.longitude,
             // });
           } else {
-            // console.log("SETTING CACHE CENTER");
+            console.log("SETTING CACHE CENTER");
             map.setCenter({
               lat: caches[0].lat,
               lng: caches[0].lng,

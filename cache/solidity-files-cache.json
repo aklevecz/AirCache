@@ -1206,8 +1206,48 @@
         "FakeNFT"
       ]
     },
+    "/Users/arielklevecz/air-cache/contracts/MagicMap.sol": {
+      "lastModificationDate": 1680046077968,
+      "contentHash": "ebbcc80ec0515e25369c4e92fd42b7b0",
+      "sourceName": "contracts/MagicMap.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "erc721a/contracts/ERC721A.sol",
+        "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol",
+        "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "MagicMap"
+      ]
+    },
     "/Users/arielklevecz/air-cache/node_modules/erc721a/contracts/ERC721A.sol": {
-      "lastModificationDate": 1679029352850,
+      "lastModificationDate": 1680040128000,
       "contentHash": "227e9db819fd61602f833edafcda7d4a",
       "sourceName": "erc721a/contracts/ERC721A.sol",
       "solcConfig": {
@@ -1245,7 +1285,7 @@
       ]
     },
     "/Users/arielklevecz/air-cache/node_modules/erc721a/contracts/IERC721A.sol": {
-      "lastModificationDate": 1679029352851,
+      "lastModificationDate": 1680040128001,
       "contentHash": "c31a05698ddc2f109ba8723105d854c6",
       "sourceName": "erc721a/contracts/IERC721A.sol",
       "solcConfig": {
@@ -1280,7 +1320,7 @@
       ]
     },
     "/Users/arielklevecz/air-cache/contracts/HiFiHoodies.sol": {
-      "lastModificationDate": 1679041353251,
+      "lastModificationDate": 1679082352331,
       "contentHash": "6bdeedd6da791dd6d62c45e74b00a21f",
       "sourceName": "contracts/HiFiHoodies.sol",
       "solcConfig": {
@@ -1314,46 +1354,6 @@
       ],
       "artifacts": [
         "HiFiHoodies"
-      ]
-    },
-    "/Users/arielklevecz/air-cache/contracts/MagicMap.sol": {
-      "lastModificationDate": 1679454336113,
-      "contentHash": "fa55b9e51672dcca7d835d0327bb53d0",
-      "sourceName": "contracts/MagicMap.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "erc721a/contracts/ERC721A.sol",
-        "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol",
-        "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
-        "@openzeppelin/contracts/access/Ownable.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "MagicMap"
       ]
     }
   }

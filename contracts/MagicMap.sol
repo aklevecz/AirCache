@@ -9,10 +9,14 @@ contract MagicMap is ERC721A, EIP712, Ownable {
     string public baseURI;
     address public oracle;
 
-    mapping(uint256 => uint8) tokenIdToType;
+    mapping(uint256 => string) public tokenIdToType;
+    mapping(address => string[]) public ownerToTokenTypes;
+    mapping(address => uint256[]) public ownerToTokenIds;
+    // This is not right, but maybe does not matter bc custodial for making sure they don't mint more than one
+    //mapping(address => uint256) ownerToToken;
 
     struct SignedNFTData {
-        uint8 tokenType;
+        string tokenType;
     }
 
     constructor(
@@ -31,6 +35,17 @@ contract MagicMap is ERC721A, EIP712, Ownable {
         uint256 _newTokenId = _nextTokenId();
         _mint(msg.sender, 1);
         tokenIdToType[_newTokenId] = nft.tokenType;
+
+        // owner to token types
+        string[] storage collectedTypes = ownerToTokenTypes[msg.sender];
+        collectedTypes.push(nft.tokenType);
+        ownerToTokenTypes[msg.sender] = collectedTypes;
+
+        // owner to token ids
+        uint256[] storage collectedIds = ownerToTokenIds[msg.sender];
+        collectedIds.push(_newTokenId);
+        ownerToTokenIds[msg.sender] = collectedIds;
+
         return _newTokenId;
     }
 
@@ -38,8 +53,8 @@ contract MagicMap is ERC721A, EIP712, Ownable {
         bytes32 digest = _hashTypedDataV4(
             keccak256(
                 abi.encode(
-                    keccak256("SignedNFTData(uint8 tokenType)"),
-                    nft.tokenType
+                    keccak256("SignedNFTData(string tokenType)"),
+                    keccak256(bytes(nft.tokenType))
                 )
             )
         );
@@ -62,11 +77,7 @@ contract MagicMap is ERC721A, EIP712, Ownable {
         return
             bytes(baseURI).length != 0
                 ? string(
-                    abi.encodePacked(
-                        baseURI,
-                        _toString(tokenIdToType[tokenId]),
-                        ".json"
-                    )
+                    abi.encodePacked(baseURI, tokenIdToType[tokenId], ".json")
                 )
                 : "";
     }
@@ -81,5 +92,19 @@ contract MagicMap is ERC721A, EIP712, Ownable {
 
     function changeOracle(address newOracle) public onlyOwner {
         oracle = newOracle;
+    }
+
+    function getOwnerTokenTypes(
+        address owner
+    ) public view returns (string[] memory) {
+        string[] memory tokenTypes = ownerToTokenTypes[owner];
+        return tokenTypes;
+    }
+
+    function getOwnerTokenIds(
+        address owner
+    ) public view returns (uint256[] memory) {
+        uint256[] memory tokenIds = ownerToTokenIds[owner];
+        return tokenIds;
     }
 }

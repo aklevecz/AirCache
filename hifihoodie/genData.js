@@ -1,7 +1,7 @@
 const fs = require("fs");
 
 const metadata = require("./metadata.json");
-const baseURL = `https://cdn.yaytso.art/joehunt/images`;
+const baseURL = `https://cdn.yaytso.art/magicmap/images`;
 const args = process.argv.slice(2);
 
 if (args[0] === "metadata") {

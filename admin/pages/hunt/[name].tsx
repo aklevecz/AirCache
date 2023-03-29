@@ -63,8 +63,7 @@ type Props = {
 console.log(ethers.utils.parseBytes32String("0x33342e3038333236333934303730343932000000000000000000000000000000"));
 console.log(ethers.utils.parseBytes32String("0x2d3131382e323137393435343639333133353500000000000000000000000000"));
 
-const getSelectedCache = (caches: Cache[], selectedCache: string) =>
-  caches.find((cache) => cache.cacheId === selectedCache);
+const getSelectedCache = (caches: Cache[], selectedCache: string) => caches.find((cache) => cache.cacheId === selectedCache);
 
 const txMessages = {
   [TxState.Idle]: "",
@@ -76,6 +75,7 @@ const txMessages = {
 };
 
 export default function Hunt({ metadata }: Props) {
+  console.log(metadata);
   const wallet = useWallet();
   const router = useRouter();
   // dumb

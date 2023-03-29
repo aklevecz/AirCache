@@ -5,17 +5,12 @@ import { useEffect, useState } from "react";
 import { provider as AlchemyProvider } from "../libs/web3Api";
 import { AIRCACHE_ADDRESS, AIRCACHE_ADDRESS_MATIC } from "../libs/constants";
 import storage from "../libs/storage";
-import {
-  delay,
-  getMagicPubKey,
-  getTokenURI,
-  ipfsToPinata,
-  isIpfs,
-  maticNodeOptions,
-} from "../libs/utils";
+import { delay, getMagicPubKey, getTokenURI, ipfsToPinata, isIpfs, maticNodeOptions } from "../libs/utils";
 import { maticMumBaiNodeOptions } from "../libs/utils";
 import web3Api from "../libs/web3Api";
 import api from "../libs/api";
+import useHuntMeta from "./useHuntMeta";
+import { getOwnerNfts } from "../libs/managerApi";
 
 const fetcher = async (address: string) => {
   const res = await api.get("/api/get-nft-txs");
@@ -51,29 +46,47 @@ export default function useWallet(address: string) {
   const [uris, setUris] = useState<any[]>([]);
   const [metadatas, setMetadatas] = useState<any[]>([]);
 
+  const [groupName, setGroupName] = useState("");
+  const { huntMeta } = useHuntMeta(groupName);
+
+  // IF PROG USE HUNTMETA
+  useEffect(() => {
+    if (huntMeta) {
+      const { contract } = huntMeta;
+      getOwnerNfts(address, contract).then((nfts) => {
+        const metadatas = nfts?.map((nft) => nft.metadata);
+        setMetadatas(metadatas as any);
+        setFetching(false);
+      });
+    }
+  }, [huntMeta]);
+
   useEffect(() => {
     if (address) {
-      // fetcher(address).then(console.log);
-      // web3Api.getPolyaytsoBalance(address).then((data) => {
-      fetcher(address).then((data) => {
-        console.log(data);
-        if (data.length === 0) {
-          console.log("no txs");
-          setFetching(false);
-        } else {
-          setNfts(data);
-        }
-      });
+      const currentGroup = storage.getItem(storage.keys.current_group);
+      // @todo CHANGE
+      if (currentGroup === "prog") {
+        setGroupName(currentGroup);
+      } else {
+        // fetcher(address).then(console.log);
+        // web3Api.getPolyaytsoBalance(address).then((data) => {
+        fetcher(address).then((data) => {
+          console.log(data);
+          if (data.length === 0) {
+            console.log("no txs");
+            setFetching(false);
+          } else {
+            setNfts(data);
+          }
+        });
+      }
     }
   }, [address]);
 
   useEffect(() => {
     if (nfts && nfts.length > 0) {
       const magic = new Magic(getMagicPubKey(), {
-        network:
-          process.env.NODE_ENV === "development"
-            ? maticMumBaiNodeOptions
-            : maticNodeOptions,
+        network: process.env.NODE_ENV === "development" ? maticMumBaiNodeOptions : maticNodeOptions,
       });
       // const provider = new ethers.providers.Web3Provider(
       //   magic.rpcProvider as any
@@ -86,11 +99,7 @@ export default function useWallet(address: string) {
           const storageKey = `${nft.tokenId}-${nft.contractAddress}`;
           let uri = await storage.getItem(storageKey);
           if (!uri) {
-            uri = await getTokenURI(
-              parseInt(nft.tokenId),
-              nft.contractAddress,
-              AlchemyProvider
-            );
+            uri = await getTokenURI(parseInt(nft.tokenId), nft.contractAddress, AlchemyProvider);
             console.log(uri);
             if (uri) {
               await storage.setItem(storageKey, uri);
@@ -166,6 +175,6 @@ export default function useWallet(address: string) {
       })();
     }
   }, [uris]);
-
+  console.log(metadatas);
   return { fetching, nfts, uris, metadatas };
 }

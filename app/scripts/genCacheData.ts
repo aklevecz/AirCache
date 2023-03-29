@@ -35,7 +35,7 @@ async function main() {
   const caches = allCachesByGroup.Items! as Cache[];
 
   const cachesByGroupName = caches
-    .filter((cache) => cache.groupName === "prog")
+    .filter((cache) => cache.groupName === "magicmap")
     .reduce((pv: { [key: string]: Cache[] }, cv) => {
       const caches = pv[cv.groupName] || [];
 
@@ -67,7 +67,7 @@ async function main() {
 
         data.nft = nft;
       }
-      if (huntMeta.huntType === "prog") {
+      if (huntMeta && huntMeta.huntType === "prog") {
         // const dir = huntMeta.groupName
         const dir = "magicmap";
         const uri = `https://cdn.yaytso.art/${dir}/metadata/${cache.tokenId}.json`;

@@ -36,8 +36,9 @@ type Props = {
   };
   auth: any;
   data: any;
+  updateCollected: () => void;
 };
-export default function CacheContentModal({ open, toggleModal, airCache, auth, data }: Props) {
+export default function CacheContentModal({ open, toggleModal, airCache, auth, data, updateCollected }: Props) {
   const router = useRouter();
   const [NFT, setNFT] = useState<NFT | null>(null);
   const [txState, setTxState] = useState<TxState>(TxState.Idle);
@@ -91,31 +92,44 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
     setTxState(TxState.Idle);
     setNFT(null);
     setFetchingLocation(false);
+    setHasAlreadyCollected(false);
   };
 
+  // @fix checks ownership and sets nft metadata if it is on the nft
+  // THIS IS PROG ONLY IT CHECKS IT IN THE EFFECT HOOK
   const checkOwnership = async () => {
     setFetchingMeta(true);
+    console.log(data.nft);
+    setNFT(data.nft);
+
+    if (!auth.user) {
+      setError({ error: "NO_AUTH", message: "sign in" });
+      setFetchingMeta(false);
+      return;
+    }
+
     const nfts = await getOwnerNfts(auth.user.publicAddress, data.progContract);
     // metadata should have token type
     const uris: string[] = [];
     const tokenTypes = nfts?.map((nft) => {
       uris.push(nft.tokenUri.gateway);
-      // @todo CHANGE
-      return parseInt(nft.tokenUri.gateway.split("metadata/")[1].split(".json")[0]) + 1;
+      // @todo CHANGE -- this could come from the contract or the new version will have the proper string replacement
+      const tokenType = parseInt(nft.tokenUri.gateway.split("metadata/")[1].split(".json")[0]) || 1;
+      return tokenType;
     });
-
     // if they already collected the nft
-    if (tokenTypes?.includes(data.progContractTokenType)) {
+    console.log(tokenTypes, data.progContractTokenType);
+    if (tokenTypes?.includes(parseInt(data.progContractTokenType))) {
       // setFetchingMeta(false);
       setHasAlreadyCollected(true);
       // return;
     }
     // URI to show
-    const uri = uris.find((uri) => uri.includes(`${data.progContractTokenType - 1}`));
-    if (uri) {
-      const metadata = await fetch(uri).then((r) => r.json());
-      setNFT(metadata);
-    }
+    // const uri = uris.find((uri) => uri.includes(`${data.progContractTokenType - 1}`));
+    // if (uri) {
+    //   const metadata = await fetch(uri).then((r) => r.json());
+    //   setNFT(metadata);
+    // }
     setTokenTypes(tokenTypes || []);
     setFetchingMeta(false);
   };
@@ -190,17 +204,10 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
 
             // This could be different more flexible
             if (!isProgHunt) {
-              const res = await claimCache(
-                data.cache.id,
-                data.groupName,
-                NFT!.tokenAddress,
-                data.cache.location,
-                userLocation,
-                {
-                  timestamp,
-                  o,
-                }
-              );
+              const res = await claimCache(data.cache.id, data.groupName, NFT!.tokenAddress, data.cache.location, userLocation, {
+                timestamp,
+                o,
+              });
               setFetchingLocation(false);
               setTxState(TxState.Mining);
               if (res.tx) {
@@ -212,13 +219,7 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
             } else {
               console.log(data.progContract);
               // is prog hunt
-              const res = await claimVoucher(
-                data.progContract,
-                data.progContractTokenType,
-                data.cache.location,
-                userLocation,
-                { timestamp, o }
-              );
+              const res = await claimVoucher(data.progContract, data.progContractTokenType, data.cache.location, userLocation, { timestamp, o });
               if (!res.signature) {
                 setTxState(TxState.Error);
                 setError({ message: res.message, error: res.error });
@@ -237,6 +238,7 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
                 for (const event of receipt.events) {
                   if ((event.event = "Transfer")) {
                     setTxState(TxState.Complete);
+                    updateCollected();
                     // I don't think i need to grab the args
                     // auth.user.publicAddress === event.args.to
                     // const tokenId = event.args.tokenId.toNumber()
@@ -262,8 +264,7 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
           console.log("error");
           setTxState(TxState.Error);
           setError({
-            message:
-              "I don't think your browser supports geolocation or you may have turned it off in the settings on your phone.",
+            message: "I don't think your browser supports geolocation or you may have turned it off in the settings on your phone.",
             error: "NO_GEOLOCATION",
           });
         }
@@ -285,6 +286,7 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
     );
   }
 
+  // move this into the Claim component
   if (hasAlreadyCollected && NFT) {
     return (
       <Container open={open} toggleModal={toggleModal}>
@@ -309,10 +311,11 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
       </Container>
     );
   }
+
   return (
     <Container open={open} toggleModal={toggleModal}>
       {txState === TxState.Idle || txState === TxState.Fetching ? (
-        <Claim NFT={NFT} claim={claim} fetching={fetchingLocation} groupName={router.query.groupName as string} />
+        <Claim NFT={NFT} claim={claim} fetching={fetchingLocation} huntType={data.huntType} groupName={router.query.groupName as string} />
       ) : (
         <></>
       )}

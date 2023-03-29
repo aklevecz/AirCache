@@ -39,8 +39,8 @@ describe("MagicMap", function () {
     expect(newOracle).to.equal(this.notOwner.address);
   });
 
-  it("can lazy mint", async function () {
-    const tokenType = 10;
+  it("can lazy mint & has expected URI", async function () {
+    const tokenType = "dnd";
     const nftData = {
       tokenType,
     };
@@ -53,7 +53,7 @@ describe("MagicMap", function () {
         verifyingContract: this.magicMap.address,
       },
       {
-        SignedNFTData: [{ name: "tokenType", type: "uint8" }],
+        SignedNFTData: [{ name: "tokenType", type: "string" }],
       },
       nftData
     );
@@ -62,6 +62,82 @@ describe("MagicMap", function () {
       .withArgs(ethers.constants.AddressZero, this.owner.address, 1);
 
     const tokenURI = await this.magicMap.tokenURI(1);
+    console.log(tokenURI);
     expect(tokenURI).to.equal(`${BASE_URI}${tokenType}.json`);
+  });
+
+  it("can track token types of a user", async function () {
+    var tokenType = "catalog";
+    var nftData = {
+      tokenType,
+    };
+
+    var signature = await this.owner._signTypedData(
+      {
+        name: "teh-raptor",
+        version: "1.0",
+        chainId: await this.owner.getChainId(),
+        verifyingContract: this.magicMap.address,
+      },
+      {
+        SignedNFTData: [{ name: "tokenType", type: "string" }],
+      },
+      nftData
+    );
+    await expect(this.magicMap.discover(nftData, signature))
+      .to.emit(this.magicMap, "Transfer")
+      .withArgs(ethers.constants.AddressZero, this.owner.address, 1);
+
+    var tokenType = "dnd";
+    var nftData = {
+      tokenType,
+    };
+
+    var signature = await this.owner._signTypedData(
+      {
+        name: "teh-raptor",
+        version: "1.0",
+        chainId: await this.owner.getChainId(),
+        verifyingContract: this.magicMap.address,
+      },
+      {
+        SignedNFTData: [{ name: "tokenType", type: "string" }],
+      },
+      nftData
+    );
+    await expect(this.magicMap.discover(nftData, signature))
+      .to.emit(this.magicMap, "Transfer")
+      .withArgs(ethers.constants.AddressZero, this.owner.address, 2);
+
+    const tokenTypes = await this.magicMap.getOwnerTokenTypes(this.owner.address);
+    console.log(tokenTypes);
+    expect(tokenTypes[0]).to.equal("catalog");
+    expect(tokenTypes[1]).to.equal("dnd");
+  });
+
+  it("can track token ids of a user", async function () {
+    const tokenType = "dnd";
+    const nftData = {
+      tokenType,
+    };
+
+    const signature = await this.owner._signTypedData(
+      {
+        name: "teh-raptor",
+        version: "1.0",
+        chainId: await this.owner.getChainId(),
+        verifyingContract: this.magicMap.address,
+      },
+      {
+        SignedNFTData: [{ name: "tokenType", type: "string" }],
+      },
+      nftData
+    );
+    await expect(this.magicMap.discover(nftData, signature))
+      .to.emit(this.magicMap, "Transfer")
+      .withArgs(ethers.constants.AddressZero, this.owner.address, 1);
+
+    const tokenIds = await this.magicMap.getOwnerTokenIds(this.owner.address);
+    expect(tokenIds[0]).to.equal(1);
   });
 });
