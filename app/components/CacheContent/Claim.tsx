@@ -19,8 +19,8 @@ export default function Claim({ groupName, NFT, claim, fetching, huntType }: Pro
     location_name: "",
     event_url: "",
   };
-  console.log(huntType);
-  if (huntType === "prog") {
+  const isProgHunt = huntType === "prog";
+  if (isProgHunt) {
     const progNFT = NFT as any;
     progHuntInfo.date = getTraitValue(progNFT.attributes, "date");
     progHuntInfo.location_name = getTraitValue(progNFT.attributes, "location_name");
@@ -31,11 +31,13 @@ export default function Claim({ groupName, NFT, claim, fetching, huntType }: Pro
       {!isWordHunt(groupName) && <div className="text-2xl font-bold text- pb-5">{NFT.name}</div>}
       <div className="text-xl font-bold">{progHuntInfo.date}</div>
       <div className="text-lg">{progHuntInfo.location_name}</div>
-      <div className="mt-2">
-        <a className="underline text-red-500 font-bold" href={progHuntInfo.event_url} target="_blank">
-          Tickets
-        </a>
-      </div>
+      {isProgHunt && (
+        <div className="mt-2">
+          <a className="underline text-red-500 font-bold" href={progHuntInfo.event_url} target="_blank">
+            Tickets
+          </a>
+        </div>
+      )}
       <div className="p-0 h-[40vh]">
         <img className="m-auto h-full" src={isIpfs(NFT.image) ? ipfsToPinata(NFT.image) : NFT.image} />
       </div>
