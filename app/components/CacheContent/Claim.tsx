@@ -38,8 +38,8 @@ export default function Claim({ groupName, NFT, claim, fetching, huntType }: Pro
           </a>
         </div>
       )}
-      <div className="p-0">
-        <img className="m-auto h-full" src={isIpfs(NFT.image) ? ipfsToPinata(NFT.image) : NFT.image} />
+      <div className="p-0 flex justify-center">
+        <img className="m-auto h-full max-w-[300px]" src={isIpfs(NFT.image) ? ipfsToPinata(NFT.image) : NFT.image} />
       </div>
       <Button disabled={true} className="m-auto w-28 block mt-0 py-3 font-bold text-2xl bg-slate-500" onClick={claim}>
         <div className="flex justify-center items-center">
