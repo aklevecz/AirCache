@@ -76,8 +76,9 @@ export default function useCacheMarkers(groupName: string, map: any, c: any[], h
     // Custom marker from the NFT metadata
     if (nft) {
       icon.url = nft.image + `#${nft.name}`;
-      icon.scaledSize = new google.maps.Size(80, 80);
-      icon.anchor = new google.maps.Point(30, 30);
+      icon.size = new google.maps.Size(80, 80);
+      icon.scaledSize = new google.maps.Size(40, 40);
+      icon.anchor = new google.maps.Point(20, 20);
     }
     return icon;
   };
@@ -139,23 +140,43 @@ export default function useCacheMarkers(groupName: string, map: any, c: any[], h
     // Lots of redundancy here -- hmm what the hell was I doing here
     // basically this is what the whole hook does by waiting for cache updates and then updating the markers on the map accordinglin
     // markerRef just holds the references to the markers as they are on the map
-    const resizeMarker = () => {
-      if (map.zoom < 13) {
-        const size = 40;
+
+    const animate = (currentSize: number, newSize: number, direction: number) => {
+      let size = currentSize;
+      const expandEgg = (timestamp: number) => {
+        size += 1 * direction;
         markersRef.current.map((marker) => {
           var icon = marker.getIcon();
           icon.scaledSize = new google.maps.Size(size, size);
           icon.anchor = new google.maps.Point(size / 2, size / 2);
           marker.setIcon(icon);
         });
+        console.log(size, newSize);
+        if (direction > 0) {
+          if (size <= newSize) {
+            requestAnimationFrame(expandEgg);
+          }
+        } else {
+          if (size >= newSize) {
+            requestAnimationFrame(expandEgg);
+          }
+        }
+      };
+      requestAnimationFrame(expandEgg);
+    };
+    let animating = false;
+    const resizeMarker = () => {
+      const currentSize = markersRef.current[0].getIcon().scaledSize.width;
+      if (map.zoom < 13) {
+        const size = 20;
+        if (currentSize !== size && !animating) {
+          animate(currentSize, size, -1);
+        }
       } else {
         const size = 80;
-        markersRef.current.map((marker) => {
-          var icon = marker.getIcon();
-          icon.scaledSize = new google.maps.Size(size, size);
-          icon.anchor = new google.maps.Point(size / 2, size / 2);
-          marker.setIcon(icon);
-        });
+        if (currentSize !== size && !animating) {
+          animate(currentSize, size, 1);
+        }
       }
     };
     if (caches && caches.length && map) {
