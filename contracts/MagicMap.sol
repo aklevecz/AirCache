@@ -5,56 +5,59 @@ import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract MagicMap is ERC721A, EIP712, Ownable {
+contract Eggvents is ERC721A, EIP712, Ownable {
     string public baseURI;
     address public oracle;
 
-    mapping(uint256 => string) public tokenIdToType;
-    mapping(address => string[]) public ownerToTokenTypes;
-    mapping(address => uint256[]) public ownerToTokenIds;
+    mapping(uint256 => string) public eggIdToType;
+    mapping(address => string[]) public ownerToEggTypes;
+    mapping(address => uint256[]) public ownerToEggIds;
     // This is not right, but maybe does not matter bc custodial for making sure they don't mint more than one
     //mapping(address => uint256) ownerToToken;
 
-    struct SignedNFTData {
+    struct Voucher {
         string tokenType;
     }
 
     constructor(
         string memory givenBaseURI,
         address givenOracle
-    ) ERC721A("MagicMap", "MAGMAP") EIP712("teh-raptor", "1.0") {
+    ) ERC721A("Eggvents", "EGGVNTS") EIP712("teh-raptor", "1.0") {
         baseURI = givenBaseURI;
         oracle = givenOracle;
     }
 
     function discover(
-        SignedNFTData calldata nft,
+        Voucher calldata voucher,
         bytes calldata signature
     ) public payable returns (uint256) {
-        require(_validateSignature(_hash(nft), signature), "Invalid signature");
+        require(
+            _validateSignature(_hash(voucher), signature),
+            "Invalid signature"
+        );
         uint256 _newTokenId = _nextTokenId();
         _mint(msg.sender, 1);
-        tokenIdToType[_newTokenId] = nft.tokenType;
+        eggIdToType[_newTokenId] = voucher.tokenType;
 
         // owner to token types
-        string[] storage collectedTypes = ownerToTokenTypes[msg.sender];
-        collectedTypes.push(nft.tokenType);
-        ownerToTokenTypes[msg.sender] = collectedTypes;
+        string[] storage collectedTypes = ownerToEggTypes[msg.sender];
+        collectedTypes.push(voucher.tokenType);
+        ownerToEggTypes[msg.sender] = collectedTypes;
 
         // owner to token ids
-        uint256[] storage collectedIds = ownerToTokenIds[msg.sender];
+        uint256[] storage collectedIds = ownerToEggIds[msg.sender];
         collectedIds.push(_newTokenId);
-        ownerToTokenIds[msg.sender] = collectedIds;
+        ownerToEggIds[msg.sender] = collectedIds;
 
         return _newTokenId;
     }
 
-    function _hash(SignedNFTData calldata nft) internal view returns (bytes32) {
+    function _hash(Voucher calldata voucher) internal view returns (bytes32) {
         bytes32 digest = _hashTypedDataV4(
             keccak256(
                 abi.encode(
-                    keccak256("SignedNFTData(string tokenType)"),
-                    keccak256(bytes(nft.tokenType))
+                    keccak256("Voucher(string tokenType)"),
+                    keccak256(bytes(voucher.tokenType))
                 )
             )
         );
@@ -77,7 +80,7 @@ contract MagicMap is ERC721A, EIP712, Ownable {
         return
             bytes(baseURI).length != 0
                 ? string(
-                    abi.encodePacked(baseURI, tokenIdToType[tokenId], ".json")
+                    abi.encodePacked(baseURI, eggIdToType[tokenId], ".json")
                 )
                 : "";
     }
@@ -94,17 +97,17 @@ contract MagicMap is ERC721A, EIP712, Ownable {
         oracle = newOracle;
     }
 
-    function getOwnerTokenTypes(
+    function getOwnerEggTypes(
         address owner
     ) public view returns (string[] memory) {
-        string[] memory tokenTypes = ownerToTokenTypes[owner];
+        string[] memory tokenTypes = ownerToEggTypes[owner];
         return tokenTypes;
     }
 
-    function getOwnerTokenIds(
+    function getOwnerEggIds(
         address owner
     ) public view returns (uint256[] memory) {
-        uint256[] memory tokenIds = ownerToTokenIds[owner];
+        uint256[] memory tokenIds = ownerToEggIds[owner];
         return tokenIds;
     }
 }

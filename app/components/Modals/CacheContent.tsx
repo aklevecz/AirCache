@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
-import { claimCache, claimVoucher } from "../../libs/api";
+import api, { claimCache, claimVoucher, endpoints } from "../../libs/api";
 import Spinner from "../Loading/Spinner";
 import Container from "./Container";
 import { useRouter } from "next/router";
@@ -38,6 +38,8 @@ type Props = {
   data: any;
   updateCollected?: () => void;
 };
+
+let rendered = false;
 export default function CacheContentModal({ open, toggleModal, airCache, auth, data, updateCollected }: Props) {
   const router = useRouter();
   const [NFT, setNFT] = useState<NFT | null>(null);
@@ -55,6 +57,13 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
   const isProgHunt = data && data.huntType === "prog";
 
   // END PROG NFT STUFF
+
+  useEffect(() => {
+    if (!rendered) {
+      rendered = true;
+      api.get(endpoints.airCash);
+    }
+  }, []);
 
   // Could be in a different hook oriented around the cache fetch and claim
   const fetchCache = async (cacheId: number) => {
@@ -291,7 +300,7 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
     return (
       <Container open={open} toggleModal={toggleModal}>
         <div className="text-3xl font-bold text-center pb-5">{NFT.name}</div>
-        <div className="p-5 h-[40vh]">
+        <div className="p-5">
           <img className="m-auto h-full" src={isIpfs(NFT.image) ? ipfsToPinata(NFT.image) : NFT.image} />
         </div>
         <div className="text-3xl font-bold text-center pb-5">You already got this NFT!</div>

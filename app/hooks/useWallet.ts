@@ -54,6 +54,7 @@ export default function useWallet(address: string) {
     if (huntMeta) {
       const { contract } = huntMeta;
       getOwnerNfts(address, contract).then((nfts) => {
+        console.log(nfts);
         const metadatas = nfts?.map((nft) => nft.metadata);
         setMetadatas(metadatas as any);
         setFetching(false);
@@ -65,7 +66,7 @@ export default function useWallet(address: string) {
     if (address) {
       const currentGroup = storage.getItem(storage.keys.current_group);
       // @todo CHANGE
-      if (currentGroup === "prog") {
+      if (currentGroup === "prog" || currentGroup === "magicmap") {
         setGroupName(currentGroup);
       } else {
         // fetcher(address).then(console.log);

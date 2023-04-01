@@ -5,6 +5,7 @@ import eggIcon from "../assets/icons/egg2.png";
 import blankEggIcon from "../assets/icons/egg.png";
 import { AIRCACHE_ADDRESS } from "../libs/constants";
 import { NFT } from "../libs/types";
+import { getMarker } from "../components/Map/utils";
 
 // This gathers the markers and updates them
 // The markerRef holds the references to the map markers and updates if they exist or creates new ones
@@ -58,7 +59,7 @@ export default function useCacheMarkers(groupName: string, map: any, c: any[], h
 
   // Definition for the icon of a marker
   const getIcon = (tokenId: number, nft: any) => {
-    let icon = {
+    let icon: google.maps.Icon = {
       url: tokenId ? eggIcon.src : blankEggIcon.src,
       scaledSize: new google.maps.Size(40, 40),
     };
@@ -74,8 +75,9 @@ export default function useCacheMarkers(groupName: string, map: any, c: any[], h
 
     // Custom marker from the NFT metadata
     if (nft) {
-      icon.url = nft.image;
+      icon.url = nft.image + `#${nft.name}`;
       icon.scaledSize = new google.maps.Size(80, 80);
+      icon.anchor = new google.maps.Point(30, 30);
     }
     return icon;
   };
@@ -137,6 +139,25 @@ export default function useCacheMarkers(groupName: string, map: any, c: any[], h
     // Lots of redundancy here -- hmm what the hell was I doing here
     // basically this is what the whole hook does by waiting for cache updates and then updating the markers on the map accordinglin
     // markerRef just holds the references to the markers as they are on the map
+    const resizeMarker = () => {
+      if (map.zoom < 13) {
+        const size = 40;
+        markersRef.current.map((marker) => {
+          var icon = marker.getIcon();
+          icon.scaledSize = new google.maps.Size(size, size);
+          icon.anchor = new google.maps.Point(size / 2, size / 2);
+          marker.setIcon(icon);
+        });
+      } else {
+        const size = 80;
+        markersRef.current.map((marker) => {
+          var icon = marker.getIcon();
+          icon.scaledSize = new google.maps.Size(size, size);
+          icon.anchor = new google.maps.Point(size / 2, size / 2);
+          marker.setIcon(icon);
+        });
+      }
+    };
     if (caches && caches.length && map) {
       console.log(mapMeta);
       if (markersRef.current.length === 0) map.setCenter(mapMeta.map_center);
@@ -164,7 +185,22 @@ export default function useCacheMarkers(groupName: string, map: any, c: any[], h
         markers.push(marker);
       });
       markersRef.current = markers;
+
+      google.maps.event.addListener(map, "zoom_changed", resizeMarker);
+
+      getMarker(`img[src='https://cdn.yaytso.art/magicmap/images/equalize.png#EQUALIZE NFT.NYC w/ BRUX + DOT']`).then((marker: any) => {
+        if (marker) {
+          marker.classList.add("shift");
+        }
+      });
     }
+
+    return () => {
+      try {
+        // @ts-ignore
+        google.maps.event.removeListener(map, "zoom_change", resizeMarker);
+      } catch (e) {}
+    };
   }, [caches, map]);
   return true;
 }

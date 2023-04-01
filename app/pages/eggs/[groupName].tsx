@@ -75,9 +75,9 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
     <>
       <HeadHunt mapMeta={huntMeta} />
       <div className="absolute l-2 t-2 z-10">
-        {collected.map((nft: NFT) => {
+        {collected.map((nft: NFT, i) => {
           return (
-            <div key={nft.name + nft.tokenId} className="w-12 h-12">
+            <div key={nft.name + nft.tokenId + i} className="w-12 h-12">
               <img src={nft.image} />
             </div>
           );

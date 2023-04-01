@@ -3,9 +3,9 @@ const { ethers } = require("hardhat");
 
 const BASE_URI = "https://cdn.yaytso.art/magicmap/metadata/";
 
-describe("MagicMap", function () {
+describe("Eggvents", function () {
   beforeEach(async function () {
-    this.MagicMap = await ethers.getContractFactory("MagicMap");
+    this.MagicMap = await ethers.getContractFactory("Eggvents");
 
     this.accounts = await ethers.getSigners();
     this.owner = this.accounts[0];
@@ -17,12 +17,12 @@ describe("MagicMap", function () {
 
   it("has a name", async function () {
     const name = await this.magicMap.name();
-    expect(name).to.equal("MagicMap");
+    expect(name).to.equal("Eggvents");
   });
 
   it("has the symbol", async function () {
     const symbol = await this.magicMap.symbol();
-    expect(symbol).to.equal("MAGMAP");
+    expect(symbol).to.equal("EGGVNTS");
   });
 
   it("can change baseuri", async function () {
@@ -53,7 +53,7 @@ describe("MagicMap", function () {
         verifyingContract: this.magicMap.address,
       },
       {
-        SignedNFTData: [{ name: "tokenType", type: "string" }],
+        Voucher: [{ name: "tokenType", type: "string" }],
       },
       nftData
     );
@@ -80,7 +80,7 @@ describe("MagicMap", function () {
         verifyingContract: this.magicMap.address,
       },
       {
-        SignedNFTData: [{ name: "tokenType", type: "string" }],
+        Voucher: [{ name: "tokenType", type: "string" }],
       },
       nftData
     );
@@ -101,7 +101,7 @@ describe("MagicMap", function () {
         verifyingContract: this.magicMap.address,
       },
       {
-        SignedNFTData: [{ name: "tokenType", type: "string" }],
+        Voucher: [{ name: "tokenType", type: "string" }],
       },
       nftData
     );
@@ -109,7 +109,7 @@ describe("MagicMap", function () {
       .to.emit(this.magicMap, "Transfer")
       .withArgs(ethers.constants.AddressZero, this.owner.address, 2);
 
-    const tokenTypes = await this.magicMap.getOwnerTokenTypes(this.owner.address);
+    const tokenTypes = await this.magicMap.getOwnerEggTypes(this.owner.address);
     console.log(tokenTypes);
     expect(tokenTypes[0]).to.equal("catalog");
     expect(tokenTypes[1]).to.equal("dnd");
@@ -129,7 +129,7 @@ describe("MagicMap", function () {
         verifyingContract: this.magicMap.address,
       },
       {
-        SignedNFTData: [{ name: "tokenType", type: "string" }],
+        Voucher: [{ name: "tokenType", type: "string" }],
       },
       nftData
     );
@@ -137,7 +137,7 @@ describe("MagicMap", function () {
       .to.emit(this.magicMap, "Transfer")
       .withArgs(ethers.constants.AddressZero, this.owner.address, 1);
 
-    const tokenIds = await this.magicMap.getOwnerTokenIds(this.owner.address);
+    const tokenIds = await this.magicMap.getOwnerEggIds(this.owner.address);
     expect(tokenIds[0]).to.equal(1);
   });
 });

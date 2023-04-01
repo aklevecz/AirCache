@@ -1207,8 +1207,8 @@
       ]
     },
     "/Users/arielklevecz/air-cache/contracts/MagicMap.sol": {
-      "lastModificationDate": 1680046077968,
-      "contentHash": "ebbcc80ec0515e25369c4e92fd42b7b0",
+      "lastModificationDate": 1680247530955,
+      "contentHash": "51dcb3e52a1fc2484ba027f16a3b2dc9",
       "sourceName": "contracts/MagicMap.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -1243,7 +1243,7 @@
         "^0.8.0"
       ],
       "artifacts": [
-        "MagicMap"
+        "Eggvents"
       ]
     },
     "/Users/arielklevecz/air-cache/node_modules/erc721a/contracts/ERC721A.sol": {

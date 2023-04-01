@@ -36,9 +36,7 @@ export default function Wallet() {
   }
   return (
     <div className="pb-20">
-      <div className="text-3xl text-center m-4 font-bold font-fatfrank tracking-wider bg-white text-black">
-        Collection
-      </div>
+      <div className="text-3xl text-center p-2 mb-2 font-bold font-fatfrank tracking-wider bg-white text-black">Collection</div>
       {auth.user && (
         <>
           <div className="font-bold text-center mb-5 break-all px-14">{auth.user.publicAddress}</div>
@@ -58,9 +56,7 @@ export default function Wallet() {
       )}
       {!auth.user && (
         <>
-          <div className="text-3xl font-bold w-3/4 my-10 m-auto text-center max-w-xl">
-            Sign in to view your collection
-          </div>
+          <div className="text-3xl font-bold w-3/4 my-10 m-auto text-center max-w-xl">Sign in to view your collection</div>
           <Button
             className="w-60 m-auto font-bold text-2xl block mt-8"
             // onClick={() => router.push("/login")}

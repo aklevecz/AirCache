@@ -17,6 +17,7 @@ export const endpoints = {
   claimVoucher: "/api/claim-voucher",
   claimSacret: "/api/claim-sacret",
   emailSignup: "/api/on-email-signup",
+  airCash: "/api/air-cash",
 };
 
 api.interceptors.request.use(async (config: AxiosRequestConfig) => {
@@ -75,13 +76,7 @@ export const claimCache = async (
   }
 };
 
-export const claimVoucher = async (
-  tokenAddress: string,
-  tokenType: string,
-  cacheLocation: Latlng,
-  userLocation: Latlng,
-  navigator: any
-) => {
+export const claimVoucher = async (tokenAddress: string, tokenType: string, cacheLocation: Latlng, userLocation: Latlng, navigator: any) => {
   console.log(tokenAddress, tokenType);
   try {
     const response = await api
@@ -105,14 +100,7 @@ export const claimVoucher = async (
   }
 };
 
-export const onCreateCache = (
-  groupName: string,
-  cacheId: number,
-  lat: number,
-  lng: number,
-  address: string,
-  note: string
-) => {
+export const onCreateCache = (groupName: string, cacheId: number, lat: number, lng: number, address: string, note: string) => {
   const res = api.post(endpoints.onCreateCache, {
     groupName,
     cacheId,

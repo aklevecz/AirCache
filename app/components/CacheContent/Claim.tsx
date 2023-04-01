@@ -38,10 +38,10 @@ export default function Claim({ groupName, NFT, claim, fetching, huntType }: Pro
           </a>
         </div>
       )}
-      <div className="p-0 h-[40vh]">
+      <div className="p-0">
         <img className="m-auto h-full" src={isIpfs(NFT.image) ? ipfsToPinata(NFT.image) : NFT.image} />
       </div>
-      <Button className="m-auto w-28 block mt-0 py-3 font-bold text-2xl" onClick={claim}>
+      <Button disabled={true} className="m-auto w-28 block mt-0 py-3 font-bold text-2xl bg-slate-500" onClick={claim}>
         <div className="flex justify-center items-center">
           {/* {txState !== TxState.Fetching ? ( */}
           {!fetching ? (
