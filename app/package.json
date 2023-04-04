@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.14.1",
+    "@lens-protocol/widgets-react": "^0.0.10",
     "@magic-ext/solana": "^4.1.1",
     "@magic-sdk/admin": "^1.4.1",
     "@solana/spl-token": "^0.2.0",

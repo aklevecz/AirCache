@@ -96,6 +96,9 @@ export const getMaticProvider = () => {
   return provider;
 };
 
+export const getMaticProviderEthersServer = () =>
+  new ethers.providers.AlchemyProvider("matic", "https://polygon-mainnet.g.alchemy.com/v2/" + process.env.ALCHEMY_KEY);
+
 export const getTokenURI = async (tokenId: number, tokenAddress: string, provider: ethers.providers.Provider): Promise<string> => {
   console.log(provider);
   const tokenContract = new ethers.Contract(tokenAddress, [abis.tokenURI, abis.uri], provider);

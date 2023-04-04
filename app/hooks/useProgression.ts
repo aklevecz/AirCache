@@ -10,7 +10,6 @@ export default function useProgression() {
   const address = auth.user ? auth.user.publicAddress : "";
 
   const [groupName, setGroupName] = useState("");
-  console.log(groupName);
   const { huntMeta } = useHuntMeta(groupName);
 
   const [collected, setCollected] = useState([]);
@@ -21,10 +20,7 @@ export default function useProgression() {
   // uri is predictable
   const updateCollected = async () => {
     const { contract } = huntMeta;
-    console.log(contract);
     getOwnerNfts(address, contract).then(async (nfts) => {
-      console.log(nfts);
-
       const metadatas = [];
       for (const nft of nfts!) {
         const metadata = await fetch(`${nft.tokenUri.gateway}`).then((r) => r.json());
@@ -33,8 +29,6 @@ export default function useProgression() {
 
       // const metadatas = nfts?.map((nft) => {
       //   const metadata = nft.metadata;
-      //   console.log(nft.tokenUri.gateway);
-
       //   return metadata;
       // });
       const deduped = metadatas?.reduce((pv, cv) => {
@@ -45,8 +39,6 @@ export default function useProgression() {
         }
         return pv;
       }, []);
-      console.log(metadatas);
-      console.log(deduped);
       setCollected(deduped);
       //   setMetadatas(metadatas as any);
       //   setFetching(false);
@@ -54,7 +46,6 @@ export default function useProgression() {
   };
 
   useEffect(() => {
-    console.log(huntMeta);
     if (huntMeta) {
       updateCollected();
     }

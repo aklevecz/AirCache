@@ -1,11 +1,6 @@
 import { useRouter } from "next/router";
 import db from "../libs/db";
-import { seoConfig } from "../libs/config";
 import { FormEvent, useEffect, useState } from "react";
-import trove from "../assets/icons/chest-filled.png";
-import myosin from "../assets/icons/myosin.png";
-import MapIcon from "../components/Icons/Map";
-import { onEmailSignup } from "../libs/api";
 import BlackWrappedSpinner from "../components/Loading/BlackWrappedSpinner";
 import { motion } from "framer-motion";
 
@@ -32,8 +27,7 @@ const Home = ({ groups }: Props) => {
   const [email, setEmail] = useState("");
   const [fetching, setFetching] = useState(false);
   const [isSignedUp, setIsSignedUp] = useState(false);
-  const onEmailChange = (e: FormEvent<HTMLInputElement>) =>
-    setEmail(e.currentTarget.value);
+  const onEmailChange = (e: FormEvent<HTMLInputElement>) => setEmail(e.currentTarget.value);
   // const onSubmitEmail = async () => {
   //   setFetching(true);
   //   const res = await onEmailSignup(email, "yaytso");
@@ -45,16 +39,17 @@ const Home = ({ groups }: Props) => {
   // };
   const router = useRouter();
 
-    return (
-      <div>
-        <img className="p-5 max-w-lg m-auto" src={airYaytso.src} />
-        <div className="w-1/2 m-auto max-w-sm">
-          <EgglineIcon />
-        </div>
-        <motion.div layout>
-          {!isSignedUp && (
-            <div id="section-2">
-              {/* <div className="text-2xl font-fatfrank text-center mt-10">
+  return (
+    <div>
+      {/* <img className="p-5 max-w-lg m-auto" src={airYaytso.src} /> */}
+      <div className="text-3xl font-fatfrank text-center m-10">MAGIC MAP NFT NYC</div>
+      <div className="w-1/2 m-auto max-w-sm">
+        <EgglineIcon />
+      </div>
+      <motion.div layout>
+        {!isSignedUp && (
+          <div id="section-2">
+            {/* <div className="text-2xl font-fatfrank text-center mt-10">
                 Sign up for more info
               </div>
               <input
@@ -66,29 +61,25 @@ const Home = ({ groups }: Props) => {
                 placeholder="email"
                 onChange={onEmailChange}
               /> */}
-              <button
-                onClick={() => {setFetching(true);router.push('/eggs/fools')}}
-                className="bg-white text-black px-5 py-2 font-fatfrank rounded-full text-xl m-auto block mt-4"
-              >
-                {fetching ? <BlackWrappedSpinner /> : "Go To Fools Hunt"}
-              </button>
-            </div>
-          )}
-          {isSignedUp && (
-            <div
-              id="section-2"
-              className="mt-10 p-5"
-              style={{ border: "2px solid white" }}
+            <button
+              onClick={() => {
+                setFetching(true);
+                router.push("/eggs/magicmap");
+              }}
+              className="bg-white text-black px-5 py-2 font-fatfrank rounded-full text-xl m-auto block mt-10"
             >
-              <div className="text-5xl text-center font-fatfrank">
-                You're all set!
-              </div>
-            </div>
-          )}
-        </motion.div>
-      </div>
-    );
-  
+              {fetching ? <BlackWrappedSpinner /> : "Start Hunting"}
+            </button>
+          </div>
+        )}
+        {isSignedUp && (
+          <div id="section-2" className="mt-10 p-5" style={{ border: "2px solid white" }}>
+            <div className="text-5xl text-center font-fatfrank">You're all set!</div>
+          </div>
+        )}
+      </motion.div>
+    </div>
+  );
 };
 
 export default Home;

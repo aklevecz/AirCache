@@ -40,6 +40,9 @@ export default function Wallet() {
       {auth.user && (
         <>
           <div className="font-bold text-center mb-5 break-all px-14">{auth.user.publicAddress}</div>
+          <Button className="w-32 m-auto font-bold block" onClick={onLogout}>
+            Logout
+          </Button>
           <div className="flex flex-wrap items-center justify-center pb-10">
             {wallet.metadatas.map((nft: any, i) => (
               <NFT nft={nft} key={nft.name + i} />
@@ -49,9 +52,6 @@ export default function Wallet() {
               <div className="text-3xl font-bold w-3/4 text-center">You haven't found any items!</div>
             )}
           </div>
-          <Button className="w-32 m-auto font-bold block" onClick={onLogout}>
-            Logout
-          </Button>
         </>
       )}
       {!auth.user && (

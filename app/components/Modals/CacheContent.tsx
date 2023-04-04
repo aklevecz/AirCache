@@ -58,12 +58,12 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
 
   // END PROG NFT STUFF
 
-  useEffect(() => {
-    if (!rendered) {
-      rendered = true;
-      api.get(endpoints.airCash);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!rendered) {
+  //     rendered = true;
+  //     api.get(endpoints.airCash);
+  //   }
+  // }, []);
 
   // Could be in a different hook oriented around the cache fetch and claim
   const fetchCache = async (cacheId: number) => {

@@ -1,7 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { ethers } from "ethers";
-import { haversineDistance } from "../../libs/utils";
+import { getMaticProvider, getMaticProviderEthersServer, haversineDistance } from "../../libs/utils";
+import { MAGIC_MAP_ADDRESS } from "../../libs/constants";
+import MagicMapInterface from "../../hooks/MagicMap.json";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
@@ -27,8 +29,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     // More checks
     // Check if their magic link is valid
     // Check if they already have the NFT type
-    // const contract = new ethers.Contract(CONTRACT_ADDRESS_FROM_POST_BODY, ABIS[CONTRACT_ADDRESS], provider)
-    // const tokenTypes[] = contract.getOwnerEggTypes(user.publicAddress);
+    // This contract isnt deployed yet
+    // const contract = new ethers.Contract(MAGIC_MAP_ADDRESS, MagicMapInterface.abi, getMaticProviderEthersServer());
+    // const tokenTypes = contract.getOwnerEggTypes(user.publicAddress);
 
     // The reference from cacheId to location or vice versa should be in a db or something
     const { cacheId, groupName, userLocation, cacheLocation, navigator, tokenAddress, tokenType } = req.body;
@@ -69,6 +72,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return res.status(200).json({ nftData, signature });
     // Is cache being claimed?
   } catch (e) {
+    console.log(e);
     console.log("no auth");
     return res.status(405).json({
       error: "NO_AUTH",

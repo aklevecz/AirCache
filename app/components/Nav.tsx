@@ -20,11 +20,7 @@ export default function Nav() {
   return (
     <div
       style={{
-        display: hideNavPaths.includes(
-          router.asPath.split("/")[1].split("?")[0]
-        )
-          ? "none"
-          : "flex",
+        display: hideNavPaths.includes(router.asPath.split("/")[1].split("?")[0]) ? "none" : "flex",
         height: 80,
       }}
       className="fixed bottom-0 left-0 w-full justify-around pointer-events-none"
@@ -32,8 +28,7 @@ export default function Nav() {
       <Link
         key={"Map"}
         href={
-          typeof localStorage !== "undefined" &&
-          storage.getItem(storage.keys.current_group)
+          typeof localStorage !== "undefined" && storage.getItem(storage.keys.current_group)
             ? `/eggs/${storage.getItem(storage.keys.current_group)}`
             : "/"
         }
@@ -44,7 +39,7 @@ export default function Nav() {
             height: ICON_DIMS,
             padding: 17,
             boxSizing: "border-box",
-            backgroundColor: colors.lavender,
+            backgroundColor: colors.yellow,
             cursor: "pointer",
           }}
           className="capitalize text-white font-bold text-2xl p-2 items-center justify-center flex rounded-full pointer-events-auto"
@@ -59,7 +54,7 @@ export default function Nav() {
             height: ICON_DIMS,
             padding: 17,
             boxSizing: "border-box",
-            backgroundColor: colors.lavender,
+            backgroundColor: colors.yellow,
             cursor: "pointer",
           }}
           className="capitalize text-white font-bold text-2xl p-2 items-center justify-center flex rounded-full pointer-events-auto"

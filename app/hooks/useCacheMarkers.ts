@@ -128,9 +128,10 @@ export default function useCacheMarkers(groupName: string, map: any, c: any[], h
   useEffect(() => {
     if (collected.length) {
       for (const nft of collected) {
+        // @todo change image to type
         const marker = markersRef.current.find((marker) => marker.nft.image === nft.image);
         if (marker) {
-          // marker.setOpacity(0.5);
+          marker.setOpacity(0.5);
         }
       }
     }
@@ -151,7 +152,6 @@ export default function useCacheMarkers(groupName: string, map: any, c: any[], h
           icon.anchor = new google.maps.Point(size / 2, size / 2);
           marker.setIcon(icon);
         });
-        console.log(size, newSize);
         if (direction > 0) {
           if (size <= newSize) {
             requestAnimationFrame(expandEgg);
@@ -191,7 +191,6 @@ export default function useCacheMarkers(groupName: string, map: any, c: any[], h
           markers.push(markerExists);
           return;
         }
-        console.log(cache);
         const marker = createCacheMarker(
           parseFloat(cache.lat),
           parseFloat(cache.lng),

@@ -35,6 +35,9 @@ export const GEMS_PASS_MATIC = "0xf4de09333fBDCF637b1Ba4e7c067B5e5502850Ec";
 
 export const RAPTOR_TIX_MATIC = "0xb617dA40Cb7368f34A3AD54Bd53EA4Da44F00EE3";
 
+// should be in the hunt metadata and will change
+export const MAGIC_MAP_ADDRESS = "0x19c14e169C00fC2292d394b37ae0e56b2Be5de90";
+
 export const ALPHABET_CITY = !prod ? ALPHABET_CITY_MUMBAI : ALPHABET_CITY_MATIC;
 export const AIRCACHE_ADDRESS = !prod ? AIRCACHE_ADDRESS_MUMBAI : AIRCACHE_ADDRESS_MATIC;
 
@@ -79,6 +82,7 @@ export const colors = {
   lavender: "#f97dff",
   red: "#ff4444",
   polygon: "#8247E5",
+  yellow: "#ffdc30",
 };
 
 export const cacheByGroupTableName = prod ? "cache-by-group" : "cache-by-group-test";
