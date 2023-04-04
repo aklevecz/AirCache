@@ -44,7 +44,7 @@ export default function Claim({ groupName, NFT, claim, fetching, huntType }: Pro
 
         <div className="text-sm mt-1 text-center">{progHuntInfo.date}</div>
       </div>
-      <SignInWithLens onSignIn={onSignIn} />
+      {/* <SignInWithLens onSignIn={onSignIn} /> */}
 
       <div className="text-md mt-1">{progHuntInfo.location_name}</div>
       {isProgHunt && (
