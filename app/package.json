@@ -33,6 +33,7 @@
     "localforage": "^1.10.0",
     "magic-sdk": "^13.6.0",
     "next": "12.2",
+    "next-transpile-modules": "^10.0.0",
     "react": "18.0.0",
     "react-cool-inview": "^3.0.1",
     "react-dom": "18.0.0",

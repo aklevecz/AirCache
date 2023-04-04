@@ -6,6 +6,7 @@ import { MetaMask, Web3Wallet } from "../libs/types";
 
 declare global {
   interface Window {
+    //@ts-ignore
     ethereum: any;
   }
 }
@@ -22,11 +23,7 @@ export default function useWeb3Wallet(): Web3Wallet {
   const [contract, setContract] = useState<ethers.Contract | null>(null);
 
   const initAirCache = () => {
-    const contract = new ethers.Contract(
-      AIRCACHE_ADDRESS,
-      AirYaytsoInterface.abi,
-      metaMask.provider!
-    );
+    const contract = new ethers.Contract(AIRCACHE_ADDRESS, AirYaytsoInterface.abi, metaMask.provider!);
 
     setContract(contract);
   };
@@ -41,14 +38,9 @@ export default function useWeb3Wallet(): Web3Wallet {
   const connectMetaMask = async () => {
     try {
       setMetaMask({ ...metaMask, isConnecting: true });
-      await window.ethereum
-        .request({ method: "eth_requestAccounts" })
-        .catch(console.log);
+      await window.ethereum.request({ method: "eth_requestAccounts" }).catch(console.log);
       const accounts = await getAccountsMetaMask();
-      const provider =
-        accounts.length > 0
-          ? new ethers.providers.Web3Provider(window.ethereum)
-          : null;
+      const provider = accounts.length > 0 ? new ethers.providers.Web3Provider(window.ethereum) : null;
       setMetaMask({ ...metaMask, accounts, provider, isConnecting: false });
       return true;
     } catch (e) {}
@@ -66,10 +58,7 @@ export default function useWeb3Wallet(): Web3Wallet {
     if (window.ethereum && window.ethereum.isMetaMask) {
       setMetaMask({ ...metaMask, isConnecting: true });
       getAccountsMetaMask().then((accounts: string[]) => {
-        const provider =
-          accounts.length > 0
-            ? new ethers.providers.Web3Provider(window.ethereum)
-            : null;
+        const provider = accounts.length > 0 ? new ethers.providers.Web3Provider(window.ethereum) : null;
         setMetaMask({
           available: true,
           accounts,
