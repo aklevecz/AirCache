@@ -50,6 +50,7 @@ const Home = ({ groups }: Props) => {
         className="m-auto my-8"
         style={{ maxHeight: "60vh" }}
       />
+
       <motion.div layout>
         {!isSignedUp && (
           <div id="section-2">
