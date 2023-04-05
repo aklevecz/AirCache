@@ -26,9 +26,8 @@ export default function Nav() {
         )
           ? "none"
           : "flex",
-        height: 80,
       }}
-      className="fixed bottom-0 left-0 w-full justify-around pointer-events-none"
+      className="fixed z-50 bottom-2 left-0 w-full justify-around pointer-events-none"
     >
       <Link
         key={"Map"}
@@ -41,46 +40,34 @@ export default function Nav() {
       >
         <div
           style={{
-            width: ICON_DIMS,
-            height: ICON_DIMS,
-            padding: 17,
-            boxSizing: "border-box",
-            backgroundColor: colors.yellow,
-            cursor: "pointer",
+            width: ICON_DIMS - 3,
+            height: ICON_DIMS - 3,
           }}
-          className="capitalize text-white font-bold text-2xl p-2 items-center justify-center flex rounded-full pointer-events-auto"
+          className="p-4 bg-primary justify-center flex rounded-full pointer-events-auto cursor-pointer box-border"
         >
-          <MapIcon />
+          <MapIcon color="black" />
         </div>
       </Link>
-      <Link key={"store"} href={`/store`}>
+      <Link key={"merch"} href={`/merch`}>
         <div
           style={{
             width: ICON_DIMS,
             height: ICON_DIMS,
-            padding: 17,
-            boxSizing: "border-box",
-            backgroundColor: colors.yellow,
-            cursor: "pointer",
           }}
-          className="capitalize text-white font-bold text-2xl p-2 items-center justify-center flex rounded-full pointer-events-auto"
+          className="p-4 bg-primary justify-center flex rounded-full pointer-events-auto cursor-pointer box-border"
         >
-          <Present />
+          <Present color="black" />
         </div>
       </Link>
       <Link key={"wallet"} href={`/wallet`}>
         <div
           style={{
-            width: ICON_DIMS,
-            height: ICON_DIMS,
-            padding: 17,
-            boxSizing: "border-box",
-            backgroundColor: colors.yellow,
-            cursor: "pointer",
+            width: ICON_DIMS + 2,
+            height: ICON_DIMS + 2,
           }}
-          className="capitalize text-white font-bold text-2xl p-2 items-center justify-center flex rounded-full pointer-events-auto"
+          className="p-4 bg-primary justify-center flex rounded-full pointer-events-auto cursor-pointer box-border"
         >
-          <EgglineIcon />
+          <EgglineIcon color="black" />
         </div>
       </Link>
       {/* {links.map((link) => (

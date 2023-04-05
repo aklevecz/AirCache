@@ -12,7 +12,9 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif; */
   /* font-family: teimer-web, serif; */
   /* font-family: black-beard, sans-serif; */
-  font-family: montserrat, sans-serif;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5rem;
 }
 html,
 body,

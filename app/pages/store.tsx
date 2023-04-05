@@ -19,7 +19,7 @@ export default function Store() {
         />
         <Button
           type="submit"
-          className="py-2 px-4 rounded-xl bg-yellow-400 text-white"
+          className="py-2 px-4 rounded-xl bg-primary text-white"
           style={{}}
         >
           Get notified

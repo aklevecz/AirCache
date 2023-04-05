@@ -27,6 +27,7 @@ module.exports = {
     extend: {
       colors: {
         polygon: "#8247E5",
+        primary: "#F0C000",
       },
     },
   },

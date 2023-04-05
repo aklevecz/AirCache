@@ -50,7 +50,7 @@ export default function Marquee({ children }: any) {
                   <ConditionalWrapper
                     condition={child === "Egg Hunt"}
                     wrapper={(children) => (
-                      <div className="text-yellow-400">{children}</div>
+                      <div className="text-primary">{children}</div>
                     )}
                   >
                     {child}
