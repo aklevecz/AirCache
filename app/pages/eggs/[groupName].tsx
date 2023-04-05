@@ -12,7 +12,7 @@ import { Latlng, NFT } from "../../libs/types";
 import Button from "../../components/Button";
 import Locate from "../../components/Icons/Locate";
 
-import BlackWrappedSpinner from "../../components/Loading/BlackWrappedSpinner";
+import BouncyEgg from "../../components/Loading/BouncyEgg";
 import { isWordHunt } from "../../libs/utils";
 import WordsUI from "../../components/WordsUI";
 import useAlphabetCity from "../../hooks/useAlphabetCity";
@@ -32,7 +32,12 @@ type Props = {
   huntMeta: any;
 };
 
-export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: Props) {
+export default function Group({
+  caches: c,
+  groupName,
+  nftMetadata,
+  huntMeta,
+}: Props) {
   const modal = useModal();
   const ctaModal = useModal();
   const airCache = useAirCache(null);
@@ -40,7 +45,8 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
   const [map, setMap] = useState<google.maps.Map>();
   const userPositionRef = useRef<any>(null);
   const positionRef = useRef<any>("");
-  const { locationAllowed, fetchingLocation, initiateUserLocation } = useUserLocation(userPositionRef, positionRef, map);
+  const { locationAllowed, fetchingLocation, initiateUserLocation } =
+    useUserLocation(userPositionRef, positionRef, map);
 
   const { collected, updateCollected } = useProgression();
   console.log(collected);
@@ -85,16 +91,24 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
       </div>
       <Map initMap={initMap} map={map} user={auth.user} />
       {locationAllowed && (
-        <Button onClick={centerMap} className="recenter-button" style={{ display: "flex" }}>
+        <Button
+          onClick={centerMap}
+          className="recenter-button"
+          style={{ display: "flex" }}
+        >
           Recenter <Locate />
         </Button>
       )}
       {!locationAllowed && (
         <Button className="recenter-button" onClick={initiateUserLocation}>
-          {fetchingLocation ? <BlackWrappedSpinner /> : "Use Location"}
+          {fetchingLocation ? <BouncyEgg /> : "Use Location"}
         </Button>
       )}
-      <div ref={positionRef} style={{ display: "none" }} className="absolute bottom-20 w-full text-center l-50 text-red-500 z-50"></div>
+      <div
+        ref={positionRef}
+        style={{ display: "none" }}
+        className="absolute bottom-20 w-full text-center l-50 text-red-500 z-50"
+      ></div>
 
       {!airCache.loading && (
         <CacheContentModal
@@ -106,13 +120,24 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
           updateCollected={updateCollected}
         />
       )}
-      <WordsUI ctaModal={ctaModal} isWordHunt={isWordHunt(groupName)} letters={letters} word={word} />
+      <WordsUI
+        ctaModal={ctaModal}
+        isWordHunt={isWordHunt(groupName)}
+        letters={letters}
+        word={word}
+      />
     </>
   );
 }
 
 export async function getStaticPaths() {
-  const allCachesByGroup = await db.scan({ TableName: cacheByGroupTableName }).promise();
+  return {
+    paths: ["/eggs/fools"],
+    fallback: true,
+  };
+  const allCachesByGroup = await db
+    .scan({ TableName: cacheByGroupTableName })
+    .promise();
 
   const caches = allCachesByGroup.Items!.map((cache) => {
     return cache.groupName;

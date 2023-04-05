@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Big from "../../components/Button/Big";
 import Img from "../../components/Img";
-import BlackWrappedSpinner from "../../components/Loading/BlackWrappedSpinner";
+import BouncyEgg from "../../components/Loading/BouncyEgg";
 import useAuth from "../../hooks/useAuth";
 import { checkClaim, claimSacret } from "../../libs/api";
 import web3Api from "../../libs/web3Api";
@@ -130,7 +130,7 @@ export default function Claim() {
               </div>
               <div className="mt-8">
                 <Big className="m-auto block text-2xl w-40" onClick={onClaim}>
-                  {fetching ? <BlackWrappedSpinner /> : "Claim"}
+                  {fetching ? <BouncyEgg /> : "Claim"}
                 </Big>
               </div>
               <div className="bg-white w-full h-2 mt-10" />
@@ -195,7 +195,7 @@ export default function Claim() {
                   className="m-auto block text-2xl px-10 w-40"
                   onClick={onLogin}
                 >
-                  {auth.fetching ? <BlackWrappedSpinner /> : "Login"}
+                  {auth.fetching ? <BouncyEgg /> : "Login"}
                 </Big>
               </div>
             </>

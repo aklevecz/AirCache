@@ -35,11 +35,15 @@ export default function Wallet() {
     );
   }
   return (
-    <div className="pb-20">
-      <div className="text-3xl text-center p-2 mb-2 font-bold font-fatfrank tracking-wider bg-white text-black">Collection</div>
+    <div className="pt-12 pb-20">
+      <div className="text-3xl text-center p-2 mb-2 font-bold font-fatfrank tracking-wider text-white">
+        Collection
+      </div>
       {auth.user && (
         <>
-          <div className="font-bold text-center mb-5 break-all px-14">{auth.user.publicAddress}</div>
+          <div className="font-bold text-center mb-5 break-all px-14">
+            {auth.user.publicAddress}
+          </div>
           <Button className="w-32 m-auto font-bold block" onClick={onLogout}>
             Logout
           </Button>
@@ -48,15 +52,21 @@ export default function Wallet() {
               <NFT nft={nft} key={nft.name + i} />
             ))}
             {wallet.fetching && <Spinner />}
-            {!wallet.fetching && wallet.nfts.length === 0 && wallet.metadatas.length === 0 && (
-              <div className="text-3xl font-bold w-3/4 text-center">You haven't found any items!</div>
-            )}
+            {!wallet.fetching &&
+              wallet.nfts.length === 0 &&
+              wallet.metadatas.length === 0 && (
+                <div className="text-3xl font-bold w-3/4 text-center">
+                  You haven't found any items!
+                </div>
+              )}
           </div>
         </>
       )}
       {!auth.user && (
         <>
-          <div className="text-3xl font-bold w-3/4 my-10 m-auto text-center max-w-xl">Sign in to view your collection</div>
+          <div className="text-3xl font-bold w-3/4 my-10 m-auto text-center max-w-xl">
+            Sign in to view your collection
+          </div>
           <Button
             className="w-60 m-auto font-bold text-2xl block mt-8"
             // onClick={() => router.push("/login")}

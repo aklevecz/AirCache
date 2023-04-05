@@ -78,12 +78,39 @@ a {
   }
 }
 
+:root {
+  --egg-height: 32px;
+  --egg-width: 23px;
+}
+@keyframes bouncy-egg {
+  20% {
+    transform: translateY(calc(var(--egg-height) * -0.35)) scale(0.85, 1.1);
+  }
+  40% {
+    transform: translateY(calc(var(--egg-height) * -0.5)) scale(1.15, 0.85);
+  }
+  60% {
+    transform: translateY(calc(var(--egg-height) * -0.35)) scale(0.85, 1.1);
+  }
+
+  65% {
+    transform: translateY(calc(var(--egg-height) * -0.35)) scale(0.85, 1.1);
+  }
+  85% {
+    transform: translateY(0) scale(1.1, 0.85);
+    transform-origin: center bottom;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 /* Loading spinner */
 .lds-roller {
   display: inline-block;
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 28px;
+  height: 28px;
 }
 .lds-roller div {
   animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;

@@ -2,7 +2,7 @@ import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import storage from "../../libs/storage";
 import Button from "../Button";
-import BlackWrappedSpinner from "../Loading/BlackWrappedSpinner";
+import BouncyEgg from "../Loading/BouncyEgg";
 
 type Props = {
   toggleModal: () => void;
@@ -15,7 +15,9 @@ export default function ModalCommonLogin({ toggleModal }: Props) {
   const onChangeEmail = (e: React.FormEvent<HTMLInputElement>) => {
     setEmail(e.currentTarget.value);
   };
-  const message = auth.isConnect ? "Tap to connect!" : "Sign in with sms in order to claim";
+  const message = auth.isConnect
+    ? "Tap to connect!"
+    : "Sign in with sms in order to claim";
   const buttonText = auth.isConnect ? "Connect" : "Sign in";
   return (
     <div>
@@ -47,7 +49,7 @@ export default function ModalCommonLogin({ toggleModal }: Props) {
           toggleModal();
         }}
       >
-        {auth.fetching ? <BlackWrappedSpinner /> : buttonText}
+        {auth.fetching ? <BouncyEgg /> : buttonText}
       </Button>
     </div>
   );
