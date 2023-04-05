@@ -30,11 +30,11 @@ const Card: React.FC<CardProps> = ({
     <>
       <div
         className={clsx(
-          `relative bg-white text-black rounded-3xl flex-1 flex flex-col overflow-hidden`,
+          `relative bg-white text-black rounded-3xl flex-1 flex flex-col overflow-auto`,
           className
         )}
       >
-        <figure className="relative w-full">
+        <figure className="relative w-full sticky top-0">
           <img
             src={image || "/egg.png"}
             alt={title || "Music Explorers"}
@@ -50,8 +50,11 @@ const Card: React.FC<CardProps> = ({
           </figcaption>
         </figure>
 
-        <article className="relative px-2 pt-4 pb-12">
-          <div className="md:overflow-auto grow-0">
+        <article
+          className="relative px-2 pt-4 pb-12 grow-1 bg-white"
+          style={{ flexGrow: 1 }}
+        >
+          <div>
             <h1 className="text-base font-bold">{title}</h1>
             <p className="m-0">{description}</p>
             {list && list.length > 0 && (
@@ -96,7 +99,7 @@ const Card: React.FC<CardProps> = ({
 
 export default function Merch() {
   return (
-    <div className="flex flex-col gap-4 justify-center px-4 md:flex-row relative md:h-[calc(100vh-80px-54px-20px)] md:top-[54px]">
+    <div className="flex flex-col gap-4 justify-center px-4 pb-[80px] md:flex-row relative md:h-[calc(100vh-80px-54px-20px)] md:top-[54px] md:pb-0">
       <Card
         key={"1"}
         disabled={false}
