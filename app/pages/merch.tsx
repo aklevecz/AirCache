@@ -43,7 +43,7 @@ const Card: React.FC<CardProps> = ({
           <figcaption
             className={clsx(
               "absolute left-2 bottom-2 rounded-full bg-white py-1 px-2 text-sm uppercase",
-              imageLabel === "golden egg" && "bg-primary"
+              imageLabel.toLowerCase() === "golden egg" && "bg-primary"
             )}
           >
             {imageLabel}
@@ -51,7 +51,7 @@ const Card: React.FC<CardProps> = ({
         </figure>
 
         <article
-          className="relative px-2 py-4 grow-1 bg-white"
+          className="relative px-3 py-4 grow-1 bg-white"
           style={{ flexGrow: 1 }}
         >
           <div>
@@ -68,22 +68,14 @@ const Card: React.FC<CardProps> = ({
 
           <Button
             className="z-50 w-full py-1 font-semibold bg-black text-white capitalize"
-            // style={{
-            //   position: "absolute",
-            //   bottom: "12px",
-            //   left: 0,
-            //   margin: "0 12px",
-            //   width: "calc(100% - 24px)",
-            // }}
             onClick={() => disabled && modal.toggleModal()}
           >
             {disabled ? "Get notified ✉️" : buttonLabel}
           </Button>
-
-          {disabled && (
-            <div className="absolute left-0 top-0 w-full h-full bg-black opacity-50 z-20" />
-          )}
         </article>
+        {disabled && (
+          <div className="absolute left-0 top-0 w-full h-full bg-black opacity-50 z-20" />
+        )}
       </div>
 
       {disabled && (
@@ -99,43 +91,45 @@ const Card: React.FC<CardProps> = ({
 
 export default function Merch() {
   return (
-    <div className="relative top-[54px] flex flex-col gap-4 justify-center items-start px-4 pb-[80px] sm:flex-row sm:pb-0">
-      <Card
-        key={"1"}
-        disabled={false}
-        title="Music Explorers – NFTNYC 2023 Egg Hunt Poster"
-        description="Bespoke 1-of-1 poster customized to your NFTNYC experience"
-        image="/poster-teaser.gif"
-        imageLabel="Free"
-        buttonLabel="download"
-        list={[
-          "18”x24” museum-quality print",
-          "thick matte paper + water-based inks",
-        ]}
-      />
-      <Card
-        key={"2"}
-        disabled={false}
-        title="Music Explorers – NFTNYC 2023 Egg Hunt Hoodie"
-        description="1-of-3 festival package customized to your NFTNYC experience"
-        image="https://placehold.co/472x437"
-        imageLabel="golden egg"
-        buttonLabel="Claim"
-        list={[
-          "includes bespoke festival poster and tshirt",
-          "plus gifts, NFTs, + more from our partners and promoters",
-        ]}
-      />
-      <Card
-        key={"3"}
-        disabled={true}
-        title="Music Explorers – NFTNYC 2023 Egg Hunt Shirt"
-        description="Bespoke 1-of-1 festival t-shirt customized to your NFTNYC experience"
-        image="/shirt-teaser.gif"
-        imageLabel="Soon"
-        buttonLabel="buy"
-        list={["unisex long sleeve tee", "100% combed ring-spun cotton"]}
-      />
+    <div className="flex justify-center items-center pt-[54px] pb-[80px] sm:pb-0:pt-0:h-full">
+      <div className="relative flex flex-col gap-4 justify-center items-start px-4 sm:flex-row">
+        <Card
+          key={"1"}
+          disabled={false}
+          title="Music Explorers – NFTNYC 2023 Egg Hunt Poster"
+          description="Bespoke 1-of-1 poster customized to your NFTNYC experience"
+          image="/poster-teaser.gif"
+          imageLabel="Free"
+          buttonLabel="download"
+          list={[
+            "18”x24” museum-quality print",
+            "thick matte paper + water-based inks",
+          ]}
+        />
+        <Card
+          key={"2"}
+          disabled={false}
+          title="Music Explorers – NFTNYC 2023 Egg Hunt Hoodie"
+          description="1-of-3 festival package customized to your NFTNYC experience"
+          image="https://placehold.co/472x437"
+          imageLabel="Golden egg"
+          buttonLabel="Claim"
+          list={[
+            "includes bespoke festival poster and tshirt",
+            "plus gifts, NFTs, + more from our partners and promoters",
+          ]}
+        />
+        <Card
+          key={"3"}
+          disabled={true}
+          title="Music Explorers – NFTNYC 2023 Egg Hunt Shirt"
+          description="Bespoke 1-of-1 festival t-shirt customized to your NFTNYC experience"
+          image="/shirt-teaser.gif"
+          imageLabel="Soon"
+          buttonLabel="buy"
+          list={["unisex long sleeve tee", "100% combed ring-spun cotton"]}
+        />
+      </div>
     </div>
   );
 }
