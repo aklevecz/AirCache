@@ -5,7 +5,7 @@ type Props = {
   children: JSX.Element | JSX.Element[];
   open: boolean;
   toggleModal: () => void;
-  center: boolean;
+  center?: boolean;
 };
 
 export default function Container({

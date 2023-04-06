@@ -30,15 +30,15 @@ const Card: React.FC<CardProps> = ({
     <>
       <div
         className={clsx(
-          `relative bg-white text-black rounded-3xl flex-1 flex flex-col overflow-auto`,
+          `relative overflow-hidden max-w-sm sm:max-w-[30%] flex-1 flex flex-col justify-center item-center bg-white text-black rounded-3xl`,
           className
         )}
       >
-        <figure className="relative w-full sticky top-0">
+        <figure className="relative w-full h-[40%] shrink">
           <img
             src={image || "/egg.png"}
             alt={title || "Music Explorers"}
-            className="w-full object-cover h-[300px]"
+            className="w-full aspect-square	object-cover max-h-[250px]"
           />
           <figcaption
             className={clsx(
@@ -51,7 +51,7 @@ const Card: React.FC<CardProps> = ({
         </figure>
 
         <article
-          className="relative px-2 pt-4 pb-12 grow-1 bg-white"
+          className="relative px-2 py-4 grow-1 bg-white"
           style={{ flexGrow: 1 }}
         >
           <div>
@@ -67,14 +67,14 @@ const Card: React.FC<CardProps> = ({
           </div>
 
           <Button
-            className="z-50 absolute b-0 l-0 w-full py-1 font-semibold bg-black text-white capitalize"
-            style={{
-              position: "absolute",
-              bottom: "12px",
-              left: 0,
-              margin: "0 12px",
-              width: "calc(100% - 24px)",
-            }}
+            className="z-50 w-full py-1 font-semibold bg-black text-white capitalize"
+            // style={{
+            //   position: "absolute",
+            //   bottom: "12px",
+            //   left: 0,
+            //   margin: "0 12px",
+            //   width: "calc(100% - 24px)",
+            // }}
             onClick={() => disabled && modal.toggleModal()}
           >
             {disabled ? "Get notified ✉️" : buttonLabel}
@@ -99,7 +99,7 @@ const Card: React.FC<CardProps> = ({
 
 export default function Merch() {
   return (
-    <div className="flex flex-col gap-4 justify-center px-4 pb-[80px] md:flex-row relative md:h-[calc(100vh-80px-54px-20px)] md:top-[54px] md:pb-0">
+    <div className="relative top-[54px] flex flex-col gap-4 justify-center items-start px-4 pb-[80px] sm:flex-row sm:pb-0">
       <Card
         key={"1"}
         disabled={false}

@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
+import clsx from "clsx";
+
 import Logo from "./icons/logo.svg";
 import Info from "./icons/info.svg";
 import InfoModal from "../Modals/Info";
@@ -6,12 +9,20 @@ import useModal from "../../hooks/useModal";
 
 export default function Header() {
   const modal = useModal();
+  const router = useRouter();
+  const { pathname } = router;
+
+  const isMap = pathname === "/eggs/[groupName]";
+  const style = isMap ? {} : { backgroundColor: "rgba(0, 0, 0, 0.15)" };
 
   return (
     <>
       <header
-        className="z-[100] fixed px-6 py-3 top-0 left-0 right-0 flex backdrop-blur-sm justify-between items-center md:justify-start h-[54px]"
-        style={{ backgroundColor: "rgba(0, 0, 0, 0.15)" }}
+        className={clsx(
+          !isMap && "backdrop-blur-sm right-0",
+          "z-[100] fixed top-0 left-0 px-6 py-3  flex items-center justify-start h-[54px]"
+        )}
+        style={style}
       >
         <Link href="/" className="flex items-center cursor-pointer">
           <a>
@@ -19,7 +30,7 @@ export default function Header() {
           </a>
         </Link>
         <a
-          className="ml-4 scale-50 cursor-pointer"
+          className="scale-50 cursor-pointer"
           onClick={() => modal.toggleModal()}
         >
           <img src={Info.src} alt="info" title="Music Explorers info" />
