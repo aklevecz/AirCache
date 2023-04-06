@@ -85,7 +85,9 @@ export default function Claim({
 
           {/* {txState !== TxState.Fetching ? ( */}
           {!fetching ? (
-            <Button className="self-end">Claim egg</Button>
+            <Button onClick={claim} className="self-end">
+              Claim egg
+            </Button>
           ) : (
             <BouncyEgg />
           )}
