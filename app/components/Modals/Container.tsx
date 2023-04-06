@@ -1,5 +1,6 @@
 import clsx from "clsx";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, motion, AnimatePresence } from "framer-motion";
+import { fadeInOutY } from "../../motion/variants";
 
 type Props = {
   children: JSX.Element | JSX.Element[];
@@ -17,19 +18,24 @@ export default function Container({
   return (
     <AnimatePresence>
       {open && (
-        <div
+        <motion.div
+          key="modal"
+          variants={parentVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
           className={clsx(
             center ? "fixed" : "absolute",
-            "w-full h-full top-0 flex justify-center items-center backdrop-blur-lg z-[999]"
+            "w-full h-full top-0 flex justify-center items-center backdrop-blur-lg z-[9999] will-change-transform"
           )}
         >
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="p-10 pb-10 z-10 max-w-lg rounded-3xl bg-tail bg-ring-current w-11/12"
+            variants={fadeInOutY}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            className="z-10 p-10 max-w-lg rounded-3xl bg-white text-black bg-ring-current w-11/12 will-change-transform"
             style={{
-              zIndex: 9999999,
               background: "rgb(56 56 56 / 80%)",
               backdropFilter: "blur(10px)",
             }}
@@ -38,10 +44,29 @@ export default function Container({
           </motion.div>
           <div
             onClick={toggleModal}
-            className="absolute w-full h-full top-0 bg-black z-0 opacity-30"
+            className="absolute w-full h-full top-0 bg-black z-0 opacity-30 "
           />
-        </div>
+        </motion.div>
       )}
     </AnimatePresence>
   );
 }
+
+const parentVariants = {
+  initial: {
+    opacity: 0,
+    transition: {
+      when: "beforeChildren",
+    },
+  },
+  animate: {
+    opacity: 1,
+  },
+  exit: {
+    opacity: 0,
+    transition: {
+      when: "afterChildren",
+      delay: 0.5,
+    },
+  },
+};

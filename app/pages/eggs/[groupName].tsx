@@ -104,14 +104,17 @@ export default function Group({
         (fetchingLocation ? (
           <BouncyEgg className="absolute top-[20px] right-[70px]" />
         ) : (
-          <Button
-            onClick={initiateUserLocation}
-            className="recenter-button bg-white fill-gray-600 cursor-pointer"
-            style={{ padding: "8px" }}
-            title="center to location"
-          >
-            <Locate />
-          </Button>
+          <div className="recenter-button flex flex-col items-end">
+            <Button
+              onClick={initiateUserLocation}
+              className=" bg-white fill-gray-600 cursor-pointer"
+              style={{ padding: "8px" }}
+              title="center to location"
+            >
+              <Locate />
+            </Button>
+            <span className="text-sm">Locate me</span>
+          </div>
         ))}
       <div
         ref={positionRef}
