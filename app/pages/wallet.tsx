@@ -68,7 +68,7 @@ export default function Wallet() {
             Sign in to view your collection
           </div>
           <Button
-            className="w-60 m-auto font-bold text-2xl block mt-8"
+            className="w-60 m-auto font-bold text-2xl block mt-8 bg-primary text-black"
             // onClick={() => router.push("/login")}
             onClick={() => modal.toggleModal()}
           >

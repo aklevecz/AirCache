@@ -75,7 +75,7 @@ const Home = ({ groups }: Props) => {
                   setFetching(true);
                   router.push("/eggs/magicmap");
                 }}
-                className="block m-auto"
+                className="block m-auto bg-primary text-black"
               >
                 Start Hunting
               </Button>

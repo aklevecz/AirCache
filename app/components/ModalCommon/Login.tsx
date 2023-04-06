@@ -28,7 +28,7 @@ export default function ModalCommonLogin({ toggleModal }: Props) {
           name="email"
           type="tel"
           placeholder="##########"
-          className="h-10 p-2 w-full mb-6 text-center black-beard"
+          className="h-10 p-2 w-full mb-6 text-center black-beard border-black"
           style={{ fontSize: 18 }}
           onChange={onChangeEmail}
         />

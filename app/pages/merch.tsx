@@ -67,7 +67,7 @@ const Card: React.FC<CardProps> = ({
           </div>
 
           <Button
-            className="z-50 w-full py-1 font-semibold bg-black text-white capitalize"
+            className="z-50 w-full py-1 font-semibold bg-primary text-black capitalize"
             onClick={() => disabled && modal.toggleModal()}
           >
             {disabled ? "Get notified ✉️" : buttonLabel}

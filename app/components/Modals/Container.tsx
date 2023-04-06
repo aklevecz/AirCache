@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { m, motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { fadeInOutY } from "../../motion/variants";
 
 type Props = {
@@ -34,14 +34,17 @@ export default function Container({
             initial="initial"
             animate="animate"
             exit="exit"
-            className="z-10 p-10 max-w-lg rounded-3xl bg-white text-black bg-ring-current w-11/12 will-change-transform"
-            style={{
-              background: "rgb(56 56 56 / 80%)",
-              backdropFilter: "blur(10px)",
-            }}
+            className="z-10 p-10 max-w-lg rounded-3xl bg-white text-black bg-ring-current w-11/12 will-change-transform relative"
           >
             {children}
+            <div
+              onClick={toggleModal}
+              className="absolute top-3 right-5 w-6 h-6 flex items-center justify-center rounded-full border-[1px] border-black text-black cursor-pointer leading-1"
+            >
+              x
+            </div>
           </motion.div>
+
           <div
             onClick={toggleModal}
             className="absolute w-full h-full top-0 bg-black z-0 opacity-30 "

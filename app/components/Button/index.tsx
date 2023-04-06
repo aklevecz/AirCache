@@ -7,7 +7,7 @@ export default function Button({ children, onClick, className, ...rest }: any) {
       layout
       onClick={onClick}
       className={clsx(
-        "relative bg-primary text-black rounded-full px-4 py-2 whitespace-nowrap",
+        "relative bg-black text-white rounded-full px-4 py-2 whitespace-nowrap text-sm",
         className
       )}
       {...rest}
