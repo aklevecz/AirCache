@@ -4,8 +4,6 @@ import Button from "../Button";
 import TicketIcon from "../Icons/Ticket";
 import Spinner from "../Loading/Spinner";
 
-import { SignInWithLens, Theme, Size } from "@lens-protocol/widgets-react";
-
 type Props = {
   groupName: string;
   NFT: NFT;
@@ -32,10 +30,6 @@ export default function Claim({ groupName, NFT, claim, fetching, huntType }: Pro
     progHuntInfo.company = getTraitValue(progNFT.attributes, "company");
   }
 
-  async function onSignIn(tokens: any, profile: any) {
-    console.log("tokens: ", tokens);
-    console.log("profile: ", profile);
-  }
   return (
     <>
       {!isWordHunt(groupName) && <div className="text-2xl font-bold mb-4">{NFT.name}</div>}
@@ -44,10 +38,8 @@ export default function Claim({ groupName, NFT, claim, fetching, huntType }: Pro
 
         <div className="text-sm mt-1 text-center">{progHuntInfo.date}</div>
       </div>
-      {/* <SignInWithLens onSignIn={onSignIn} /> */}
-
       <div className="text-md mt-1">{progHuntInfo.location_name}</div>
-      {isProgHunt && (
+      {isProgHunt && progHuntInfo.event_url && (
         <div className="mt-2 w-10">
           <a className="underline text-red-500 font-bold" href={progHuntInfo.event_url} target="_blank">
             <TicketIcon />

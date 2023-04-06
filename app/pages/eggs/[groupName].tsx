@@ -40,10 +40,12 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
   const [map, setMap] = useState<google.maps.Map>();
   const userPositionRef = useRef<any>(null);
   const positionRef = useRef<any>("");
-  const { locationAllowed, fetchingLocation, initiateUserLocation } = useUserLocation(userPositionRef, positionRef, map);
-
+  const { locationAllowed, fetchingLocation, initiateUserLocation } = useUserLocation(
+    userPositionRef,
+    positionRef,
+    map
+  );
   const { collected, updateCollected } = useProgression();
-  console.log(collected);
   // how to update marker after fetching the token
   useCacheMarkers(groupName, map, c, huntMeta, nftMetadata, modal, collected);
 
@@ -94,7 +96,11 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
           {fetchingLocation ? <BlackWrappedSpinner /> : "Use Location"}
         </Button>
       )}
-      <div ref={positionRef} style={{ display: "none" }} className="absolute bottom-20 w-full text-center l-50 text-red-500 z-50"></div>
+      <div
+        ref={positionRef}
+        style={{ display: "none" }}
+        className="absolute bottom-20 w-full text-center l-50 text-red-500 z-50"
+      ></div>
 
       {!airCache.loading && (
         <CacheContentModal
