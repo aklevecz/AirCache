@@ -91,7 +91,7 @@ const Card: React.FC<CardProps> = ({
 
 export default function Merch() {
   return (
-    <div className="flex justify-center items-center pt-[54px] pb-[80px] sm:pb-0:pt-0:h-full">
+    <div className="flex justify-center items-center pt-[54px] pb-[80px] sm:pb-0 sm:pt-0 sm:h-full">
       <div className="relative flex flex-col gap-4 justify-center items-start px-4 sm:flex-row">
         <Card
           key={"1"}
