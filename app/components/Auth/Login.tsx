@@ -38,7 +38,7 @@ export default function Login({
         You will be sent a verification link
       </motion.div>
       <Button
-        className="w-32 mt-4 font-bold"
+        className="w-32 mt-4"
         onClick={() => {
           const destination = cacheId ? `/${cacheId}` : "/";
           login(email, destination);

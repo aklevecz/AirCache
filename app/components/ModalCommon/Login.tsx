@@ -34,7 +34,7 @@ export default function ModalCommonLogin({ toggleModal }: Props) {
         />
       )}
       <Button
-        className="m-auto w-32 block mt-0 py-2 px-4 font-bold text-lg"
+        className="m-auto w-32 block mt-0 py-2 px-4"
         disabled={auth.fetching}
         onClick={async () => {
           let destination = "/";

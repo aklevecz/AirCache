@@ -44,7 +44,7 @@ export default function Wallet() {
           <div className="font-bold text-center mb-5 break-all px-14">
             {auth.user.publicAddress}
           </div>
-          <Button className="w-32 m-auto font-bold block" onClick={onLogout}>
+          <Button className="w-32 m-auto block" onClick={onLogout}>
             Logout
           </Button>
           <div className="flex flex-wrap items-center justify-center pb-10">
@@ -68,7 +68,7 @@ export default function Wallet() {
             Sign in to view your collection
           </div>
           <Button
-            className="w-60 m-auto font-bold text-2xl block mt-8 bg-primary text-black"
+            className="w-60 m-auto block mt-8"
             // onClick={() => router.push("/login")}
             onClick={() => modal.toggleModal()}
           >

@@ -20,11 +20,13 @@ export default function Error({ error, toggleModal }: Props) {
           </div>
         )}
         {error.error === "TOO_FAR" && (
-          <Button onClick={toggleModal} className="w-20 font-bold m-auto block text-2xl mt-10">
+          <Button onClick={toggleModal} className="w-20 m-auto block mt-10">
             Ok
           </Button>
         )}
-        {error.error === "NO_AUTH" && <ModalCommonLogin toggleModal={toggleModal} />}
+        {error.error === "NO_AUTH" && (
+          <ModalCommonLogin toggleModal={toggleModal} />
+        )}
       </div>
     </>
   );

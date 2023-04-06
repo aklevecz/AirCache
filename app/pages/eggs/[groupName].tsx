@@ -93,9 +93,9 @@ export default function Group({
       {locationAllowed && (
         <Button
           onClick={centerMap}
-          className="recenter-button bg-white fill-gray-600 cursor-pointer"
-          style={{ padding: "8px" }}
-          title="center to location"
+          className="recenter-button"
+          variant="maps-locate"
+          title="Center to location"
         >
           <Locate />
         </Button>
@@ -104,17 +104,14 @@ export default function Group({
         (fetchingLocation ? (
           <BouncyEgg className="absolute top-[20px] right-[70px]" />
         ) : (
-          <div className="recenter-button flex flex-col items-end">
-            <Button
-              onClick={initiateUserLocation}
-              className=" bg-white fill-gray-600 cursor-pointer"
-              style={{ padding: "8px" }}
-              title="center to location"
-            >
-              <Locate />
-            </Button>
-            <span className="text-sm">Locate me</span>
-          </div>
+          <Button
+            onClick={initiateUserLocation}
+            className="recenter-button flex flex-col items-end"
+            variant="maps-locate"
+            title="center to location"
+          >
+            <Locate />
+          </Button>
         ))}
       <div
         ref={positionRef}

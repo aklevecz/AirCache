@@ -17,11 +17,7 @@ export default function Store() {
           placeholder="gm@your.email"
           className="py-2 px-4 rounded-xl"
         />
-        <Button
-          type="submit"
-          className="py-2 px-4 rounded-xl bg-primary text-white"
-          style={{}}
-        >
+        <Button type="submit" variant="secondary">
           Get notified
         </Button>
       </form>

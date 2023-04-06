@@ -85,9 +85,7 @@ export default function Claim({
 
           {/* {txState !== TxState.Fetching ? ( */}
           {!fetching ? (
-            <Button className="self-end py-1 font-semibold bg-black text-white capitalize">
-              "Claim egg"
-            </Button>
+            <Button className="self-end">Claim egg</Button>
           ) : (
             <BouncyEgg />
           )}
