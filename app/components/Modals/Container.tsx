@@ -1,6 +1,9 @@
 import clsx from "clsx";
 import { motion, AnimatePresence } from "framer-motion";
 import { fadeInOutY } from "../../motion/variants";
+import Close from "../Icons/Close";
+
+import { parentVariants } from "../../motion/variants";
 
 type Props = {
   children: JSX.Element | JSX.Element[];
@@ -39,9 +42,9 @@ export default function Container({
             {children}
             <div
               onClick={toggleModal}
-              className="absolute top-3 right-5 w-6 h-6 flex items-center justify-center rounded-full border-[1px] border-black text-black cursor-pointer leading-1"
+              className="absolute top-3 right-5 w-7 h-7 flex items-center justify-center rounded-full border-[1px] border-black text-black cursor-pointer"
             >
-              x
+              <Close />
             </div>
           </motion.div>
 
@@ -54,22 +57,3 @@ export default function Container({
     </AnimatePresence>
   );
 }
-
-const parentVariants = {
-  initial: {
-    opacity: 0,
-    transition: {
-      when: "beforeChildren",
-    },
-  },
-  animate: {
-    opacity: 1,
-  },
-  exit: {
-    opacity: 0,
-    transition: {
-      when: "afterChildren",
-      delay: 0.5,
-    },
-  },
-};

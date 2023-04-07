@@ -1,13 +1,15 @@
 import { useRouter } from "next/router";
 import Button from "../components/Button";
-import FullScreenSpinner from "../components/Loading/FullScreenSpinner";
-import Spinner from "../components/Loading/Spinner";
+import BouncyEgg from "../components/Loading/BouncyEgg";
 import LoginModal from "../components/Modals/Login";
 import NFT from "../components/Wallet/NFT";
+
 import useAuth from "../hooks/useAuth";
 import useModal from "../hooks/useModal";
 import useWallet from "../hooks/useWallet";
 
+import { motion } from "framer-motion";
+import { fadeInOut } from "../motion/variants";
 // Solana
 // Another version for Solana?
 // or state switching that fetches other ones?
@@ -29,13 +31,26 @@ export default function Wallet() {
 
   if (!wallet.nfts) {
     return (
-      <div>
-        <FullScreenSpinner />
-      </div>
+      <motion.div
+        key="wallet-loading"
+        variants={fadeInOut}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+      >
+        <BouncyEgg />
+      </motion.div>
     );
   }
   return (
-    <div className="pt-12 pb-20">
+    <motion.div
+      key="wallet"
+      variants={fadeInOut}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      className="pt-12 pb-20"
+    >
       <div className="text-3xl text-center p-2 mb-2 font-bold font-fatfrank tracking-wider text-white">
         Collection
       </div>
@@ -51,7 +66,7 @@ export default function Wallet() {
             {wallet.metadatas.map((nft: any, i) => (
               <NFT nft={nft} key={nft.name + i} />
             ))}
-            {wallet.fetching && <Spinner />}
+            {wallet.fetching && <BouncyEgg />}
             {!wallet.fetching &&
               wallet.nfts.length === 0 &&
               wallet.metadatas.length === 0 && (
@@ -77,6 +92,6 @@ export default function Wallet() {
           <LoginModal open={modal.open} toggleModal={modal.toggleModal} />
         </>
       )}
-    </div>
+    </motion.div>
   );
 }
