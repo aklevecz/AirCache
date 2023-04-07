@@ -1,0 +1,19 @@
+{
+  "name": "Voyage To The Stars",
+  "description": "Jack Frost Labs NYC Magic Map Egg",
+  "external_url": "https://www.eventbrite.com/e/voyage-to-the-stars-the-multidimensional-nftnyc-afterparty-tickets-607747247377",
+  "image": "https://cdn.yaytso.art/magicmap/images/2023-nftnyc-voyagetothestars.png",
+  "attributes": [
+    { "trait_type": "company", "value": "Nolcha Shows" },
+    { "trait_type": "date", "value": "4/14/2023" },
+    { "trait_type": "location_name", "value": "Arlene’s Grocery - 95 Stanton Street" },
+    { "trait_type": "location", "value": "40.72131978089275, -73.98830736658368" },
+    {
+      "trait_type": "event_url",
+      "value": "https://www.eventbrite.com/e/voyage-to-the-stars-the-multidimensional-nftnyc-afterparty-tickets-607747247377"
+    },
+    { "trait_type": "website", "value": "www.sayten89.com" },
+    { "trait_type": "twitter", "value": "nftali99" },
+    { "trait_type": "token_gated", "value": true }
+  ]
+}

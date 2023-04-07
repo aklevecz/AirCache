@@ -1,0 +1,16 @@
+{
+  "name": "W3BSTOCK NYC",
+  "description": "W3BSTOCK NYC Magic Map Egg",
+  "external_url": "https://w3bstock.kydlabs.com/e/EV68ece4af-d777-450d-a247-5de45ba360bf",
+  "image": "https://cdn.yaytso.art/magicmap/images/2023-nftnyc-w3bstock.png",
+  "attributes": [
+    { "trait_type": "company", "value": "W3BSTOCK" },
+    { "trait_type": "date", "value": "4/11/2023" },
+    { "trait_type": "location_name", "value": "The Blue Building 222 E 46th St, New York, NY 10017" },
+    { "trait_type": "location", "value": "40.7527763360644, -73.97169091537093" },
+    { "trait_type": "event_url", "value": "https://w3bstock.kydlabs.com/e/EV68ece4af-d777-450d-a247-5de45ba360bf" },
+    { "trait_type": "website", "value": "https://www.w3bstock.io/" },
+    { "trait_type": "twitter", "value": "w3bstock" },
+    { "trait_type": "token_gated", "value": false }
+  ]
+}

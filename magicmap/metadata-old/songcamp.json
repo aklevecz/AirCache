@@ -1,0 +1,16 @@
+{
+  "name": "Club Chaos",
+  "description": "Songcamp NYC Magic Map Egg",
+  "external_url": "https://b2bsongcampandcatalog.eventbrite.com",
+  "image": "https://cdn.yaytso.art/magicmap/images/songcamp.png",
+  "attributes": [
+    { "trait_type": "company", "value": "Songcamp" },
+    { "trait_type": "date", "value": "4/13/2023" },
+    { "trait_type": "location_name", "value": "Public Records 233 Butler St, Brooklyn, NY 11217" },
+    { "trait_type": "location", "value": "40.68226205988972, -73.98639912203694" },
+    { "trait_type": "event_url", "value": "https://b2bsongcampandcatalog.eventbrite.com" },
+    { "trait_type": "website", "value": "https://chaos.build" },
+    { "trait_type": "twitter", "value": "songcamp_" },
+    { "trait_type": "token_gated", "value": false }
+  ]
+}

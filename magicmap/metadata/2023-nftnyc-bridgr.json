@@ -1,0 +1,19 @@
+{
+  "name": "NFT.NYC AFTER PARTY",
+  "description": "BRIDGR NYC Magic Map Egg",
+  "external_url": "https://www.eventbrite.sg/e/nftnyc-after-party-on-april-12th-gamehaus-new-york-tickets-605643825987",
+  "image": "https://cdn.yaytso.art/magicmap/images/2023-nftnyc-bridgr.png",
+  "attributes": [
+    { "trait_type": "company", "value": "bridgr" },
+    { "trait_type": "date", "value": "4/12/2023" },
+    { "trait_type": "location_name", "value": "Gamehaus New York, 5-14 51st Ave, Queens, NY 11101" },
+    { "trait_type": "location", "value": "40.74213900650922, -73.95608192774932" },
+    {
+      "trait_type": "event_url",
+      "value": "https://www.eventbrite.sg/e/nftnyc-after-party-on-april-12th-gamehaus-new-york-tickets-605643825987"
+    },
+    { "trait_type": "website", "value": "https://www.bridgr.xyz/" },
+    { "trait_type": "twitter", "value": "bridgrxyz" },
+    { "trait_type": "token_gated", "value": false }
+  ]
+}

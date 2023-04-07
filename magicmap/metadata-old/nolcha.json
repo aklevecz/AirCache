@@ -1,0 +1,16 @@
+{
+  "name": "Nolcha Shows Immersive NFT Exhibition",
+  "description": "Nolcha NYC Magic Map Egg",
+  "external_url": "https://nolchashows.splashthat.com",
+  "image": "https://cdn.yaytso.art/magicmap/images/nolcha.png",
+  "attributes": [
+    { "trait_type": "company", "value": "Nolcha Shows" },
+    { "trait_type": "date", "value": "4/12/2023" },
+    { "trait_type": "location_name", "value": "Arts District BK" },
+    { "trait_type": "location", "value": "40.72580106470963, -73.95775728488918" },
+    { "trait_type": "event_url", "value": "https://nolchashows.splashthat.com/" },
+    { "trait_type": "website", "value": "https://nftbazl.com" },
+    { "trait_type": "twitter", "value": "nftali99" },
+    { "trait_type": "token_gated", "value": false }
+  ]
+}
