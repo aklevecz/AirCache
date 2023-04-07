@@ -43,11 +43,7 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
   const [map, setMap] = useState<google.maps.Map>();
   const userPositionRef = useRef<any>(null);
   const positionRef = useRef<any>("");
-  const { locationAllowed, fetchingLocation, initiateUserLocation } = useUserLocation(
-    userPositionRef,
-    positionRef,
-    map
-  );
+  const { locationAllowed, fetchingLocation, initiateUserLocation } = useUserLocation(userPositionRef, positionRef, map);
   const { collected, updateCollected } = useProgression();
   // how to update marker after fetching the token
   const { filteredCaches, dates, filter, applyFilter } = useDateFilter(c);
@@ -73,12 +69,14 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
     map!.setCenter(userPositionRef.current as Latlng);
   };
 
+  const [loaded, setLoaded] = useState(true);
   useEffect(() => {
     if (map && navigator.geolocation && typeof window !== "undefined" && user) {
+      // setTimeout(() => setLoaded(true), 5000);
       // initiateUserLocation();
     }
   }, [map, user]);
-
+  console.log(map);
   return (
     <>
       <HeadHunt mapMeta={huntMeta} />
@@ -91,7 +89,7 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
           );
         })}
       </div>
-      <FilterDate dates={dates} applyFilter={applyFilter} filter={filter} />
+      {loaded && <FilterDate dates={dates} applyFilter={applyFilter} filter={filter} />}
       <Map initMap={initMap} map={map} user={auth.user} />
       {locationAllowed && (
         <Button onClick={centerMap} className="recenter-button" style={{ display: "flex" }}>
@@ -103,11 +101,7 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
           {fetchingLocation ? <BlackWrappedSpinner /> : "Use Location"}
         </Button>
       )}
-      <div
-        ref={positionRef}
-        style={{ display: "none" }}
-        className="absolute bottom-20 w-full text-center l-50 text-red-500 z-50"
-      ></div>
+      <div ref={positionRef} style={{ display: "none" }} className="absolute bottom-20 w-full text-center l-50 text-red-500 z-50"></div>
 
       {!airCache.loading && (
         <CacheContentModal
