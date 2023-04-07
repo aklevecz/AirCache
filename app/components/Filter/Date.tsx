@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { AnimatePresence, motion, useAnimate, useAnimationControls } from "framer-motion";
+import { motion, useAnimationControls } from "framer-motion";
 import { useEffect, useState } from "react";
 
 type Props = {
@@ -18,7 +18,7 @@ export default function FilterDate({ filter, applyFilter, dates }: Props) {
       console.log("gooo");
       controls.start({ x: -102 });
     } else {
-      controls.start({ x: 100 });
+      controls.start({ x: 102 });
     }
   }, [open]);
 
@@ -34,7 +34,7 @@ export default function FilterDate({ filter, applyFilter, dates }: Props) {
           {filter || "All"}
         </div>
       </div>
-      <motion.div className="absolute z-10 right-2 top-20" initial={{ x: 100 }} exit={{ x: 100 }} animate={controls}>
+      <motion.div className="absolute z-10 right-2 top-20" initial={{ x: 102 }} exit={{ x: 100 }} animate={controls}>
         <div onClick={() => onApply("")} className={clsx(filter === "" ? "bg-red-500" : "bg-white", "text-black p-2 cursor-pointer")}>
           All
         </div>
