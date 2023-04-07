@@ -17,11 +17,11 @@ export default function useCacheMarkers(
   huntMeta: any,
   nftMetadata: any,
   modal: any,
-  collected: NFT[]
+  collected: NFT[],
+  filteredCaches: any
 ) {
   const [caches, setCaches] = useState(c);
   const markersRef = useRef<any[]>([]);
-
   const mapMeta: any = useMemo(() => {
     let mapMeta = huntMeta;
     if (mapMeta) {
@@ -82,7 +82,6 @@ export default function useCacheMarkers(
       };
     } else {
     }
-
     // Custom marker from the NFT metadata
     if (nft) {
       icon.url = nft.image + `#${nft.name}`;
@@ -110,7 +109,6 @@ export default function useCacheMarkers(
       icon,
       // draggable: true,
     });
-    console.log(icon);
     (cacheMarker as any).cacheId = id;
     (cacheMarker as any).nft = nft;
     cacheMarker.addListener("click", () => {
@@ -147,10 +145,22 @@ export default function useCacheMarkers(
   }, [collected]);
 
   useEffect(() => {
+    for (const marker of markersRef.current) {
+      const showMarker = filteredCaches.find((cache: any) => cache.nft.tokenId === marker.nft.tokenId);
+      if (!showMarker) {
+        marker.setVisible(false);
+      } else {
+        marker.setVisible(true);
+      }
+    }
+  }, [filteredCaches]);
+
+  useEffect(() => {
     // Lots of redundancy here -- hmm what the hell was I doing here
     // basically this is what the whole hook does by waiting for cache updates and then updating the markers on the map accordinglin
     // markerRef just holds the references to the markers as they are on the map
 
+    // ANIMATION LOGIC
     const animate = (currentSize: number, newSize: number, direction: number) => {
       let size = currentSize;
       const expandEgg = (timestamp: number) => {
@@ -188,8 +198,9 @@ export default function useCacheMarkers(
         }
       }
     };
+    // END ANIMATION LOGIC
+
     if (caches && caches.length && map) {
-      console.log(caches);
       if (markersRef.current.length === 0) map.setCenter(mapMeta.map_center);
       const markers: any[] = [];
       caches.forEach((cache, index) => {
