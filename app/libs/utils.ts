@@ -99,7 +99,11 @@ export const getMaticProvider = () => {
 export const getMaticProviderEthersServer = () =>
   new ethers.providers.AlchemyProvider("matic", "https://polygon-mainnet.g.alchemy.com/v2/" + process.env.ALCHEMY_KEY);
 
-export const getTokenURI = async (tokenId: number, tokenAddress: string, provider: ethers.providers.Provider): Promise<string> => {
+export const getTokenURI = async (
+  tokenId: number,
+  tokenAddress: string,
+  provider: ethers.providers.Provider
+): Promise<string> => {
   console.log(provider);
   const tokenContract = new ethers.Contract(tokenAddress, [abis.tokenURI, abis.uri], provider);
   let uri;
@@ -133,6 +137,10 @@ export const delay = (t = 500) =>
   new Promise((resolve) => {
     setTimeout(resolve, t);
   });
+
+export const getTraitValue = (attributes: any[], trait: string) => attributes.find((o) => o.trait_type === trait).value;
+
+export const currentDateNoHours = () => new Date().setHours(0, 0, 0, 0);
 
 export const alphabet = [
   "A",
@@ -197,7 +205,11 @@ const wordHunts = ["nft-nyc", "venice", "la"];
 export const isWordHunt = (hunt: string) => wordHunts.includes(hunt);
 
 export const getMagicPubKey = (groupName?: string) => {
-  const currentGroup = groupName ? groupName : typeof localStorage !== "undefined" ? storage.getItem(storage.keys.current_group) : null;
+  const currentGroup = groupName
+    ? groupName
+    : typeof localStorage !== "undefined"
+    ? storage.getItem(storage.keys.current_group)
+    : null;
   // if (typeof localStorage !== "undefined") {
   // const currentGroup = storage.getItem(storage.keys.current_group);
   if (currentGroup) {

@@ -1,0 +1,16 @@
+{
+  "name": "Music NFT Movement",
+  "description": "PTC Crypto x Coop Records NYC Magic Map Egg",
+  "external_url": "https://partiful.com/e/BRZZybvIbADIYYvgBYT7",
+  "image": "https://cdn.yaytso.art/magicmap/images/2023-nftnyc-musicnftmovement.png",
+  "attributes": [
+    { "trait_type": "company", "value": "PTC Crypto x Coop Records" },
+    { "trait_type": "date", "value": "4/11/2023" },
+    { "trait_type": "location_name", "value": "6 Greene St" },
+    { "trait_type": "location", "value": "40.720599370057805, -74.00282519762699" },
+    { "trait_type": "event_url", "value": "https://partiful.com/e/BRZZybvIbADIYYvgBYT7" },
+    { "trait_type": "website", "value": "" },
+    { "trait_type": "twitter", "value": "cooopahtroopa" },
+    { "trait_type": "token_gated", "value": false }
+  ]
+}

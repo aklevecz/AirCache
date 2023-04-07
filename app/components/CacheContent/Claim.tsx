@@ -1,5 +1,10 @@
 import { NFT } from "../../libs/types";
-import { ipfsToPinata, isIpfs, isWordHunt } from "../../libs/utils";
+import {
+  getTraitValue,
+  ipfsToPinata,
+  isIpfs,
+  isWordHunt,
+} from "../../libs/utils";
 import Button from "../Button";
 import TicketIcon from "../Icons/Ticket";
 import BouncyEgg from "../Loading/BouncyEgg";
@@ -11,9 +16,6 @@ type Props = {
   fetching: boolean;
   huntType: string;
 };
-
-const getTraitValue = (attributes: any[], trait: string) =>
-  attributes.find((o) => o.trait_type === trait).value;
 
 export default function Claim({
   groupName,

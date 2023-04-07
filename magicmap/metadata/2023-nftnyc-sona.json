@@ -1,0 +1,16 @@
+{
+  "name": "Sona Presents: SMS NYC",
+  "description": "Sona NYC Magic Map Egg",
+  "external_url": "https://sona.stream",
+  "image": "https://cdn.yaytso.art/magicmap/images/2023-nftnyc-sona.png",
+  "attributes": [
+    { "trait_type": "company", "value": "sona" },
+    { "trait_type": "date", "value": "4/12/2023" },
+    { "trait_type": "location_name", "value": "Racket NYC, 431 W 16th St., New York NY" },
+    { "trait_type": "location", "value": "40.74309313401445, -74.00572734009285" },
+    { "trait_type": "event_url", "value": "https://sona.stream" },
+    { "trait_type": "website", "value": "https://sona.stream" },
+    { "trait_type": "twitter", "value": "sonastream" },
+    { "trait_type": "token_gated", "value": false }
+  ]
+}

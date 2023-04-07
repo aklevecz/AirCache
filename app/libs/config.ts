@@ -151,4 +151,8 @@ export const appKeys: { [key: string]: { secret: string; pub: string } } = {
     secret: process.env.HIFIHOODIES_SECRET_KEY as string,
     pub: process.env.NEXT_PUBLIC_HIFIHOODIES_PUB_KEY as string,
   },
+  magicmap: {
+    secret: process.env.MAGICMAP_SECRET_KEY as string,
+    pub: process.env.NEXT_PUBLIC_MAGICMAP_PUB_KEY as string,
+  },
 };

@@ -1,0 +1,19 @@
+{
+  "name": "Supernova House Party Series",
+  "description": "Layer15 NFT.NYC 2023 Magic Map Egg",
+  "external_url": "https://partiful.com/e/er5cSs01tcCzZQePWDL3",
+  "image": "https://cdn.yaytso.art/magicmap/images/2023-nftnyc-layer15.png",
+  "attributes": [
+    { "trait_type": "company", "value": "layer15" },
+    { "trait_type": "date", "value": "4/13/2023" },
+    { "trait_type": "location_name", "value": "Ludlow House" },
+    { "trait_type": "location", "value": "40.72054092020519, -73.98838747128138" },
+    {
+      "trait_type": "event_url",
+      "value": "https://partiful.com/e/er5cSs01tcCzZQePWDL3"
+    },
+    { "trait_type": "website", "value": "https://layer15.io" },
+    { "trait_type": "twitter", "value": "jar3dwolf" },
+    { "trait_type": "token_gated", "value": false }
+  ]
+}

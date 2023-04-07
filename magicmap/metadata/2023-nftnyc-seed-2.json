@@ -1,0 +1,19 @@
+{
+  "name": "NFT BK Week Opening Party",
+  "description": "SEED BRKLYN NFT.NYC 2023 Magic Map Egg",
+  "external_url": "https://www.eventbrite.com/e/nft-bk-week-opening-party-tickets-608923174607?aff=odcleoeventsincollection",
+  "image": "https://cdn.yaytso.art/magicmap/images/2023-nftnyc-seed.png",
+  "attributes": [
+    { "trait_type": "company", "value": "seed brklyn" },
+    { "trait_type": "date", "value": "4/12/2023" },
+    { "trait_type": "location_name", "value": "1217 Bedford Avenue Brooklyn, NY 11216" },
+    { "trait_type": "location", "value": "40.68164860136075, -73.95341464919866" },
+    {
+      "trait_type": "event_url",
+      "value": "https://www.eventbrite.com/e/nft-bk-week-opening-party-tickets-608923174607?aff=odcleoeventsincollection"
+    },
+    { "trait_type": "website", "value": "https://shop.seedbrklyn.com" },
+    { "trait_type": "twitter", "value": "seedbrklyn" },
+    { "trait_type": "token_gated", "value": false }
+  ]
+}
