@@ -22,6 +22,7 @@ import useCacheMarkers from "../../hooks/useCacheMarkers";
 import useProgression from "../../hooks/useProgression";
 import useDateFilter from "../../hooks/useDateFilter";
 import clsx from "clsx";
+import FilterDate from "../../components/Filter/Date";
 
 // Notes:
 // Most of the things here need to wait for the map to initialize.
@@ -92,25 +93,7 @@ export default function Group({
           );
         })}
       </div>
-      <div className="absolute flex flex-col gap-2 right-2 top-16 z-10">
-        <div
-          onClick={() => applyFilter("")}
-          className={clsx(filter === "" ? "bg-red-500" : "bg-white", "text-black p-2 cursor-pointer")}
-        >
-          All
-        </div>
-        {dates
-          .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
-          .map((date) => (
-            <div
-              onClick={() => applyFilter(date)}
-              className={clsx(filter === date ? "bg-red-500" : "bg-white", "text-black p-2 cursor-pointer")}
-              key={date}
-            >
-              {date}
-            </div>
-          ))}
-      </div>
+      <FilterDate dates={dates} applyFilter={applyFilter} filter={filter} />
       <Map initMap={initMap} map={map} user={auth.user} />
       {locationAllowed && (
         <Button
