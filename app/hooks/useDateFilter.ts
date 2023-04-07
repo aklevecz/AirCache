@@ -10,10 +10,12 @@ export default function useDateFilter(caches: any) {
 
   const dates = useMemo(() => {
     let dates = new Set<string>();
-    if (caches.length) {
+    if (caches && caches.length) {
       for (const cache of caches) {
-        const date = getTraitValue(cache.nft.attributes, "date");
-        dates.add(date);
+        if (cache.nft && cache.nft.attributes) {
+          const date = getTraitValue(cache.nft.attributes, "date");
+          dates.add(date);
+        }
       }
     }
     return Array.from(dates);
@@ -30,8 +32,16 @@ export default function useDateFilter(caches: any) {
   }, [dates]);
 
   const filteredCaches = useMemo(() => {
+    if (!caches) {
+      return true;
+    }
     return caches.filter((cache: any) => {
-      if (!filter) return true;
+      if (!filter) {
+        return true;
+      }
+      if (cache.nft && !cache.nft.attributes) {
+        return true;
+      }
       const date = getTraitValue(cache.nft.attributes, "date");
       if (date === filter) {
         return true;
