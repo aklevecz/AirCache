@@ -47,9 +47,7 @@ export default function Group({
   const positionRef = useRef<any>("");
   const { locationAllowed, fetchingLocation, initiateUserLocation } =
     useUserLocation(userPositionRef, positionRef, map);
-
   const { collected, updateCollected } = useProgression();
-  console.log(collected);
   // how to update marker after fetching the token
   useCacheMarkers(groupName, map, c, huntMeta, nftMetadata, modal, collected);
 

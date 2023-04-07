@@ -10,7 +10,15 @@ import { getMarker } from "../components/Map/utils";
 // This gathers the markers and updates them
 // The markerRef holds the references to the map markers and updates if they exist or creates new ones
 // This could probably be wrapped into the more map oriented spaces
-export default function useCacheMarkers(groupName: string, map: any, c: any[], huntMeta: any, nftMetadata: any, modal: any, collected: NFT[]) {
+export default function useCacheMarkers(
+  groupName: string,
+  map: any,
+  c: any[],
+  huntMeta: any,
+  nftMetadata: any,
+  modal: any,
+  collected: NFT[]
+) {
   const [caches, setCaches] = useState(c);
   const markersRef = useRef<any[]>([]);
 
@@ -42,7 +50,9 @@ export default function useCacheMarkers(groupName: string, map: any, c: any[], h
         caches.map((cache: any) => {
           const data: any = cache;
           if (cache.tokenId) {
-            const nft = nftMetadata.find((nft: any) => nft.tokenId === cache.tokenId && cache.tokenAddress === nft.tokenAddress);
+            const nft = nftMetadata.find(
+              (nft: any) => nft.tokenId === cache.tokenId && cache.tokenAddress === nft.tokenAddress
+            );
             data.nft = nft;
           }
           return data;
@@ -100,11 +110,10 @@ export default function useCacheMarkers(groupName: string, map: any, c: any[], h
       icon,
       // draggable: true,
     });
-
+    console.log(icon);
     (cacheMarker as any).cacheId = id;
     (cacheMarker as any).nft = nft;
     cacheMarker.addListener("click", () => {
-      console.log(progContractTokenType);
       modal.toggleModal({
         cache: {
           id,
@@ -180,7 +189,7 @@ export default function useCacheMarkers(groupName: string, map: any, c: any[], h
       }
     };
     if (caches && caches.length && map) {
-      console.log(mapMeta);
+      console.log(caches);
       if (markersRef.current.length === 0) map.setCenter(mapMeta.map_center);
       const markers: any[] = [];
       caches.forEach((cache, index) => {
@@ -208,11 +217,13 @@ export default function useCacheMarkers(groupName: string, map: any, c: any[], h
 
       google.maps.event.addListener(map, "zoom_changed", resizeMarker);
 
-      getMarker(`img[src='https://cdn.yaytso.art/magicmap/images/equalize.png#EQUALIZE NFT.NYC w/ BRUX + DOT']`).then((marker: any) => {
-        if (marker) {
-          marker.classList.add("shift");
+      getMarker(`img[src='https://cdn.yaytso.art/magicmap/images/equalize.png#EQUALIZE NFT.NYC w/ BRUX + DOT']`).then(
+        (marker: any) => {
+          if (marker) {
+            marker.classList.add("shift");
+          }
         }
-      });
+      );
     }
 
     return () => {

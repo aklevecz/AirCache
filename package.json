@@ -33,6 +33,7 @@
     "svgson": "^5.2.1"
   },
   "scripts": {
-    "update:magicmap:meta": "aws s3 cp magicmap/metadata s3://cf-simple-s3-origin-egg2-669844428319/magicmap/metadata/ --recursive"
+    "update:magicmap:meta": "aws s3 cp magicmap/metadata s3://cf-simple-s3-origin-egg2-669844428319/magicmap/metadata/ --recursive",
+    "update:magicmap:images": "aws s3 cp magicmap/images s3://cf-simple-s3-origin-egg2-669844428319/magicmap/images/ --recursive"
   }
 }

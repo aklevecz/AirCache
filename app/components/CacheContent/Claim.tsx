@@ -4,8 +4,6 @@ import Button from "../Button";
 import TicketIcon from "../Icons/Ticket";
 import BouncyEgg from "../Loading/BouncyEgg";
 
-import { SignInWithLens, Theme, Size } from "@lens-protocol/widgets-react";
-
 type Props = {
   groupName: string;
   NFT: NFT;
@@ -42,10 +40,6 @@ export default function Claim({
     progHuntInfo.company = getTraitValue(progNFT.attributes, "company");
   }
 
-  async function onSignIn(tokens: any, profile: any) {
-    console.log("tokens: ", tokens);
-    console.log("profile: ", profile);
-  }
   return (
     <>
       <div className="-m-10 relative overflow-hidden flex-1 flex flex-col justify-center item-center rounded-3xl">
@@ -63,7 +57,6 @@ export default function Claim({
             <time>{progHuntInfo.date}</time>
           </figcaption>
         </figure>
-
         <article className="flex flex-col relative px-3 py-4 grow-1">
           <div>
             {!isWordHunt(groupName) && (
@@ -72,7 +65,7 @@ export default function Claim({
             <p className="m-0">{progHuntInfo.company}</p>
             <address>{progHuntInfo.location_name}</address>
             {/* <SignInWithLens onSignIn={onSignIn} /> */}
-            {isProgHunt && (
+            {isProgHunt && progHuntInfo.event_url && (
               <a
                 className="flex items-center gap-1 text-blue-600 my-2 hover:underline"
                 href={progHuntInfo.event_url}
