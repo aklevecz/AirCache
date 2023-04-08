@@ -1,6 +1,13 @@
+import { motion } from "framer-motion";
+import { fadeInOut } from "../../motion/variants";
+
 export default function BouncyEgg({ size, className }: any) {
   return (
-    <img
+    <motion.img
+      variants={fadeInOut}
+      initial="initial"
+      animate="animate"
+      exit="exit"
       src="/egg.png"
       className={className}
       style={{

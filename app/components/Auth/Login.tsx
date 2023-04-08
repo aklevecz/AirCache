@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Button from "../Button";
-import Spinner from "../Loading/Spinner";
+import BouncyEgg from "../Loading/BouncyEgg";
 import eggImg from "../../assets/icons/egg.png";
 
 export default function Login({
@@ -37,21 +37,22 @@ export default function Login({
       >
         You will be sent a verification link
       </motion.div>
-      <Button
-        className="w-32 mt-4"
-        onClick={() => {
-          const destination = cacheId ? `/${cacheId}` : "/";
-          login(email, destination);
-        }}
-      >
-        {fetching ? (
+
+      {fetching ? (
+        <BouncyEgg />
+      ) : (
+        <Button
+          className="w-32 mt-4"
+          onClick={() => {
+            const destination = cacheId ? `/${cacheId}` : "/";
+            login(email, destination);
+          }}
+        >
           <div id="button" className="bg-black rounded-full">
-            <Spinner />
+            begin
           </div>
-        ) : (
-          "Begin"
-        )}
-      </Button>
+        </Button>
+      )}
 
       {/* <Button className="w-32" onClick={logout}>
         Logout

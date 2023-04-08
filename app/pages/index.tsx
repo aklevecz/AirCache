@@ -9,8 +9,11 @@ import Marquee, { formatMarquee } from "../components/Marquee/Marquee";
 import airYaytso from "../assets/icons/air-yaytso.svg";
 import EgglineIcon from "../components/Icons/Eggline";
 
+import { fadeInOut } from "../motion/variants";
+
 type Props = {
   groups: { name: string }[];
+  isFirstMount: boolean;
 };
 
 const ContentBlock = ({ children }: any) => (
@@ -24,7 +27,22 @@ const ContentBlock = ({ children }: any) => (
   </div>
 );
 
-const Home = ({ groups }: Props) => {
+const intro = (isFirstMount: boolean) => ({
+  initial: {
+    opacity: isFirstMount ? 0 : 1,
+    y: isFirstMount ? "50%" : 0,
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+  },
+  exit: {
+    opacity: 0,
+    y: "-100%",
+  },
+});
+
+const Home = ({ groups, isFirstMount }: Props) => {
   const [viewHunts, setViewHunts] = useState(false);
   const [email, setEmail] = useState("");
   const [fetching, setFetching] = useState(false);
@@ -45,10 +63,15 @@ const Home = ({ groups }: Props) => {
   return (
     <div className="flex flex-col justify-center h-full w-1/2 m-auto max-w-sm">
       {/* <img className="p-5 max-w-lg m-auto" src={airYaytso.src} /> */}
-      <img
+      <motion.img
+        key="intro-egg"
         src="/egg.png"
-        className="m-auto my-8"
+        className="z-20 relative m-auto my-8"
         style={{ maxHeight: "60vh" }}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={intro(isFirstMount)}
       />
 
       <motion.div layout>
@@ -71,11 +94,15 @@ const Home = ({ groups }: Props) => {
               <BouncyEgg className="block m-auto" />
             ) : (
               <Button
+                variants={fadeInOut}
+                initial="initial"
+                animate="animate"
+                exit="exit"
                 onClick={() => {
                   setFetching(true);
                   router.push("/eggs/magicmap");
                 }}
-                className="block m-auto"
+                className="block m-auto z-20 relative"
               >
                 Start Hunting
               </Button>

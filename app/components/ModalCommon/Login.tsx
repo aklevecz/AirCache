@@ -19,6 +19,7 @@ export default function ModalCommonLogin({ toggleModal }: Props) {
     ? "Tap to connect!"
     : "Sign in with sms in order to claim";
   const buttonText = auth.isConnect ? "Connect" : "Sign in";
+
   return (
     <div>
       <div className="text-xl text-center pb-7">{message}</div>
@@ -33,24 +34,28 @@ export default function ModalCommonLogin({ toggleModal }: Props) {
           onChange={onChangeEmail}
         />
       )}
-      <Button
-        className="m-auto w-32 block mt-0 py-2 px-4"
-        disabled={auth.fetching}
-        onClick={async () => {
-          let destination = "/";
-          if (typeof localStorage !== "undefined") {
-            const currentGroup = storage.getItem(storage.keys.current_group);
-            if (currentGroup) {
-              destination = "/" + currentGroup;
+      {auth.fetching ? (
+        <BouncyEgg />
+      ) : (
+        <Button
+          className="m-auto w-32 block mt-0 py-2 px-4"
+          disabled={auth.fetching}
+          onClick={async () => {
+            let destination = "/";
+            if (typeof localStorage !== "undefined") {
+              const currentGroup = storage.getItem(storage.keys.current_group);
+              if (currentGroup) {
+                destination = "/" + currentGroup;
+              }
             }
-          }
-          await auth.logout();
-          await auth.login(email, destination);
-          toggleModal();
-        }}
-      >
-        {auth.fetching ? <BouncyEgg /> : buttonText}
-      </Button>
+            await auth.logout();
+            await auth.login(email, destination);
+            toggleModal();
+          }}
+        >
+          {buttonText}
+        </Button>
+      )}
     </div>
   );
 }

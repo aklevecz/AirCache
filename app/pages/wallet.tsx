@@ -9,7 +9,7 @@ import useModal from "../hooks/useModal";
 import useWallet from "../hooks/useWallet";
 
 import { motion } from "framer-motion";
-import { fadeInOut } from "../motion/variants";
+import { fadeInOut, parentVariants } from "../motion/variants";
 // Solana
 // Another version for Solana?
 // or state switching that fetches other ones?
@@ -45,15 +45,15 @@ export default function Wallet() {
   return (
     <motion.div
       key="wallet"
-      variants={fadeInOut}
+      variants={parentVariants}
       initial="initial"
       animate="animate"
       exit="exit"
-      className="pt-12 pb-20"
+      className="flex flex-col justify-center items-center h-full"
     >
-      <div className="text-3xl text-center p-2 mb-2 font-bold font-fatfrank tracking-wider text-white">
+      <h1 className="text-3xl text-center p-2 mb-2 font-bold font-fatfrank tracking-wider text-white">
         Collection
-      </div>
+      </h1>
       {auth.user && (
         <>
           <div className="font-bold text-center mb-5 break-all px-14">
@@ -83,11 +83,10 @@ export default function Wallet() {
             Sign in to view your collection
           </div>
           <Button
-            className="w-60 m-auto block mt-8"
             // onClick={() => router.push("/login")}
             onClick={() => modal.toggleModal()}
           >
-            Go to Signin
+            Connect
           </Button>
           <LoginModal open={modal.open} toggleModal={modal.toggleModal} />
         </>

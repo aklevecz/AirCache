@@ -91,7 +91,7 @@ export default function Group({
       // initiateUserLocation();
     }
   }, [map, user]);
-  console.log(map);
+
   return (
     <>
       <HeadHunt mapMeta={huntMeta} />

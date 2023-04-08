@@ -36,7 +36,6 @@ export const Map = forwardRef<Ref, Props>(
             center,
           });
           initMap(map);
-          // init show opacity animation
         }
       });
     }, []);
