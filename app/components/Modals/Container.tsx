@@ -1,9 +1,7 @@
 import clsx from "clsx";
 import { motion, AnimatePresence } from "framer-motion";
-import { fadeInOutY } from "../../motion/variants";
+import { fadeInOutY, parentVariants } from "../../motion/variants";
 import Close from "../Icons/Close";
-
-import { parentVariants } from "../../motion/variants";
 
 type Props = {
   children: JSX.Element | JSX.Element[];
@@ -38,6 +36,11 @@ export default function Container({
             animate="animate"
             exit="exit"
             className="z-10 p-10 max-w-lg rounded-3xl bg-white text-black bg-ring-current w-11/12 will-change-transform relative"
+            // initial={{ opacity: 0 }}
+            // animate={{ opacity: 1 }}
+            // exit={{ opacity: 0 }}
+            // className="p-6 pb-10 z-10 max-w-lg rounded-3xl bg-tail bg-ring-current w-11/12"
+            // style={{ zIndex: 9999999, position: "relative", background: "rgb(56 56 56 / 80%)", backdropFilter: "blur(10px)" }}
           >
             {children}
             <div

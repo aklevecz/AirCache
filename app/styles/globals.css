@@ -22,8 +22,11 @@ body,
   height: 100%;
   background-color: black;
   color: white;
-  overflow-x: hidden;
 }
+
+/* * {
+  overflow-x: hidden;
+} */
 
 input {
   color: black;

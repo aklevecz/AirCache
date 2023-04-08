@@ -6,6 +6,7 @@ import {
   isWordHunt,
 } from "../../libs/utils";
 import Button from "../Button";
+import NavigateIcon from "../Icons/NavigateIcon";
 import TicketIcon from "../Icons/Ticket";
 import BouncyEgg from "../Loading/BouncyEgg";
 
@@ -16,6 +17,8 @@ type Props = {
   fetching: boolean;
   huntType: string;
 };
+
+const gmapUrl = (l: string) => `https://maps.google.com/?q=${l}`;
 
 export default function Claim({
   groupName,
@@ -30,7 +33,9 @@ export default function Claim({
     event_url: "",
     company: "",
   };
+
   const isProgHunt = huntType === "prog";
+
   if (isProgHunt) {
     const progNFT = NFT as any;
     progHuntInfo.date = getTraitValue(progNFT.attributes, "date");
@@ -76,6 +81,14 @@ export default function Claim({
                 <TicketIcon dim={"18px"} className="fill-blue-600" /> buy ticket
               </a>
             )}
+
+            <a
+              className="flex items-center gap-1 text-blue-600 my-2 hover:underline"
+              href={gmapUrl(progHuntInfo.location_name)}
+              target="_blank"
+            >
+              <NavigateIcon dim={"18px"} className="fill-blue-600" /> open maps
+            </a>
           </div>
 
           {/* {txState !== TxState.Fetching ? ( */}
