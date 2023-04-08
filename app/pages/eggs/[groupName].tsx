@@ -12,7 +12,7 @@ import { Latlng, NFT } from "../../libs/types";
 import Button from "../../components/Button";
 import Locate from "../../components/Icons/Locate";
 
-import BlackWrappedSpinner from "../../components/Loading/BlackWrappedSpinner";
+import BouncyEgg from "../../components/Loading/BouncyEgg";
 import { isWordHunt } from "../../libs/utils";
 import WordsUI from "../../components/WordsUI";
 import useAlphabetCity from "../../hooks/useAlphabetCity";
@@ -35,7 +35,12 @@ type Props = {
   huntMeta: any;
 };
 
-export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: Props) {
+export default function Group({
+  caches: c,
+  groupName,
+  nftMetadata,
+  huntMeta,
+}: Props) {
   const modal = useModal();
   const ctaModal = useModal();
   const airCache = useAirCache(null);
@@ -43,13 +48,23 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
   const [map, setMap] = useState<google.maps.Map>();
   const userPositionRef = useRef<any>(null);
   const positionRef = useRef<any>("");
-  const { locationAllowed, fetchingLocation, initiateUserLocation } = useUserLocation(userPositionRef, positionRef, map);
+  const { locationAllowed, fetchingLocation, initiateUserLocation } =
+    useUserLocation(userPositionRef, positionRef, map);
   const { collected, updateCollected } = useProgression();
   // how to update marker after fetching the token
   const { filteredCaches, dates, filter, applyFilter } = useDateFilter(c);
 
   // for now will pass the filtered caches into this function for comparison, this way the filter logic can always live outside of this scope
-  useCacheMarkers(groupName, map, c, huntMeta, nftMetadata, modal, collected, filteredCaches);
+  useCacheMarkers(
+    groupName,
+    map,
+    c,
+    huntMeta,
+    nftMetadata,
+    modal,
+    collected,
+    filteredCaches
+  );
 
   const { user } = auth;
 
@@ -76,7 +91,7 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
       // initiateUserLocation();
     }
   }, [map, user]);
-  console.log(map);
+
   return (
     <>
       <HeadHunt mapMeta={huntMeta} />
@@ -89,19 +104,29 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
           );
         })}
       </div>
-      {loaded && <FilterDate dates={dates} applyFilter={applyFilter} filter={filter} />}
+      {loaded && (
+        <FilterDate dates={dates} applyFilter={applyFilter} filter={filter} />
+      )}
       <Map initMap={initMap} map={map} user={auth.user} />
-      {locationAllowed && (
-        <Button onClick={centerMap} className="recenter-button" style={{ display: "flex" }}>
-          Recenter <Locate />
-        </Button>
-      )}
-      {!locationAllowed && (
-        <Button className="recenter-button" onClick={initiateUserLocation}>
-          {fetchingLocation ? <BlackWrappedSpinner /> : "Use Location"}
-        </Button>
-      )}
-      <div ref={positionRef} style={{ display: "none" }} className="absolute bottom-20 w-full text-center l-50 text-red-500 z-50"></div>
+
+      {!locationAllowed &&
+        (fetchingLocation ? (
+          <BouncyEgg className="absolute top-[20px] right-[70px]" />
+        ) : (
+          <Button
+            onClick={initiateUserLocation}
+            className="recenter-button flex flex-col items-end"
+            variant="maps-locate"
+            title="center to location"
+          >
+            <Locate />
+          </Button>
+        ))}
+      <div
+        ref={positionRef}
+        style={{ display: "none" }}
+        className="absolute bottom-20 w-full text-center l-50 text-red-500 z-50"
+      ></div>
 
       {!airCache.loading && (
         <CacheContentModal
@@ -113,13 +138,24 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
           updateCollected={updateCollected}
         />
       )}
-      <WordsUI ctaModal={ctaModal} isWordHunt={isWordHunt(groupName)} letters={letters} word={word} />
+      <WordsUI
+        ctaModal={ctaModal}
+        isWordHunt={isWordHunt(groupName)}
+        letters={letters}
+        word={word}
+      />
     </>
   );
 }
 
 export async function getStaticPaths() {
-  const allCachesByGroup = await db.scan({ TableName: cacheByGroupTableName }).promise();
+  return {
+    paths: ["/eggs/fools"],
+    fallback: true,
+  };
+  const allCachesByGroup = await db
+    .scan({ TableName: cacheByGroupTableName })
+    .promise();
 
   const caches = allCachesByGroup.Items!.map((cache) => {
     return cache.groupName;

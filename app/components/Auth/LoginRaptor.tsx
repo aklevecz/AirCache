@@ -22,9 +22,7 @@ export default function LoginRaptor({
   return (
     <div className="flex flex-col justify-center items-center">
       {/* <img src={eggImg.src} /> */}
-      <div className="text-4xl font-bold w-3/4 text-center mb-4">
-        signin
-      </div>
+      <div className="text-4xl font-bold w-3/4 text-center mb-4">signin</div>
       <div className="mb-4 max-w-md text-center">
         punch in your phone number & I'll send you an text
       </div>
@@ -45,7 +43,7 @@ export default function LoginRaptor({
         You will be sent a verification code
       </motion.div>
       <Button
-        className="w-32 mt-4 font-bold"
+        className="w-32 mt-4"
         onClick={() => {
           // let destination = cacheId ? `/cache-${cacheId}` : "/";
 

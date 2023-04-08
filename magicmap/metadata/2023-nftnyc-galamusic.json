@@ -1,0 +1,16 @@
+{
+  "name": "Open Mic NYC",
+  "description": "Gala Music NYC Magic Map Egg",
+  "external_url": "",
+  "image": "https://cdn.yaytso.art/magicmap/images/2023-nftnyc-galamusic.png",
+  "attributes": [
+    { "trait_type": "company", "value": "gala music" },
+    { "trait_type": "date", "value": "4/15/2023" },
+    { "trait_type": "location_name", "value": "Tower Records, 151 Kent Avenue, Brooklyn, New York 11249" },
+    { "trait_type": "location", "value": "40.71881984227182, -73.96275979038143" },
+    { "trait_type": "event_url", "value": "https://music.gala.com" },
+    { "trait_type": "website", "value": "https://music.gala.com" },
+    { "trait_type": "twitter", "value": "gogalamusic" },
+    { "trait_type": "token_gated", "value": false }
+  ]
+}

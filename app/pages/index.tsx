@@ -2,13 +2,18 @@ import { useRouter } from "next/router";
 import db from "../libs/db";
 import { FormEvent, useEffect, useState } from "react";
 import BlackWrappedSpinner from "../components/Loading/BlackWrappedSpinner";
+import BouncyEgg from "../components/Loading/BouncyEgg";
 import { motion } from "framer-motion";
-
+import Button from "../components/Button";
+import Marquee, { formatMarquee } from "../components/Marquee/Marquee";
 import airYaytso from "../assets/icons/air-yaytso.svg";
 import EgglineIcon from "../components/Icons/Eggline";
 
+import { fadeInOut } from "../motion/variants";
+
 type Props = {
   groups: { name: string }[];
+  isFirstMount: boolean;
 };
 
 const ContentBlock = ({ children }: any) => (
@@ -22,12 +27,28 @@ const ContentBlock = ({ children }: any) => (
   </div>
 );
 
-const Home = ({ groups }: Props) => {
+const intro = (isFirstMount: boolean) => ({
+  initial: {
+    opacity: isFirstMount ? 0 : 1,
+    y: isFirstMount ? "50%" : 0,
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+  },
+  exit: {
+    opacity: 0,
+    y: "-100%",
+  },
+});
+
+const Home = ({ groups, isFirstMount }: Props) => {
   const [viewHunts, setViewHunts] = useState(false);
   const [email, setEmail] = useState("");
   const [fetching, setFetching] = useState(false);
   const [isSignedUp, setIsSignedUp] = useState(false);
-  const onEmailChange = (e: FormEvent<HTMLInputElement>) => setEmail(e.currentTarget.value);
+  const onEmailChange = (e: FormEvent<HTMLInputElement>) =>
+    setEmail(e.currentTarget.value);
   // const onSubmitEmail = async () => {
   //   setFetching(true);
   //   const res = await onEmailSignup(email, "yaytso");
@@ -40,44 +61,72 @@ const Home = ({ groups }: Props) => {
   const router = useRouter();
 
   return (
-    <div>
+    <div className="flex flex-col justify-center h-full w-1/2 m-auto max-w-sm">
       {/* <img className="p-5 max-w-lg m-auto" src={airYaytso.src} /> */}
-      <div className="text-3xl font-fatfrank text-center m-10">MAGIC MAP NFT NYC</div>
-      <div className="w-1/2 m-auto max-w-sm">
-        <EgglineIcon />
-      </div>
+      <motion.img
+        key="intro-egg"
+        src="/egg.png"
+        className="z-20 relative m-auto my-8"
+        style={{ maxHeight: "60vh" }}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={intro(isFirstMount)}
+      />
+
       <motion.div layout>
         {!isSignedUp && (
           <div id="section-2">
             {/* <div className="text-2xl font-fatfrank text-center mt-10">
-                Sign up for more info
-              </div>
-              <input
-                className="m-auto block mt-2 text-center p-2"
-                style={{ borderRadius: 10 }}
-                name="email"
-                value={email}
-                type="email"
-                placeholder="email"
-                onChange={onEmailChange}
-              /> */}
-            <button
-              onClick={() => {
-                setFetching(true);
-                router.push("/eggs/magicmap");
-              }}
-              className="bg-white text-black px-5 py-2 font-fatfrank rounded-full text-xl m-auto block mt-10"
-            >
-              {fetching ? <BlackWrappedSpinner /> : "Start Hunting"}
-            </button>
+                  Sign up for more info
+                </div>
+                <input
+                  className="m-auto block mt-2 text-center p-2"
+                  style={{ borderRadius: 10 }}
+                  name="email"
+                  value={email}
+                  type="email"
+                  placeholder="email"
+                  onChange={onEmailChange}
+                /> */}
+
+            {fetching ? (
+              <BouncyEgg className="block m-auto" />
+            ) : (
+              <Button
+                variants={fadeInOut}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                onClick={() => {
+                  setFetching(true);
+                  router.push("/eggs/magicmap");
+                }}
+                className="block m-auto z-20 relative"
+              >
+                Start Hunting
+              </Button>
+            )}
           </div>
         )}
         {isSignedUp && (
-          <div id="section-2" className="mt-10 p-5" style={{ border: "2px solid white" }}>
-            <div className="text-5xl text-center font-fatfrank">You're all set!</div>
+          <div
+            id="section-2"
+            className="mt-10 p-5"
+            style={{ border: "2px solid white" }}
+          >
+            <div className="text-5xl text-center font-fatfrank">
+              You're all set!
+            </div>
           </div>
         )}
       </motion.div>
+
+      <Marquee>
+        {formatMarquee(
+          "Egg Hunt, NFT.NYC, Concert Raptors, HIFI Labs,Egg Hunt, NFT.NYC, Concert Raptors, HIFI Labs,Egg Hunt, NFT.NYC, Concert Raptors, HIFI Labs"
+        )}
+      </Marquee>
     </div>
   );
 };
@@ -85,6 +134,7 @@ const Home = ({ groups }: Props) => {
 export default Home;
 
 export const getStaticProps = async () => {
+  return { props: { hi: "hi" } };
   const params = {
     TableName: "air-yaytso-groups",
   };

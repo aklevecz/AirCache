@@ -1,6 +1,6 @@
 import { Formik } from "formik";
 import { useState } from "react";
-import Spinner from "../components/Loading/Spinner";
+import BouncyEgg from "../components/Loading/BouncyEgg";
 import useAirCache from "../hooks/useAirCache";
 import { SPOTTED_PIGS_ADDRESS } from "../libs/constants";
 import {
@@ -72,7 +72,7 @@ const ApproveForm = ({ setSubmitting, submitting }: any) => (
             <div id="feedback">{props.errors.tokenId}</div>
           )}
         </div>
-        <button type="submit">{submitting ? <Spinner /> : "Submit"}</button>
+        {submitting ? <BouncyEgg /> : <button type="submit">Submit</button>}
       </form>
     )}
   </Formik>
@@ -151,7 +151,7 @@ const FillForm = ({
             <div id="feedback">{props.errors.cacheId}</div>
           )}
         </div>
-        <button type="submit">{submitting ? <Spinner /> : "Submit"}</button>
+        {submitting ? <BouncyEgg /> : <button type="submit">Submit</button>}
       </form>
     )}
   </Formik>

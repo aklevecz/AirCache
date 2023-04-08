@@ -12,7 +12,9 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif; */
   /* font-family: teimer-web, serif; */
   /* font-family: black-beard, sans-serif; */
-  font-family: montserrat, sans-serif;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5rem;
 }
 html,
 body,
@@ -32,16 +34,12 @@ input {
 
 .recenter-button {
   position: absolute;
-  left: 50%;
-  top: 26px;
-  width: 150px;
-  margin-left: -75px;
-  font-weight: bold;
-  transform: none;
-  transform-origin: 50% 50% 0px;
-  display: flex;
-  justify-content: space-around;
-  padding: 10px 18px;
+  right: 10px;
+  top: 64px;
+  z-index: 700;
+  box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3),
+    0 1px 3px 1px rgba(60, 64, 67, 0.15);
+  padding: 8px;
 }
 
 a {
@@ -82,12 +80,39 @@ a {
   }
 }
 
+:root {
+  --egg-height: 32px;
+  --egg-width: 23px;
+}
+@keyframes bouncy-egg {
+  20% {
+    transform: translateY(calc(var(--egg-height) * -0.35)) scale(0.85, 1.1);
+  }
+  40% {
+    transform: translateY(calc(var(--egg-height) * -0.5)) scale(1.15, 0.85);
+  }
+  60% {
+    transform: translateY(calc(var(--egg-height) * -0.35)) scale(0.85, 1.1);
+  }
+
+  65% {
+    transform: translateY(calc(var(--egg-height) * -0.35)) scale(0.85, 1.1);
+  }
+  85% {
+    transform: translateY(0) scale(1.1, 0.85);
+    transform-origin: center bottom;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 /* Loading spinner */
 .lds-roller {
   display: inline-block;
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 28px;
+  height: 28px;
 }
 .lds-roller div {
   animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;

@@ -9,7 +9,7 @@ import {
 import { Web3Wallet } from "../../libs/types";
 import Big from "../Button/Big";
 import Img from "../Img";
-import BlackWrappedSpinner from "../Loading/BlackWrappedSpinner";
+import BouncyEgg from "../Loading/BouncyEgg";
 
 type Props = {
   onGetNfts: (tokenAddress?: string) => void;
@@ -84,7 +84,7 @@ export default function Nfts({
               className="text-2xl px-12"
               onClick={() => onGetNfts(toggleTokenAddress ? tokenAddress : "")}
             >
-              {fetching ? <BlackWrappedSpinner /> : queryText}
+              {fetching ? <BouncyEgg /> : queryText}
             </Big>
             <div className="mt-5 text-2xl" style={{ color: colors.red }}>
               {message}
@@ -139,7 +139,7 @@ export default function Nfts({
                     onClick={approve}
                     disabled={fetching}
                   >
-                    {fetching ? <BlackWrappedSpinner /> : "APPROVE"}
+                    {fetching ? <BouncyEgg /> : "APPROVE"}
                   </Big>
                 )}
               </div>
@@ -154,7 +154,7 @@ export default function Nfts({
         )}
         {/* {selectedNft && (
           <Big className=" bottom-10" onClick={approve} disabled={fetching}>
-            {fetching ? <BlackWrappedSpinner /> : "APPROVE"}
+            {fetching ? <BouncyEgg /> : "APPROVE"}
           </Big>
         )} */}
       </div>

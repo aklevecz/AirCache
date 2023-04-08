@@ -1,6 +1,6 @@
 import { Web3Wallet } from "../../libs/types";
 import Big from "../Button/Big";
-import BlackWrappedSpinner from "../Loading/BlackWrappedSpinner";
+import BouncyEgg from "../Loading/BouncyEgg";
 
 import metaMaskWhite from "../../assets/icons/metamask_white.svg";
 
@@ -28,7 +28,7 @@ const MetaMask = (props: any) => (
         {!props.web3Wallet.metaMask.isConnecting ? (
           "Connect MetaMask"
         ) : (
-          <BlackWrappedSpinner />
+          <BouncyEgg />
         )}
       </Big>
     )}

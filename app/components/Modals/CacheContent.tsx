@@ -304,7 +304,7 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
           <img className="m-auto h-full" src={isIpfs(NFT.image) ? ipfsToPinata(NFT.image) : NFT.image} />
         </div>
         <div className="text-3xl font-bold text-center pb-5">You already got this NFT!</div>
-        <Button className="m-auto w-28 block mt-5 py-3 font-bold text-2xl" onClick={toggleModal}>
+        <Button className="m-auto w-28 block mt-5 py-3" onClick={toggleModal}>
           Ok
         </Button>
       </Container>

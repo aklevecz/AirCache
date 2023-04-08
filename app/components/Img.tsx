@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { ipfstoIO, isIpfs } from "../libs/utils";
-import BlackWrappedSpinner from "./Loading/BlackWrappedSpinner";
+import BouncyEgg from "./Loading/BouncyEgg";
 import Nfts from "./Manager/Nfts";
 
 type Props = {
@@ -31,7 +31,7 @@ export default function Img(props: Props) {
     }
   }, [uri]);
   if (!loaded) {
-    return <BlackWrappedSpinner />;
+    return <BouncyEgg />;
   }
   return <img className={className} src={src} />;
 }

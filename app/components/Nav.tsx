@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { colors } from "../libs/constants";
 import storage from "../libs/storage";
 import EgglineIcon from "./Icons/Eggline";
+import Present from "./Icons/Present";
 import MapIcon from "./Icons/Map";
 
 // To do: Some way of remembering what page they went to before
@@ -20,46 +21,53 @@ export default function Nav() {
   return (
     <div
       style={{
-        display: hideNavPaths.includes(router.asPath.split("/")[1].split("?")[0]) ? "none" : "flex",
-        height: 80,
+        display: hideNavPaths.includes(
+          router.asPath.split("/")[1].split("?")[0]
+        )
+          ? "none"
+          : "flex",
       }}
-      className="fixed bottom-0 left-0 w-full justify-around pointer-events-none"
+      className="fixed z-50 bottom-2 left-0 w-full justify-around pointer-events-none"
     >
       <Link
         key={"Map"}
         href={
-          typeof localStorage !== "undefined" && storage.getItem(storage.keys.current_group)
+          typeof localStorage !== "undefined" &&
+          storage.getItem(storage.keys.current_group)
             ? `/eggs/${storage.getItem(storage.keys.current_group)}`
             : "/"
         }
       >
         <div
           style={{
+            width: ICON_DIMS - 3,
+            height: ICON_DIMS - 3,
+          }}
+          className="p-4 bg-primary justify-center flex rounded-full pointer-events-auto cursor-pointer box-border"
+        >
+          <MapIcon color="black" />
+        </div>
+      </Link>
+      <Link key={"merch"} href={`/merch`}>
+        <div
+          style={{
             width: ICON_DIMS,
             height: ICON_DIMS,
-            padding: 17,
-            boxSizing: "border-box",
-            backgroundColor: colors.yellow,
-            cursor: "pointer",
           }}
-          className="capitalize text-white font-bold text-2xl p-2 items-center justify-center flex rounded-full pointer-events-auto"
+          className="p-4 bg-primary justify-center flex rounded-full pointer-events-auto cursor-pointer box-border"
         >
-          <MapIcon />
+          <Present color="black" />
         </div>
       </Link>
       <Link key={"wallet"} href={`/wallet`}>
         <div
           style={{
-            width: ICON_DIMS,
-            height: ICON_DIMS,
-            padding: 17,
-            boxSizing: "border-box",
-            backgroundColor: colors.yellow,
-            cursor: "pointer",
+            width: ICON_DIMS + 2,
+            height: ICON_DIMS + 2,
           }}
-          className="capitalize text-white font-bold text-2xl p-2 items-center justify-center flex rounded-full pointer-events-auto"
+          className="p-4 bg-primary justify-center flex rounded-full pointer-events-auto cursor-pointer box-border"
         >
-          <EgglineIcon />
+          <EgglineIcon color="black" />
         </div>
       </Link>
       {/* {links.map((link) => (
