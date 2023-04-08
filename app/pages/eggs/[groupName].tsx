@@ -55,7 +55,16 @@ export default function Group({
   const { filteredCaches, dates, filter, applyFilter } = useDateFilter(c);
 
   // for now will pass the filtered caches into this function for comparison, this way the filter logic can always live outside of this scope
-  useCacheMarkers(groupName, map, c, huntMeta, nftMetadata, modal, collected, filteredCaches);
+  useCacheMarkers(
+    groupName,
+    map,
+    c,
+    huntMeta,
+    nftMetadata,
+    modal,
+    collected,
+    filteredCaches
+  );
 
   const { user } = auth;
 
@@ -75,12 +84,14 @@ export default function Group({
     map!.setCenter(userPositionRef.current as Latlng);
   };
 
+  const [loaded, setLoaded] = useState(true);
   useEffect(() => {
     if (map && navigator.geolocation && typeof window !== "undefined" && user) {
+      // setTimeout(() => setLoaded(true), 5000);
       // initiateUserLocation();
     }
   }, [map, user]);
-
+  console.log(map);
   return (
     <>
       <HeadHunt mapMeta={huntMeta} />
@@ -93,18 +104,11 @@ export default function Group({
           );
         })}
       </div>
-      <FilterDate dates={dates} applyFilter={applyFilter} filter={filter} />
-      <Map initMap={initMap} map={map} user={auth.user} />
-      {locationAllowed && (
-        <Button
-          onClick={centerMap}
-          className="recenter-button"
-          variant="maps-locate"
-          title="Center to location"
-        >
-          <Locate />
-        </Button>
+      {loaded && (
+        <FilterDate dates={dates} applyFilter={applyFilter} filter={filter} />
       )}
+      <Map initMap={initMap} map={map} user={auth.user} />
+
       {!locationAllowed &&
         (fetchingLocation ? (
           <BouncyEgg className="absolute top-[20px] right-[70px]" />

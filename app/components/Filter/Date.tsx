@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { AnimatePresence, motion, useAnimate, useAnimationControls } from "framer-motion";
+import { motion, useAnimationControls } from "framer-motion";
 import { useEffect, useState } from "react";
 
 type Props = {
@@ -15,9 +15,10 @@ export default function FilterDate({ filter, applyFilter, dates }: Props) {
 
   useEffect(() => {
     if (open) {
-      controls.start({ x: -100 });
+      console.log("gooo");
+      controls.start({ x: -102 });
     } else {
-      controls.start({ x: 100 });
+      controls.start({ x: 102 });
     }
   }, [open]);
 
@@ -25,18 +26,16 @@ export default function FilterDate({ filter, applyFilter, dates }: Props) {
     toggleOpen();
     applyFilter(filter);
   };
+
   return (
-    <div className="absolute flex flex-col gap-2 right-2 top-16 z-10">
-      <div onClick={toggleOpen} className="bg-white text-black p-2 cursor-pointer ">
-        {filter || "All"}
+    <>
+      <div className="absolute flex flex-col gap-2 right-2 top-20 z-10 w-[95px]">
+        <div onClick={toggleOpen} className="bg-white text-black p-2 cursor-pointer ">
+          {filter || "All"}
+        </div>
       </div>
-      {/* <AnimatePresence>
-        {open && ( */}
-      <motion.div className="absolute" initial={{ x: 100 }} exit={{ x: 100 }} animate={controls}>
-        <div
-          onClick={() => onApply("")}
-          className={clsx(filter === "" ? "bg-red-500" : "bg-white", "text-black p-2 cursor-pointer")}
-        >
+      <motion.div className="absolute z-10 right-2 top-20" initial={{ x: 102 }} exit={{ x: 100 }} animate={controls}>
+        <div onClick={() => onApply("")} className={clsx(filter === "" ? "bg-red-500" : "bg-white", "text-black p-2 cursor-pointer")}>
           All
         </div>
         {dates
@@ -51,8 +50,6 @@ export default function FilterDate({ filter, applyFilter, dates }: Props) {
             </div>
           ))}
       </motion.div>
-      {/* )}
-      </AnimatePresence> */}
-    </div>
+    </>
   );
 }
