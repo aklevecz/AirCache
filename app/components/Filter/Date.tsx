@@ -15,10 +15,9 @@ export default function FilterDate({ filter, applyFilter, dates }: Props) {
 
   useEffect(() => {
     if (open) {
-      console.log("gooo");
-      controls.start({ x: -102 });
+      controls.start({ opacity: 1 });
     } else {
-      controls.start({ x: 102 });
+      controls.start({ opacity: 0 });
     }
   }, [open]);
 
@@ -31,10 +30,10 @@ export default function FilterDate({ filter, applyFilter, dates }: Props) {
     <>
       <div className="absolute flex flex-col gap-2 right-2 top-20 z-10 w-[95px]">
         <div onClick={toggleOpen} className="bg-white text-black p-2 cursor-pointer ">
-          {filter || "All"}
+          {!open ? filter || "All" : "Pick one!"}
         </div>
       </div>
-      <motion.div className="absolute z-10 right-2 top-20" initial={{ x: 102 }} exit={{ x: 100 }} animate={controls}>
+      <motion.div className="absolute z-10 right-2 top-[140px]" initial={{ opacity: 0 }} exit={{ opacity: 0 }} animate={controls}>
         <div onClick={() => onApply("")} className={clsx(filter === "" ? "bg-red-500" : "bg-white", "text-black p-2 cursor-pointer")}>
           All
         </div>

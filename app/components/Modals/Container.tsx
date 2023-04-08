@@ -16,8 +16,8 @@ export default function Container({ children, open, toggleModal }: Props) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="p-10 pb-10 z-10 max-w-lg rounded-3xl bg-tail bg-ring-current w-11/12"
-            style={{ zIndex: 9999999, background: "rgb(56 56 56 / 80%)", backdropFilter: "blur(10px)" }}
+            className="p-6 pb-10 z-10 max-w-lg rounded-3xl bg-tail bg-ring-current w-11/12"
+            style={{ zIndex: 9999999, position: "relative", background: "rgb(56 56 56 / 80%)", backdropFilter: "blur(10px)" }}
           >
             {children}
           </motion.div>
