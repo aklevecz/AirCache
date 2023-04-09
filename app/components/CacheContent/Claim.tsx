@@ -72,28 +72,31 @@ export default function Claim({
             <p className="m-0">{progHuntInfo.company}</p>
             <address>{progHuntInfo.location_name}</address>
             {/* <SignInWithLens onSignIn={onSignIn} /> */}
-            {isProgHunt && progHuntInfo.event_url && (
+            <div className="my-5">
+              {isProgHunt && progHuntInfo.event_url && (
+                <a
+                  className="flex items-center gap-1 text-blue-600 my-2 hover:underline"
+                  href={progHuntInfo.event_url}
+                  target="_blank"
+                >
+                  <TicketIcon dim={"18px"} className="fill-blue-600" /> buy
+                  ticket
+                </a>
+              )}
               <a
                 className="flex items-center gap-1 text-blue-600 my-2 hover:underline"
-                href={progHuntInfo.event_url}
+                href={gmapUrl(progHuntInfo.location_name)}
                 target="_blank"
               >
-                <TicketIcon dim={"18px"} className="fill-blue-600" /> buy ticket
+                <NavigateIcon dim={"18px"} className="fill-blue-600" /> open
+                maps
               </a>
-            )}
-
-            <a
-              className="flex items-center gap-1 text-blue-600 my-2 hover:underline"
-              href={gmapUrl(progHuntInfo.location_name)}
-              target="_blank"
-            >
-              <NavigateIcon dim={"18px"} className="fill-blue-600" /> open maps
-            </a>
+            </div>
           </div>
 
           {/* {txState !== TxState.Fetching ? ( */}
           {!fetching ? (
-            <Button onClick={claim} className="self-end">
+            <Button onClick={claim} className="font-bold self-center px-12">
               Claim egg
             </Button>
           ) : (
