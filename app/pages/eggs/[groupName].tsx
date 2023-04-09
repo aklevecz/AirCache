@@ -111,7 +111,7 @@ export default function Group({
 
       {!locationAllowed &&
         (fetchingLocation ? (
-          <BouncyEgg className="absolute top-[20px] right-[70px]" />
+          <BouncyEgg className="absolute right-[18px] top-[70px] z-[700] flex flex-col items-end" />
         ) : (
           <Button
             onClick={initiateUserLocation}
