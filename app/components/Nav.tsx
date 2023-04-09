@@ -21,19 +21,14 @@ export default function Nav() {
   return (
     <div
       style={{
-        display: hideNavPaths.includes(
-          router.asPath.split("/")[1].split("?")[0]
-        )
-          ? "none"
-          : "flex",
+        display: hideNavPaths.includes(router.asPath.split("/")[1].split("?")[0]) ? "none" : "flex",
       }}
       className="fixed z-50 bottom-2 left-0 w-full justify-around pointer-events-none"
     >
       <Link
         key={"Map"}
         href={
-          typeof localStorage !== "undefined" &&
-          storage.getItem(storage.keys.current_group)
+          typeof localStorage !== "undefined" && storage.getItem(storage.keys.current_group)
             ? `/eggs/${storage.getItem(storage.keys.current_group)}`
             : "/"
         }
@@ -48,7 +43,7 @@ export default function Nav() {
           <MapIcon color="black" />
         </div>
       </Link>
-      <Link key={"merch"} href={`/merch`}>
+      {/* <Link key={"merch"} href={`/merch`}>
         <div
           style={{
             width: ICON_DIMS,
@@ -58,7 +53,7 @@ export default function Nav() {
         >
           <Present color="black" />
         </div>
-      </Link>
+      </Link> */}
       <Link key={"wallet"} href={`/wallet`}>
         <div
           style={{
