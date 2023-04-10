@@ -104,14 +104,16 @@ export default function Group({
           );
         })}
       </div>
+
       {loaded && (
         <FilterDate dates={dates} applyFilter={applyFilter} filter={filter} />
       )}
+
       <Map initMap={initMap} map={map} user={auth.user} />
 
       {!locationAllowed &&
         (fetchingLocation ? (
-          <BouncyEgg className="absolute right-[18px] top-[70px] z-[700] flex flex-col items-end" />
+          <BouncyEgg className="absolute right-[130px] top-[22px] z-[700] flex flex-col items-end" />
         ) : (
           <Button
             onClick={initiateUserLocation}
@@ -122,11 +124,12 @@ export default function Group({
             <Locate />
           </Button>
         ))}
+
       <div
         ref={positionRef}
         style={{ display: "none" }}
         className="absolute bottom-20 w-full text-center l-50 text-red-500 z-50"
-      ></div>
+      />
 
       {!airCache.loading && (
         <CacheContentModal

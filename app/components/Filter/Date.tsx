@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { motion, useAnimationControls } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 
 type Props = {
@@ -9,63 +9,80 @@ type Props = {
 };
 
 export default function FilterDate({ filter, applyFilter, dates }: Props) {
-  const controls = useAnimationControls();
   const [open, setOpen] = useState(false);
   const toggleOpen = () => setOpen(!open);
-
-  useEffect(() => {
-    if (open) {
-      controls.start({ opacity: 1 });
-    } else {
-      controls.start({ opacity: 0 });
-    }
-  }, [open]);
 
   const onApply = (filter: string) => {
     toggleOpen();
     applyFilter(filter);
   };
 
+  function formatDateString(dateString: string): string {
+    const monthNames: string[] = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    const date: Date = new Date(dateString);
+    const day: number = date.getDate();
+    const monthIndex: number = date.getMonth();
+    const monthName: string = monthNames[monthIndex];
+
+    return `${day} ${monthName}`;
+  }
+
+  const allDays = "All days";
+
   return (
-    <>
-      <div className="absolute flex flex-col gap-2 right-2 top-[120px] z-10 w-[95px]">
-        <div
-          onClick={toggleOpen}
-          className="bg-white text-black p-2 cursor-pointer "
-        >
-          {filter || "All"}
-        </div>
+    <div className="absolute right-[12px] top-[12px] w-[100px] z-10 cursor-pointer rounded-full bg-white text-black whitespace-nowrap">
+      <div onClick={toggleOpen} className="relative z-20 px-4 py-2">
+        {filter !== "" ? formatDateString(filter) : allDays}
       </div>
-      <motion.div
-        className="absolute z-10 right-2 top-20"
-        initial={{ x: 102, opacity: 0 }}
-        exit={{ x: 100, opacity: 0 }}
-        animate={controls}
-      >
-        <div
-          onClick={() => onApply("")}
-          className={clsx(
-            filter === "" ? "bg-red-500" : "bg-white",
-            "text-black p-2 cursor-pointer"
-          )}
-        >
-          All
-        </div>
-        {dates
-          .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
-          .map((date) => (
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            key="dates"
+            className="z-10 absolute top-[44px] left-0 w-full bg-white rounded-md overflow-hidden"
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -20, opacity: 0 }}
+          >
             <div
-              onClick={() => onApply(date)}
+              onClick={() => onApply("")}
               className={clsx(
-                filter === date ? "bg-red-500" : "bg-white",
+                filter === "" ? "bg-primary" : "bg-white",
                 "text-black p-2 cursor-pointer"
               )}
-              key={date}
             >
-              {date}
+              {allDays}
             </div>
-          ))}
-      </motion.div>
-    </>
+            {dates
+              .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+              .map((date) => (
+                <div
+                  onClick={() => onApply(date)}
+                  className={clsx(
+                    filter === date ? "bg-primary" : "bg-white",
+                    "text-black p-2 cursor-pointer hover:bg-primary"
+                  )}
+                  key={date}
+                >
+                  {formatDateString(date)}
+                </div>
+              ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
