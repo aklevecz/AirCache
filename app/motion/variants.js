@@ -1,22 +1,22 @@
-import { easeIn } from "./ease";
+import { easeIn, easeOut } from "./ease";
 
 export const parentVariants = {
   initial: {
     opacity: 0,
-    // transition: {
-    //   when: "afterChildren",
-    //   duration: 0.001,
-    // },
   },
   animate: {
     opacity: 1,
+    transition: {
+      when: "beforeChildren",
+      duration: 0.1,
+    },
   },
   exit: {
     opacity: 0,
-    // transition: {
-    //   when: "afterChildren",
-    //   delay: 0.2,
-    // },
+    transition: {
+      when: "afterChildren",
+      delay: 0.1,
+    },
   },
 };
 
@@ -41,16 +41,17 @@ export const fadeInOutY = {
     opacity: 0,
     y: 20,
   },
-  animate: (i = 1) => ({
+  animate: (i = 0) => ({
     opacity: 1,
     y: 0,
     transition: {
-      delay: i * 0.05,
+      delay: i * 0.05 + 0.15,
+      easings: easeOut,
     },
   }),
-  exit: (i = 1) => ({
+  exit: (i = 0) => ({
     opacity: 0,
-    y: -20, //somehow there's a performance issue with this
+    y: -20,
     transition: {
       delay: i * 0.05,
       easings: easeIn,

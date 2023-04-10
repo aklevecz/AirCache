@@ -125,6 +125,17 @@ export default function Group({
           </Button>
         ))}
 
+      {locationAllowed && (
+        <Button
+          onClick={initiateUserLocation}
+          className="recenter-button flex flex-col items-end"
+          variant="maps-locate"
+          title="center to location"
+        >
+          <Locate />
+        </Button>
+      )}
+
       <div
         ref={positionRef}
         style={{ display: "none" }}
