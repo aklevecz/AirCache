@@ -40,7 +40,7 @@ export default function Container({ children, open, toggleModal, center = false 
             {children}
             <div
               onClick={toggleModal}
-              className="absolute top-3 right-5 w-7 h-7 flex items-center justify-center rounded-full border-[3px] border-black text-black cursor-pointer"
+              className="absolute z-[20] top-3 right-5 w-7 h-7 flex items-center justify-center rounded-full border-[3px] border-black text-black cursor-pointer"
             >
               <Close />
             </div>

@@ -35,7 +35,11 @@ export default function Claim({ groupName, NFT, claim, fetching, huntType }: Pro
 
   return (
     <>
-      {!isWordHunt(groupName) && <div className="text-xl font-bold">{NFT.name}</div>}
+      {!isWordHunt(groupName) && (
+        <div style={{ lineHeight: "1.2rem" }} className="text-xl font-bold">
+          {NFT.name}
+        </div>
+      )}
       <div className="flex items-center justify-between my-1">
         <div className="text-md capitalize">{progHuntInfo.company}</div>
         <div className="text-md mt-1">{progHuntInfo.date}</div>

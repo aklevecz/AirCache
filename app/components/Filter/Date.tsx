@@ -35,7 +35,7 @@ export default function FilterDate({ filter, applyFilter, dates }: Props) {
           {!open ? (
             <div className="flex gap-2 px-1 items-center">
               <div style={{ color: colors.lavender }} className={`font-bold text-[${colors.red}]`}>
-                {filter || "All"}
+                {filter || "4/11-4/15"}
               </div>{" "}
               <div className="h-6">
                 <DateIcon />
@@ -47,7 +47,7 @@ export default function FilterDate({ filter, applyFilter, dates }: Props) {
         </motion.div>
       </div>
       <motion.div
-        className="absolute z-[999999999] right-2 top-[10px]"
+        className="absolute z-[19] right-2 top-[10px]"
         initial={{ opacity: 0 }}
         exit={{ opacity: 0 }}
         animate={controls}
@@ -56,7 +56,7 @@ export default function FilterDate({ filter, applyFilter, dates }: Props) {
           onClick={() => onApply("")}
           className={clsx(filter === "" ? `bg-lavender` : "bg-white", "text-black p-2 cursor-pointer")}
         >
-          All
+          4/11-4/15
         </div>
         {dates
           .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())

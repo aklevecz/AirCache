@@ -31,13 +31,7 @@ export default function Wallet() {
 
   if (!wallet.nfts) {
     return (
-      <motion.div
-        key="wallet-loading"
-        variants={fadeInOut}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-      >
+      <motion.div key="wallet-loading" variants={fadeInOut} initial="initial" animate="animate" exit="exit">
         <BouncyEgg />
       </motion.div>
     );
@@ -49,16 +43,15 @@ export default function Wallet() {
       initial="initial"
       animate="animate"
       exit="exit"
-      className="flex flex-col justify-center items-center h-full"
+      className="flex flex-col justify-center items-center h-full pt-14"
     >
-      <h1 className="text-3xl text-center p-2 mb-2 font-bold font-fatfrank tracking-wider text-white">
-        Collection
-      </h1>
+      <h1 className="text-3xl text-center p-2 mb-2 font-bold font-fatfrank tracking-wider text-white">Collection</h1>
       {auth.user && (
         <>
-          <div className="font-bold text-center mb-5 break-all px-14">
-            {auth.user.publicAddress}
-          </div>
+          <div className="font-bold text-center mb-5 break-all px-14">{auth.user.publicAddress}</div>
+          {!wallet.fetching && wallet.nfts.length === 0 && wallet.metadatas.length === 0 && (
+            <div className="text-3xl font-bold w-3/4 text-center">You haven't found any eggs!</div>
+          )}
           <Button className="w-32 m-auto block" onClick={onLogout}>
             Logout
           </Button>
@@ -67,13 +60,6 @@ export default function Wallet() {
               <NFT nft={nft} key={nft.name + i} />
             ))}
             {wallet.fetching && <BouncyEgg />}
-            {!wallet.fetching &&
-              wallet.nfts.length === 0 &&
-              wallet.metadatas.length === 0 && (
-                <div className="text-3xl font-bold w-3/4 text-center">
-                  You haven't found any items!
-                </div>
-              )}
           </div>
         </>
       )}
