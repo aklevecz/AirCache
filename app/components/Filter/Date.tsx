@@ -42,12 +42,12 @@ export default function FilterDate({ filter, applyFilter, dates }: Props) {
               </div>
             </div>
           ) : (
-            "Pick one!"
+            "Pick a date!"
           )}
         </motion.div>
       </div>
       <motion.div
-        className="absolute z-[19] right-2 top-[10px]"
+        className="absolute z-[19] right-2 top-[60px]"
         initial={{ opacity: 0 }}
         exit={{ opacity: 0 }}
         animate={controls}
