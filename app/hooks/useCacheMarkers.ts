@@ -50,9 +50,7 @@ export default function useCacheMarkers(
         caches.map((cache: any) => {
           const data: any = cache;
           if (cache.tokenId) {
-            const nft = nftMetadata.find(
-              (nft: any) => nft.tokenId === cache.tokenId && cache.tokenAddress === nft.tokenAddress
-            );
+            const nft = nftMetadata.find((nft: any) => nft.tokenId === cache.tokenId && cache.tokenAddress === nft.tokenAddress);
             data.nft = nft;
           }
           return data;
@@ -85,9 +83,10 @@ export default function useCacheMarkers(
     // Custom marker from the NFT metadata
     if (nft) {
       icon.url = nft.image + `#${nft.name}`;
-      icon.size = new google.maps.Size(80, 80);
-      icon.scaledSize = new google.maps.Size(40, 40);
-      icon.anchor = new google.maps.Point(20, 20);
+      const size = 40;
+      icon.size = new google.maps.Size(size, size);
+      icon.scaledSize = new google.maps.Size(size, size);
+      icon.anchor = new google.maps.Point(size / 2, size / 2);
     }
     return icon;
   };
@@ -163,10 +162,12 @@ export default function useCacheMarkers(
     // ANIMATION LOGIC
     const animate = (currentSize: number, newSize: number, direction: number) => {
       let size = currentSize;
+      animating = true;
       const expandEgg = (timestamp: number) => {
         size += 1 * direction;
         markersRef.current.map((marker) => {
           var icon = marker.getIcon();
+          icon.size = new google.maps.Size(size, size);
           icon.scaledSize = new google.maps.Size(size, size);
           icon.anchor = new google.maps.Point(size / 2, size / 2);
           marker.setIcon(icon);
@@ -174,10 +175,14 @@ export default function useCacheMarkers(
         if (direction > 0) {
           if (size <= newSize) {
             requestAnimationFrame(expandEgg);
+          } else {
+            animating = false;
           }
         } else {
           if (size >= newSize) {
             requestAnimationFrame(expandEgg);
+          } else {
+            animating = false;
           }
         }
       };
@@ -186,8 +191,9 @@ export default function useCacheMarkers(
     let animating = false;
     const resizeMarker = () => {
       const currentSize = markersRef.current[0].getIcon().scaledSize.width;
+
       if (map.zoom < 13) {
-        const size = 20;
+        const size = 40;
         if (currentSize !== size && !animating) {
           animate(currentSize, size, -1);
         }
@@ -203,9 +209,11 @@ export default function useCacheMarkers(
     if (caches && caches.length && map) {
       if (markersRef.current.length === 0) map.setCenter(mapMeta.map_center);
       const markers: any[] = [];
+
       caches
-        .sort((a, b) => b.priority || 99 - a.priority || 99)
-        .forEach((cache, index) => {
+        .sort((a, b) => b.tokenId.localeCompare(a.tokenId))
+        .map((cache, index) => {
+          console.log(cache.priority);
           const markerExists = markersRef.current.find((marker) => marker.cacheId === cache.cacheId);
           if (markerExists) {
             const icon = getIcon(cache.tokenId, cache.nft);
@@ -230,13 +238,11 @@ export default function useCacheMarkers(
 
       google.maps.event.addListener(map, "zoom_changed", resizeMarker);
 
-      getMarker(`img[src='https://cdn.yaytso.art/magicmap/images/equalize.png#EQUALIZE NFT.NYC w/ BRUX + DOT']`).then(
-        (marker: any) => {
-          if (marker) {
-            marker.classList.add("shift");
-          }
+      getMarker(`img[src='https://cdn.yaytso.art/magicmap/images/2023-nftnyc-equalize.png#EQUALIZE NFT.NYC w/ BRUX + DOT']`).then((marker: any) => {
+        if (marker) {
+          marker.classList.add("shift");
         }
-      );
+      });
     }
 
     return () => {

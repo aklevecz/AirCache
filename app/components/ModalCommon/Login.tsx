@@ -33,7 +33,9 @@ export default function ModalCommonLogin({ toggleModal }: Props) {
         />
       )}
       {auth.fetching ? (
-        <BouncyEgg />
+        <div className="flex w-full justify-center">
+          <BouncyEgg />
+        </div>
       ) : (
         <Button
           className="m-auto w-32 block mt-0 py-2 px-4"

@@ -18,24 +18,14 @@ type CardProps = {
   list?: string[];
 };
 
-const Card: React.FC<CardProps> = ({
-  i = 1,
-  className = "",
-  disabled = false,
-  title,
-  description,
-  image,
-  imageLabel,
-  buttonLabel,
-  list,
-}: any) => {
+const Card: React.FC<CardProps> = ({ i = 1, className = "", disabled = false, title, description, image, imageLabel, buttonLabel, list }: any) => {
   const modal = useModal();
 
   return (
     <>
       <motion.div
         className={clsx(
-          `relative overflow-hidden max-w-sm sm:max-w-[30%] flex-1 flex flex-col justify-center item-center bg-white text-black rounded-3xl`,
+          `relative overflow-hidden max-w-sm sm:max-w-[30%] flex-1 flex flex-col justify-center item-center bg-black text-black rounded-3xl`,
           className
         )}
         variants={fadeInOutY}
@@ -45,26 +35,19 @@ const Card: React.FC<CardProps> = ({
         custom={i}
       >
         <figure className="relative w-full h-[40%] shrink">
-          <img
-            src={image || "/egg.png"}
-            alt={title || "Music Explorers"}
-            className="w-full aspect-square	object-cover max-h-[250px]"
-          />
-          <figcaption
+          <img src={image || "/egg.png"} alt={title || "Music Explorers"} className="w-full aspect-square	object-cover max-h-[250px] opacity-50" />
+          {/* <figcaption
             className={clsx(
               "absolute left-2 bottom-2 rounded-full bg-white py-1 px-2 text-sm uppercase",
               imageLabel.toLowerCase() === "golden egg" && "bg-primary"
             )}
           >
             {imageLabel}
-          </figcaption>
+          </figcaption> */}
         </figure>
 
-        <article
-          className="relative px-3 py-4 grow-1 bg-white"
-          style={{ flexGrow: 1 }}
-        >
-          <div>
+        <article className="relative px-3 py-4 grow-1 bg-white hidden" style={{ flexGrow: 1 }}>
+          {/* <div>
             <h1 className="text-base font-bold">{title}</h1>
             <p className="m-0">{description}</p>
             {list && list.length > 0 && (
@@ -74,27 +57,16 @@ const Card: React.FC<CardProps> = ({
                 ))}
               </ul>
             )}
-          </div>
+          </div> */}
 
-          <Button
-            className="w-full z-[30]"
-            onClick={() => disabled && modal.toggleModal()}
-          >
+          {/* <Button className="w-full z-[30]" onClick={() => disabled && modal.toggleModal()}>
             {disabled ? "Get notified ✉️" : buttonLabel}
-          </Button>
+          </Button> */}
         </article>
-        {disabled && (
-          <div className="absolute left-0 top-0 w-full h-full bg-black opacity-50 z-20" />
-        )}
+        {disabled && <div className="absolute left-0 top-0 w-full h-full bg-black opacity-50 z-20" />}
       </motion.div>
 
-      {disabled && (
-        <NotifyModal
-          open={modal.open}
-          toggleModal={modal.toggleModal}
-          center={true}
-        />
-      )}
+      {disabled && <NotifyModal open={modal.open} toggleModal={modal.toggleModal} center={true} />}
     </>
   );
 };
@@ -118,12 +90,9 @@ export default function Merch() {
             image="/poster-teaser.gif"
             imageLabel="Free"
             buttonLabel="download"
-            list={[
-              "18”x24” museum-quality print",
-              "thick matte paper + water-based inks",
-            ]}
+            list={["18”x24” museum-quality print", "thick matte paper + water-based inks"]}
           />
-          <Card
+          {/* <Card
             key={"card-1"}
             i={1}
             disabled={false}
@@ -132,11 +101,8 @@ export default function Merch() {
             image="https://placehold.co/472x437"
             imageLabel="Golden egg"
             buttonLabel="Claim"
-            list={[
-              "includes bespoke festival poster and tshirt",
-              "plus gifts, NFTs, + more from our partners and promoters",
-            ]}
-          />
+            list={["includes bespoke festival poster and tshirt", "plus gifts, NFTs, + more from our partners and promoters"]}
+          /> */}
           <Card
             key={"card-2"}
             i={2}

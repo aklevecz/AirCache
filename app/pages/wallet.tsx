@@ -43,7 +43,7 @@ export default function Wallet() {
       initial="initial"
       animate="animate"
       exit="exit"
-      className="flex flex-col justify-center items-center h-full pt-14"
+      className="flex flex-col justify-center items-center pt-14"
     >
       <h1 className="text-3xl text-center p-2 mb-2 font-bold font-fatfrank tracking-wider text-white">Collection</h1>
       {auth.user && (
@@ -65,9 +65,7 @@ export default function Wallet() {
       )}
       {!auth.user && (
         <>
-          <div className="text-3xl font-bold w-3/4 my-10 m-auto text-center max-w-xl">
-            Sign in to view your collection
-          </div>
+          <div className="text-3xl font-bold w-3/4 my-10 m-auto text-center max-w-xl">Sign in to view your collection</div>
           <Button
             // onClick={() => router.push("/login")}
             onClick={() => modal.toggleModal()}

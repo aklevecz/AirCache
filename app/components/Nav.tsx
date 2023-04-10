@@ -5,6 +5,7 @@ import storage from "../libs/storage";
 import EgglineIcon from "./Icons/Eggline";
 import Present from "./Icons/Present";
 import MapIcon from "./Icons/Map";
+import QuestionIcon from "./Icons/Question";
 
 // To do: Some way of remembering what page they went to before
 // Or just put the login in the modal instead of having its own designated page?
@@ -43,7 +44,7 @@ export default function Nav() {
           <MapIcon color="black" />
         </div>
       </Link>
-      {/* <Link key={"merch"} href={`/merch`}>
+      <Link key={"merch"} href={`/merch`}>
         <div
           style={{
             width: ICON_DIMS,
@@ -51,9 +52,9 @@ export default function Nav() {
           }}
           className="p-4 bg-primary justify-center flex rounded-full pointer-events-auto cursor-pointer box-border"
         >
-          <Present color="black" />
+          <QuestionIcon />
         </div>
-      </Link> */}
+      </Link>
       <Link key={"wallet"} href={`/wallet`}>
         <div
           style={{

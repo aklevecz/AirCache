@@ -17,6 +17,7 @@ import { getMaticProvider, ipfsToPinata, isIpfs } from "../../libs/utils";
 import { getOwnerNfts } from "../../libs/managerApi";
 import Button from "../Button";
 import BouncyEgg from "../Loading/BouncyEgg";
+import useProgression from "../../hooks/useProgression";
 
 enum TxState {
   Idle,
@@ -49,6 +50,9 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
   const [error, setError] = useState({ error: "", message: "" });
   const [fetchingLocation, setFetchingLocation] = useState(false);
   const [fetchingMeta, setFetchingMeta] = useState(false);
+
+  const { collected } = useProgression();
+  const isCollected = Boolean(collected.find((nft: any) => nft.name === data?.nft?.name));
 
   // @note PROG NFT STUFF
   // this could be a SWR hook
@@ -216,17 +220,10 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
 
             // This could be different more flexible
             if (!isProgHunt) {
-              const res = await claimCache(
-                data.cache.id,
-                data.groupName,
-                NFT!.tokenAddress,
-                data.cache.location,
-                userLocation,
-                {
-                  timestamp,
-                  o,
-                }
-              );
+              const res = await claimCache(data.cache.id, data.groupName, NFT!.tokenAddress, data.cache.location, userLocation, {
+                timestamp,
+                o,
+              });
               setFetchingLocation(false);
               setTxState(TxState.Mining);
               if (res.tx) {
@@ -238,13 +235,7 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
             } else {
               console.log(data);
               // is prog hunt
-              const res = await claimMint(
-                data.progContract,
-                data.progContractTokenType,
-                data.cache.location,
-                userLocation,
-                { timestamp, o }
-              );
+              const res = await claimMint(data.progContract, data.progContractTokenType, data.cache.location, userLocation, { timestamp, o });
               // this is resolving on success right now as well since the changes to minting on the lambda with optismtic feedback
 
               if (res.success) {
@@ -296,8 +287,7 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
           console.log("error");
           setTxState(TxState.Error);
           setError({
-            message:
-              "I don't think your browser supports geolocation or you may have turned it off in the settings on your phone.",
+            message: "I don't think your browser supports geolocation or you may have turned it off in the settings on your phone.",
             error: "NO_GEOLOCATION",
           });
         }
@@ -320,20 +310,20 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
   }
 
   // move this into the Claim component
-  if (hasAlreadyCollected && NFT) {
-    return (
-      <Container open={open} toggleModal={toggleModal}>
-        <div className="text-3xl font-bold text-center pb-5">{NFT.name}</div>
-        <div className="p-5">
-          <img className="m-auto h-full" src={isIpfs(NFT.image) ? ipfsToPinata(NFT.image) : NFT.image} />
-        </div>
-        <div className="text-3xl font-bold text-center pb-5">You already got this NFT!</div>
-        <Button className="m-auto w-28 block mt-5 py-3" onClick={toggleModal}>
-          Ok
-        </Button>
-      </Container>
-    );
-  }
+  // if (hasAlreadyCollected && NFT) {
+  //   return (
+  //     <Container open={open} toggleModal={toggleModal}>
+  //       <div className="text-3xl font-bold text-center pb-5">{NFT.name}</div>
+  //       <div className="p-5">
+  //         <img className="m-auto h-full" src={isIpfs(NFT.image) ? ipfsToPinata(NFT.image) : NFT.image} />
+  //       </div>
+  //       <div className="text-3xl font-bold text-center pb-5">You already got this NFT!</div>
+  //       <Button className="m-auto w-28 block mt-5 py-3" onClick={toggleModal}>
+  //         Ok
+  //       </Button>
+  //     </Container>
+  //   );
+  // }
 
   //   const empty = data && data.NFT && Object.keys(data.NFT).length === 0;
   const empty = !NFT;
@@ -350,6 +340,7 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
       {txState === TxState.Idle || txState === TxState.Fetching ? (
         <Claim
           NFT={NFT}
+          isCollected={isCollected}
           claim={claim}
           fetching={fetchingLocation}
           huntType={data.huntType}

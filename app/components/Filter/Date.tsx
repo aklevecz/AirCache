@@ -30,7 +30,7 @@ export default function FilterDate({ filter, applyFilter, dates }: Props) {
 
   return (
     <>
-      <div className="absolute flex flex-col gap-2 right-2 top-[10px] z-10">
+      <div className="absolute flex flex-col gap-2 right-2 top-[100px] z-10">
         <motion.div layout onClick={toggleOpen} className="bg-white rounded- text-black p-2 cursor-pointer">
           {!open ? (
             <div className="flex gap-2 px-1 items-center">
@@ -46,16 +46,8 @@ export default function FilterDate({ filter, applyFilter, dates }: Props) {
           )}
         </motion.div>
       </div>
-      <motion.div
-        className="absolute z-[19] right-2 top-[60px]"
-        initial={{ opacity: 0 }}
-        exit={{ opacity: 0 }}
-        animate={controls}
-      >
-        <div
-          onClick={() => onApply("")}
-          className={clsx(filter === "" ? `bg-lavender` : "bg-white", "text-black p-2 cursor-pointer")}
-        >
+      <motion.div className="absolute z-[19] right-2 top-[160px]" initial={{ opacity: 0 }} exit={{ opacity: 0 }} animate={controls}>
+        <div onClick={() => onApply("")} className={clsx(filter === "" ? `bg-lavender` : "bg-white", "text-black p-2 cursor-pointer")}>
           4/11-4/15
         </div>
         {dates

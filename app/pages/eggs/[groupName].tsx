@@ -43,15 +43,10 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
   const [map, setMap] = useState<google.maps.Map>();
   const userPositionRef = useRef<any>(null);
   const positionRef = useRef<any>("");
-  const { locationAllowed, fetchingLocation, initiateUserLocation } = useUserLocation(
-    userPositionRef,
-    positionRef,
-    map
-  );
+  const { locationAllowed, fetchingLocation, initiateUserLocation } = useUserLocation(userPositionRef, positionRef, map);
   const { collected, updateCollected } = useProgression();
   // how to update marker after fetching the token
   const { filteredCaches, dates, filter, applyFilter } = useDateFilter(c);
-  console.log(c);
   // for now will pass the filtered caches into this function for comparison, this way the filter logic can always live outside of this scope
   useCacheMarkers(groupName, map, c, huntMeta, nftMetadata, modal, collected, filteredCaches);
 
@@ -96,12 +91,12 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
       {loaded && <FilterDate dates={dates} applyFilter={applyFilter} filter={filter} />}
       <Map initMap={initMap} map={map} user={auth.user} />
 
-      {!locationAllowed &&
+      {true &&
         (fetchingLocation ? (
           <BouncyEgg className="absolute top-[20px] right-[70px]" />
         ) : (
           <Button
-            onClick={initiateUserLocation}
+            onClick={!locationAllowed ? initiateUserLocation : centerMap}
             className="recenter-button flex flex-col items-end"
             variant="maps-locate"
             title="center to location"
@@ -109,11 +104,7 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
             <Locate />
           </Button>
         ))}
-      <div
-        ref={positionRef}
-        style={{ display: "none" }}
-        className="absolute bottom-20 w-full text-center l-50 text-red-500 z-50"
-      ></div>
+      <div ref={positionRef} style={{ display: "none" }} className="absolute bottom-20 w-full text-center l-50 text-red-500 z-50"></div>
 
       {!airCache.loading && (
         <CacheContentModal
