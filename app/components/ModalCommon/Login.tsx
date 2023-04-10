@@ -15,9 +15,7 @@ export default function ModalCommonLogin({ toggleModal }: Props) {
   const onChangeEmail = (e: React.FormEvent<HTMLInputElement>) => {
     setEmail(e.currentTarget.value);
   };
-  const message = auth.isConnect
-    ? "Tap to connect!"
-    : "Sign in with sms in order to claim";
+  const message = auth.isConnect ? "Tap to connect!" : "Give us your number & we'll send you a text :)";
   const buttonText = auth.isConnect ? "Connect" : "Sign in";
 
   return (
@@ -39,7 +37,7 @@ export default function ModalCommonLogin({ toggleModal }: Props) {
       ) : (
         <Button
           className="m-auto w-32 block mt-0 py-2 px-4"
-          disabled={auth.fetching}
+          disabled={auth.fetching || email.length < 9}
           onClick={async () => {
             let destination = "/";
             if (typeof localStorage !== "undefined") {

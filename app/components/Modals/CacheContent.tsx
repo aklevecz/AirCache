@@ -1,11 +1,11 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
-import api, { claimCache, claimVoucher, endpoints } from "../../libs/api";
+import api, { claimCache, claimMint, claimVoucher, endpoints } from "../../libs/api";
 import Spinner from "../Loading/Spinner";
 import Container from "./Container";
 import { useRouter } from "next/router";
 import AirYaytsoInterface from "../../hooks/AirCache.json";
-import MagicMapInterface from "../../hooks/MagicMap.json";
+import EggventsInterface from "../../hooks/Eggvents.json";
 import { provider } from "../../libs/web3Api";
 import NothingHere from "../CacheContent/NothingHere";
 import { NFT } from "../../libs/types";
@@ -16,6 +16,7 @@ import Error from "../CacheContent/Error";
 import { getMaticProvider, ipfsToPinata, isIpfs } from "../../libs/utils";
 import { getOwnerNfts } from "../../libs/managerApi";
 import Button from "../Button";
+import BouncyEgg from "../Loading/BouncyEgg";
 
 enum TxState {
   Idle,
@@ -36,7 +37,7 @@ type Props = {
   };
   auth: any;
   data: any;
-  updateCollected?: () => void;
+  updateCollected?: any;
 };
 
 let rendered = false;
@@ -87,7 +88,7 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
   const cacheMapSlot = 1;
   const fetchProgNFT = async () => {
     setFetchingMeta(true);
-    const contract = new ethers.Contract(data.progContract, MagicMapInterface.abi, provider);
+    const contract = new ethers.Contract(data.progContract, EggventsInterface.abi, provider);
     console.log(data);
     const tokenURI = await contract.tokenURI(data.progContractTokenType || 1);
     // @todo replace
@@ -181,6 +182,8 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
     };
   }, [airCache.contract, airCache.signer, auth.user, open && NFT]);
 
+  // hook to listen for the mint claim?
+
   const claim = () => {
     setFetchingLocation(true);
     if (!auth.user) {
@@ -213,10 +216,17 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
 
             // This could be different more flexible
             if (!isProgHunt) {
-              const res = await claimCache(data.cache.id, data.groupName, NFT!.tokenAddress, data.cache.location, userLocation, {
-                timestamp,
-                o,
-              });
+              const res = await claimCache(
+                data.cache.id,
+                data.groupName,
+                NFT!.tokenAddress,
+                data.cache.location,
+                userLocation,
+                {
+                  timestamp,
+                  o,
+                }
+              );
               setFetchingLocation(false);
               setTxState(TxState.Mining);
               if (res.tx) {
@@ -226,9 +236,22 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
                 setError({ message: res.message, error: res.error });
               }
             } else {
-              console.log(data.progContract);
+              console.log(data);
               // is prog hunt
-              const res = await claimVoucher(data.progContract, data.progContractTokenType, data.cache.location, userLocation, { timestamp, o });
+              const res = await claimMint(
+                data.progContract,
+                data.progContractTokenType,
+                data.cache.location,
+                userLocation,
+                { timestamp, o }
+              );
+              // this is resolving on success right now as well since the changes to minting on the lambda with optismtic feedback
+
+              if (res.success) {
+                setTxState(TxState.Complete);
+                updateCollected && updateCollected(true, data.nft);
+                return;
+              }
               if (!res.signature) {
                 setTxState(TxState.Error);
                 setError({ message: res.message, error: res.error });
@@ -236,7 +259,7 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
               }
               const { nftData, signature } = res;
               const provider = getMaticProvider();
-              const contract = new ethers.Contract(data.progContract, MagicMapInterface.abi, provider);
+              const contract = new ethers.Contract(data.progContract, EggventsInterface.abi, provider);
               const signer = await provider.getSigner();
               const magicMap = contract.connect(signer);
               try {
@@ -273,7 +296,8 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
           console.log("error");
           setTxState(TxState.Error);
           setError({
-            message: "I don't think your browser supports geolocation or you may have turned it off in the settings on your phone.",
+            message:
+              "I don't think your browser supports geolocation or you may have turned it off in the settings on your phone.",
             error: "NO_GEOLOCATION",
           });
         }
@@ -288,8 +312,8 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
   if (loading) {
     return (
       <Container open={open} toggleModal={toggleModal}>
-        <div className="flex justify-center items-center" style={{ height: 200 }}>
-          <Spinner />
+        <div className="flex w-full justify-center h-[80vh] items-center">
+          <BouncyEgg size={100} />
         </div>
       </Container>
     );
@@ -324,7 +348,13 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
   return (
     <Container open={open} toggleModal={toggleModal}>
       {txState === TxState.Idle || txState === TxState.Fetching ? (
-        <Claim NFT={NFT} claim={claim} fetching={fetchingLocation} huntType={data.huntType} groupName={router.query.groupName as string} />
+        <Claim
+          NFT={NFT}
+          claim={claim}
+          fetching={fetchingLocation}
+          huntType={data.huntType}
+          groupName={router.query.groupName as string}
+        />
       ) : (
         <></>
       )}

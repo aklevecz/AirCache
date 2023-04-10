@@ -40,8 +40,6 @@ export default function Claim({ groupName, NFT, claim, fetching, huntType }: Pro
         <div className="text-md capitalize">{progHuntInfo.company}</div>
         <div className="text-md mt-1">{progHuntInfo.date}</div>
       </div>
-      <div className="flex items-center justify-start mb-0 gap-4 py-1"></div>
-
       <div className="text-lg mt-0">{progHuntInfo.location_name}</div>
       <div className="flex gap-4">
         {isProgHunt && progHuntInfo.event_url && (
@@ -58,7 +56,10 @@ export default function Claim({ groupName, NFT, claim, fetching, huntType }: Pro
         </div>
       </div>
       <div className="p-0 flex justify-center">
-        <img className="m-auto h-full max-w-[300px]" src={isIpfs(NFT.image) ? ipfsToPinata(NFT.image) : NFT.image} />
+        <img
+          className="m-auto h-full max-w-[300px] max-h-[250px]"
+          src={isIpfs(NFT.image) ? ipfsToPinata(NFT.image) : NFT.image}
+        />
       </div>
       <div className="flex justify-center items-center">
         {/* {txState !== TxState.Fetching ? ( */}

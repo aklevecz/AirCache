@@ -1,8 +1,5 @@
 module.exports = {
-  content: [
-    "./pages/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
   theme: {
     fontFamily: {
       fatfrank: ["fatfrank", "sans-serif"],
@@ -27,7 +24,8 @@ module.exports = {
     extend: {
       colors: {
         polygon: "#8247E5",
-        primary: "#F0C000",
+        primary: "#FFD432",
+        lavender: "#f97dff",
       },
     },
   },

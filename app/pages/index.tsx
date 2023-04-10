@@ -47,8 +47,7 @@ const Home = ({ groups, isFirstMount }: Props) => {
   const [email, setEmail] = useState("");
   const [fetching, setFetching] = useState(false);
   const [isSignedUp, setIsSignedUp] = useState(false);
-  const onEmailChange = (e: FormEvent<HTMLInputElement>) =>
-    setEmail(e.currentTarget.value);
+  const onEmailChange = (e: FormEvent<HTMLInputElement>) => setEmail(e.currentTarget.value);
   // const onSubmitEmail = async () => {
   //   setFetching(true);
   //   const res = await onEmailSignup(email, "yaytso");
@@ -102,7 +101,7 @@ const Home = ({ groups, isFirstMount }: Props) => {
                   setFetching(true);
                   router.push("/eggs/magicmap");
                 }}
-                className="block m-auto z-20 relative"
+                className="block font-fatfrank text-2xl m-auto z-20 relative"
               >
                 Start Hunting
               </Button>
@@ -110,14 +109,8 @@ const Home = ({ groups, isFirstMount }: Props) => {
           </div>
         )}
         {isSignedUp && (
-          <div
-            id="section-2"
-            className="mt-10 p-5"
-            style={{ border: "2px solid white" }}
-          >
-            <div className="text-5xl text-center font-fatfrank">
-              You're all set!
-            </div>
+          <div id="section-2" className="mt-10 p-5" style={{ border: "2px solid white" }}>
+            <div className="text-5xl text-center font-fatfrank">You're all set!</div>
           </div>
         )}
       </motion.div>

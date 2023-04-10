@@ -1206,46 +1206,6 @@
         "FakeNFT"
       ]
     },
-    "/Users/arielklevecz/air-cache/contracts/MagicMap.sol": {
-      "lastModificationDate": 1680247530955,
-      "contentHash": "51dcb3e52a1fc2484ba027f16a3b2dc9",
-      "sourceName": "contracts/MagicMap.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "erc721a/contracts/ERC721A.sol",
-        "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol",
-        "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
-        "@openzeppelin/contracts/access/Ownable.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "Eggvents"
-      ]
-    },
     "/Users/arielklevecz/air-cache/node_modules/erc721a/contracts/ERC721A.sol": {
       "lastModificationDate": 1680040128000,
       "contentHash": "227e9db819fd61602f833edafcda7d4a",
@@ -1354,6 +1314,46 @@
       ],
       "artifacts": [
         "HiFiHoodies"
+      ]
+    },
+    "/Users/arielklevecz/air-cache/contracts/Eggvents.sol": {
+      "lastModificationDate": 1681022986161,
+      "contentHash": "d0371c99f72ccf054cc8d5e38225eb7a",
+      "sourceName": "contracts/Eggvents.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "erc721a/contracts/ERC721A.sol",
+        "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol",
+        "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Eggvents"
       ]
     }
   }

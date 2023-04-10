@@ -43,6 +43,7 @@ describe("Eggvents", function () {
     const tokenType = "dnd";
     const nftData = {
       tokenType,
+      receiver: this.owner.address,
     };
 
     const signature = await this.owner._signTypedData(
@@ -53,7 +54,10 @@ describe("Eggvents", function () {
         verifyingContract: this.magicMap.address,
       },
       {
-        Voucher: [{ name: "tokenType", type: "string" }],
+        Voucher: [
+          { name: "tokenType", type: "string" },
+          { name: "receiver", type: "address" },
+        ],
       },
       nftData
     );
@@ -70,6 +74,7 @@ describe("Eggvents", function () {
     var tokenType = "catalog";
     var nftData = {
       tokenType,
+      receiver: this.owner.address,
     };
 
     var signature = await this.owner._signTypedData(
@@ -80,7 +85,10 @@ describe("Eggvents", function () {
         verifyingContract: this.magicMap.address,
       },
       {
-        Voucher: [{ name: "tokenType", type: "string" }],
+        Voucher: [
+          { name: "tokenType", type: "string" },
+          { name: "receiver", type: "address" },
+        ],
       },
       nftData
     );
@@ -91,6 +99,7 @@ describe("Eggvents", function () {
     var tokenType = "dnd";
     var nftData = {
       tokenType,
+      receiver: this.owner.address,
     };
 
     var signature = await this.owner._signTypedData(
@@ -101,7 +110,10 @@ describe("Eggvents", function () {
         verifyingContract: this.magicMap.address,
       },
       {
-        Voucher: [{ name: "tokenType", type: "string" }],
+        Voucher: [
+          { name: "tokenType", type: "string" },
+          { name: "receiver", type: "address" },
+        ],
       },
       nftData
     );
@@ -119,6 +131,7 @@ describe("Eggvents", function () {
     const tokenType = "dnd";
     const nftData = {
       tokenType,
+      receiver: this.owner.address,
     };
 
     const signature = await this.owner._signTypedData(
@@ -129,7 +142,10 @@ describe("Eggvents", function () {
         verifyingContract: this.magicMap.address,
       },
       {
-        Voucher: [{ name: "tokenType", type: "string" }],
+        Voucher: [
+          { name: "tokenType", type: "string" },
+          { name: "receiver", type: "address" },
+        ],
       },
       nftData
     );

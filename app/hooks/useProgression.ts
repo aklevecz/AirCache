@@ -12,37 +12,45 @@ export default function useProgression() {
   const [groupName, setGroupName] = useState("");
   const { huntMeta } = useHuntMeta(groupName);
 
-  const [collected, setCollected] = useState([]);
+  const [collected, setCollected] = useState<any>([]);
 
   // This could call the contracts method to grab the token types of the user
   // then you can just use that to make the metadata url
   // e.g. ['dnd'] => cdn.yaytso.art/magicmap/metadata/dnd.json
   // uri is predictable
-  const updateCollected = async () => {
-    const { contract } = huntMeta;
-    getOwnerNfts(address, contract).then(async (nfts) => {
-      const metadatas = [];
-      for (const nft of nfts!) {
-        const metadata = await fetch(`${nft.tokenUri.gateway}`).then((r) => r.json());
-        metadatas.push(metadata);
-      }
+  const updateCollected = async (optimistic = false, givenNFT?: any) => {
+    if (!optimistic) {
+      const { contract } = huntMeta;
+      getOwnerNfts(address, contract).then(async (nfts) => {
+        const metadatas = [];
+        console.log(nfts);
+        if (nfts) {
+          for (const nft of nfts) {
+            const metadata = await fetch(`${nft.tokenUri.gateway}`).then((r) => r.json());
+            metadatas.push(metadata);
+          }
 
-      // const metadatas = nfts?.map((nft) => {
-      //   const metadata = nft.metadata;
-      //   return metadata;
-      // });
-      const deduped = metadatas?.reduce((pv, cv) => {
-        const isDupe = pv.find((o: any) => o.image === cv.image);
-        // o.name === cv.name && o.tokenAddress === cv.tokenAddress);
-        if (!isDupe) {
-          pv.push(cv);
+          // const metadatas = nfts?.map((nft) => {
+          //   const metadata = nft.metadata;
+          //   return metadata;
+          // });
+          const deduped = metadatas?.reduce((pv, cv) => {
+            const isDupe = pv.find((o: any) => o.image === cv.image);
+            // o.name === cv.name && o.tokenAddress === cv.tokenAddress);
+            if (!isDupe) {
+              pv.push(cv);
+            }
+            return pv;
+          }, []);
+          setCollected(deduped);
+          //   setMetadatas(metadatas as any);
+          //   setFetching(false);
         }
-        return pv;
-      }, []);
-      setCollected(deduped);
-      //   setMetadatas(metadatas as any);
-      //   setFetching(false);
-    });
+      });
+    } else {
+      console.log(givenNFT);
+      setCollected([...collected, givenNFT]);
+    }
   };
 
   useEffect(() => {

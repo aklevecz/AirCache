@@ -15,6 +15,7 @@ export const endpoints = {
   getCachesByGroup: "/api/get-caches-by-group",
   checkClaim: "/api/check-claim",
   claimVoucher: "/api/claim-voucher",
+  claimMint: "/api/claim-mint",
   claimSacret: "/api/claim-sacret",
   emailSignup: "/api/on-email-signup",
   airCash: "/api/air-cash",
@@ -76,7 +77,13 @@ export const claimCache = async (
   }
 };
 
-export const claimVoucher = async (tokenAddress: string, tokenType: string, cacheLocation: Latlng, userLocation: Latlng, navigator: any) => {
+export const claimVoucher = async (
+  tokenAddress: string,
+  tokenType: string,
+  cacheLocation: Latlng,
+  userLocation: Latlng,
+  navigator: any
+) => {
   console.log(tokenAddress, tokenType);
   try {
     const response = await api
@@ -100,7 +107,44 @@ export const claimVoucher = async (tokenAddress: string, tokenType: string, cach
   }
 };
 
-export const onCreateCache = (groupName: string, cacheId: number, lat: number, lng: number, address: string, note: string) => {
+export const claimMint = async (
+  tokenAddress: string,
+  tokenType: string,
+  cacheLocation: Latlng,
+  userLocation: Latlng,
+  navigator: any
+) => {
+  console.log(tokenAddress, tokenType);
+  try {
+    const response = await api
+      .post(endpoints.claimMint, {
+        tokenAddress,
+        tokenType,
+        cacheLocation,
+        userLocation,
+        navigator,
+      })
+      .catch((error) => {
+        if (error.response) {
+          const err = error.response.data;
+          return { data: { tx: null, message: err.message, error: err.error } };
+        }
+      });
+    return response && response.data;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};
+
+export const onCreateCache = (
+  groupName: string,
+  cacheId: number,
+  lat: number,
+  lng: number,
+  address: string,
+  note: string
+) => {
   const res = api.post(endpoints.onCreateCache, {
     groupName,
     cacheId,

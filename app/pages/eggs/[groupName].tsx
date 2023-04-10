@@ -35,12 +35,7 @@ type Props = {
   huntMeta: any;
 };
 
-export default function Group({
-  caches: c,
-  groupName,
-  nftMetadata,
-  huntMeta,
-}: Props) {
+export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: Props) {
   const modal = useModal();
   const ctaModal = useModal();
   const airCache = useAirCache(null);
@@ -48,23 +43,17 @@ export default function Group({
   const [map, setMap] = useState<google.maps.Map>();
   const userPositionRef = useRef<any>(null);
   const positionRef = useRef<any>("");
-  const { locationAllowed, fetchingLocation, initiateUserLocation } =
-    useUserLocation(userPositionRef, positionRef, map);
+  const { locationAllowed, fetchingLocation, initiateUserLocation } = useUserLocation(
+    userPositionRef,
+    positionRef,
+    map
+  );
   const { collected, updateCollected } = useProgression();
   // how to update marker after fetching the token
   const { filteredCaches, dates, filter, applyFilter } = useDateFilter(c);
-
+  console.log(c);
   // for now will pass the filtered caches into this function for comparison, this way the filter logic can always live outside of this scope
-  useCacheMarkers(
-    groupName,
-    map,
-    c,
-    huntMeta,
-    nftMetadata,
-    modal,
-    collected,
-    filteredCaches
-  );
+  useCacheMarkers(groupName, map, c, huntMeta, nftMetadata, modal, collected, filteredCaches);
 
   const { user } = auth;
 
@@ -95,8 +84,8 @@ export default function Group({
   return (
     <>
       <HeadHunt mapMeta={huntMeta} />
-      <div className="absolute l-2 t-2 z-10">
-        {collected.map((nft: NFT, i) => {
+      <div className="absolute l-2 top-10 z-10">
+        {collected.map((nft: NFT, i: number) => {
           return (
             <div key={nft.name + nft.tokenId + i} className="w-12 h-12">
               <img src={nft.image} />
@@ -104,9 +93,7 @@ export default function Group({
           );
         })}
       </div>
-      {loaded && (
-        <FilterDate dates={dates} applyFilter={applyFilter} filter={filter} />
-      )}
+      {loaded && <FilterDate dates={dates} applyFilter={applyFilter} filter={filter} />}
       <Map initMap={initMap} map={map} user={auth.user} />
 
       {!locationAllowed &&
@@ -138,24 +125,13 @@ export default function Group({
           updateCollected={updateCollected}
         />
       )}
-      <WordsUI
-        ctaModal={ctaModal}
-        isWordHunt={isWordHunt(groupName)}
-        letters={letters}
-        word={word}
-      />
+      <WordsUI ctaModal={ctaModal} isWordHunt={isWordHunt(groupName)} letters={letters} word={word} />
     </>
   );
 }
 
 export async function getStaticPaths() {
-  return {
-    paths: ["/eggs/fools"],
-    fallback: true,
-  };
-  const allCachesByGroup = await db
-    .scan({ TableName: cacheByGroupTableName })
-    .promise();
+  const allCachesByGroup = await db.scan({ TableName: cacheByGroupTableName }).promise();
 
   const caches = allCachesByGroup.Items!.map((cache) => {
     return cache.groupName;

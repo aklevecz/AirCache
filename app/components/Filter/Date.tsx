@@ -1,6 +1,8 @@
 import clsx from "clsx";
 import { motion, useAnimationControls } from "framer-motion";
 import { useEffect, useState } from "react";
+import { colors } from "../../libs/constants";
+import DateIcon from "../Icons/Date";
 
 type Props = {
   filter: string;
@@ -28,13 +30,32 @@ export default function FilterDate({ filter, applyFilter, dates }: Props) {
 
   return (
     <>
-      <div className="absolute flex flex-col gap-2 right-2 top-32 z-10 w-[95px]">
-        <div onClick={toggleOpen} className="bg-white text-black p-2 cursor-pointer ">
-          {!open ? filter || "All" : "Pick one!"}
-        </div>
+      <div className="absolute flex flex-col gap-2 right-2 top-[10px] z-10">
+        <motion.div layout onClick={toggleOpen} className="bg-white rounded- text-black p-2 cursor-pointer">
+          {!open ? (
+            <div className="flex gap-2 px-1 items-center">
+              <div style={{ color: colors.lavender }} className={`font-bold text-[${colors.red}]`}>
+                {filter || "All"}
+              </div>{" "}
+              <div className="h-6">
+                <DateIcon />
+              </div>
+            </div>
+          ) : (
+            "Pick one!"
+          )}
+        </motion.div>
       </div>
-      <motion.div className="absolute z-10 right-2 top-[180px]" initial={{ opacity: 0 }} exit={{ opacity: 0 }} animate={controls}>
-        <div onClick={() => onApply("")} className={clsx(filter === "" ? "bg-red-500" : "bg-white", "text-black p-2 cursor-pointer")}>
+      <motion.div
+        className="absolute z-[999999999] right-2 top-[10px]"
+        initial={{ opacity: 0 }}
+        exit={{ opacity: 0 }}
+        animate={controls}
+      >
+        <div
+          onClick={() => onApply("")}
+          className={clsx(filter === "" ? `bg-lavender` : "bg-white", "text-black p-2 cursor-pointer")}
+        >
           All
         </div>
         {dates
@@ -42,7 +63,7 @@ export default function FilterDate({ filter, applyFilter, dates }: Props) {
           .map((date) => (
             <div
               onClick={() => onApply(date)}
-              className={clsx(filter === date ? "bg-red-500" : "bg-white", "text-black p-2 cursor-pointer")}
+              className={clsx(filter === date ? `bg-lavender` : "bg-white", "text-black p-2 cursor-pointer")}
               key={date}
             >
               {date}

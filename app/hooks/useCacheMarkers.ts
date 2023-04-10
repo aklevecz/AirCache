@@ -203,27 +203,29 @@ export default function useCacheMarkers(
     if (caches && caches.length && map) {
       if (markersRef.current.length === 0) map.setCenter(mapMeta.map_center);
       const markers: any[] = [];
-      caches.forEach((cache, index) => {
-        const markerExists = markersRef.current.find((marker) => marker.cacheId === cache.cacheId);
-        if (markerExists) {
-          const icon = getIcon(cache.tokenId, cache.nft);
-          markerExists.setIcon(icon);
-          markers.push(markerExists);
-          return;
-        }
-        const marker = createCacheMarker(
-          parseFloat(cache.lat),
-          parseFloat(cache.lng),
-          cache.cacheId,
-          cache.address ?? AIRCACHE_ADDRESS,
-          cache.tokenId,
-          cache.tokenAddress,
-          cache.nft,
-          // @todo CHANGE -- this is progContractTokenType
-          cache.tokenId
-        );
-        markers.push(marker);
-      });
+      caches
+        .sort((a, b) => b.priority || 99 - a.priority || 99)
+        .forEach((cache, index) => {
+          const markerExists = markersRef.current.find((marker) => marker.cacheId === cache.cacheId);
+          if (markerExists) {
+            const icon = getIcon(cache.tokenId, cache.nft);
+            markerExists.setIcon(icon);
+            markers.push(markerExists);
+            return;
+          }
+          const marker = createCacheMarker(
+            parseFloat(cache.lat),
+            parseFloat(cache.lng),
+            cache.cacheId,
+            cache.address ?? AIRCACHE_ADDRESS,
+            cache.tokenId,
+            cache.tokenAddress,
+            cache.nft,
+            // @todo CHANGE -- this is progContractTokenType
+            cache.tokenId
+          );
+          markers.push(marker);
+        });
       markersRef.current = markers;
 
       google.maps.event.addListener(map, "zoom_changed", resizeMarker);

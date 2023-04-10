@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     //   )) as JwtPayload;
     const { owner, tokenAddress } = req.query;
     const tokenContractQuery = tokenAddress ? "&contractAddresses[]=" + tokenAddress : "";
-    const network = prod ? "mainnet" : "mumbai";
+    const network = prod ? "mumbai" : "mumbai";
     const maticurl = `https://polygon-${network}.g.alchemyapi.io/v2/${ALCHEMY_KEY}/getNFTs/`;
     // const mumurl =
     //   "https://polygon-mumbai.g.alchemy.com/v2/" +

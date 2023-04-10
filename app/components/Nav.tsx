@@ -60,7 +60,7 @@ export default function Nav() {
             width: ICON_DIMS + 2,
             height: ICON_DIMS + 2,
           }}
-          className="p-4 bg-primary justify-center flex rounded-full pointer-events-auto cursor-pointer box-border"
+          className="p-4 bg-[#FFD432] justify-center flex rounded-full pointer-events-auto cursor-pointer box-border"
         >
           <EgglineIcon color="black" />
         </div>

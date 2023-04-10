@@ -21,6 +21,7 @@ const endpoints = {
 // });
 
 export const getOwnerNfts = async (owner: string, tokenAddress?: string) => {
+  console.log(owner, tokenAddress);
   try {
     const response = await api.get(endpoints.getNfts, { params: { owner, tokenAddress } }).catch((error) => {
       if (error.response) {
