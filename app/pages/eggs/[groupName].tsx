@@ -93,7 +93,7 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
 
       {true &&
         (fetchingLocation ? (
-          <BouncyEgg className="absolute top-[20px] right-[70px]" />
+          <BouncyEgg className="absolute top-[10px] right-[70px]" />
         ) : (
           <Button
             onClick={!locationAllowed ? initiateUserLocation : centerMap}

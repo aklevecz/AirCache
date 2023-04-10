@@ -67,7 +67,12 @@ export default function Claim({ groupName, NFT, claim, fetching, huntType, isCol
       <div className="flex justify-center items-center">
         {/* {txState !== TxState.Fetching ? ( */}
         {!fetching ? (
-          <Button disabled={isCollected || fetching} onClick={claim} className="self-end">
+          <Button
+            disabled={true}
+            // disabled={isCollected || fetching}
+            onClick={claim}
+            className="self-end"
+          >
             {isCollected ? "You have this egg :)" : "Claim egg"}
           </Button>
         ) : (
