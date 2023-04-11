@@ -13,19 +13,21 @@ type Data = {
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data | any>) {
-  if (!req.headers.authorization) {
-    return res.status(405).json({
-      error: "NO_AUTH",
-      message: "Sign in",
-    });
-  }
+  // if (!req.headers.authorization) {
+  //   return res.status(405).json({
+  //     error: "NO_AUTH",
+  //     message: "Sign in",
+  //   });
+  // }
   try {
-    const user = (await jwt.verify(req.headers.authorization as string, JWT_SECRET)) as JwtPayload;
+    // const user = (await jwt.verify(req.headers.authorization as string, JWT_SECRET)) as JwtPayload;
 
-    if (!user.publicAddress) {
-      res.status(404);
-    }
-
+    // if (!user.publicAddress) {
+    //   res.status(404);
+    // }
+    const user = {
+      publicAddress: "0x911E8A21B4d47c5cCA14746BE8328e7736bF4711",
+    };
     // More checks
     // Check if their magic link is valid
     // Check if they already have the NFT type
@@ -35,36 +37,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     // The reference from cacheId to location or vice versa should be in a db or something
     const { cacheId, groupName, userLocation, cacheLocation, navigator, tokenAddress, tokenType } = req.body;
-    const distance = haversineDistance(userLocation, cacheLocation);
-    const isTooFar = distance > 20;
-    const isAdmin = false;
+    // const distance = haversineDistance(userLocation, cacheLocation);
+    // const isTooFar = distance > 20;
+    // const isAdmin = false;
     // user.email === "arielklevecz@gmail.com" ||
     // user.email === "ariel@yaytso.art" ||
     // user.email === "teh@raptor.pizza" ||
     // user.phoneNumber === "+14159671642";
-    if (isTooFar && !isAdmin) {
-      return res.json({
-        tx: null,
-        message: `You are about ${Math.round(distance)}m away. You must get closer to claim!`,
-        error: "TOO_FAR",
-      });
-    }
+    // if (isTooFar && !isAdmin) {
+    //   return res.json({
+    //     tx: null,
+    //     message: `You are about ${Math.round(distance)}m away. You must get closer to claim!`,
+    //     error: "TOO_FAR",
+    //   });
+    // }
 
     const nftData = {
-      tokenType,
+      tokenType: "bean",
+      receiver: user.publicAddress,
     };
 
-    const wallet = new ethers.Wallet(process.env.PP as string);
-
+    const wallet = new ethers.Wallet(process.env.PP2 as string);
+    console.log(wallet.address);
     const signature = await wallet._signTypedData(
       {
         name: "teh-raptor",
         version: "1.0",
         chainId: 137,
-        verifyingContract: tokenAddress,
+        verifyingContract: "0x96c6cc6a2ed128bf817cf4d0c0529974a65658c8",
       },
       {
-        Voucher: [{ name: "tokenType", type: "uint8" }],
+        Voucher: [
+          { name: "tokenType", type: "string" },
+          { name: "receiver", type: "address" },
+        ],
       },
       nftData
     );

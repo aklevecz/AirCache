@@ -49,14 +49,14 @@ export default function Wallet() {
       {auth.user && (
         <>
           <div className="font-bold text-center mb-5 break-all px-14">{auth.user.publicAddress}</div>
-          {!wallet.fetching && wallet.nfts.length === 0 && wallet.metadatas.length === 0 && (
+          {!wallet.fetching && wallet.nfts?.length === 0 && wallet.metadatas?.length === 0 && (
             <div className="text-3xl font-bold w-3/4 text-center">You haven't found any eggs!</div>
           )}
           <Button className="w-32 m-auto block" onClick={onLogout}>
             Logout
           </Button>
           <div className="flex flex-wrap items-center justify-center pb-10">
-            {wallet.metadatas.map((nft: any, i) => (
+            {wallet.metadatas?.map((nft: any, i) => (
               <NFT nft={nft} key={nft.name + i} />
             ))}
             {wallet.fetching && <BouncyEgg />}

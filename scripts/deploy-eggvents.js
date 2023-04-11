@@ -4,7 +4,7 @@ const baseURI = "https://cdn.yaytso.art/magicmap/metadata/";
 const oracle = "0xa928293bb65eFB978559058e3C39Ef8d730c6f07";
 async function main() {
   const Eggvents = await hre.ethers.getContractFactory("Eggvents");
-  const eggvents = await Eggvents.deploy(baseURI, oracle);
+  const eggvents = await Eggvents.deploy(baseURI);
   await eggvents.deployed();
 
   console.log("eggvents deployed to:", eggvents.address);
@@ -25,6 +25,9 @@ main().catch((error) => {
 
 // 4/11
 // 0x067Cc02D3C49f844009e15Bd0DDeb69dbccbC4Fc
+
+// 4/12 -- owner bug
+//0x96C6cC6a2ED128bf817cf4d0c0529974A65658c8
 
 // MUMBAI
 //0xd2867FcbA3A26FadE8AD958F07412828DDeC58B7

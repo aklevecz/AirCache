@@ -30,7 +30,7 @@ export default function FilterDate({ filter, applyFilter, dates }: Props) {
 
   return (
     <>
-      <div className="absolute flex flex-col gap-2 right-2 top-[120px] z-10" style={{ maxWidth: 150 }}>
+      <div className="absolute flex flex-col gap-2 right-2 top-[120px] z-10" style={{ width: !filter || open ? 160 : 100 }}>
         <motion.div layout onClick={toggleOpen} className="bg-white rounded- text-black p-2 cursor-pointer">
           {!open ? (
             <div className="flex gap-2 px-1 items-center justify-between">

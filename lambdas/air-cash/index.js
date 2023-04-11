@@ -1,10 +1,10 @@
 const { ethers } = require("ethers");
 const fetch = require("node-fetch");
-const ContractInterface = require("./Eggvents.json");
+const ContractInterface = require("./Eggvents-simple.json");
 
 // 4/8
-const maticAddress = "0x067Cc02D3C49f844009e15Bd0DDeb69dbccbC4Fc";
-
+const maticAddress = "0x5D87ABb8A4db5F9C706d68c67DE02BCC461FCf09";
+// const maticAddress = "0x067Cc02D3C49f844009e15Bd0DDeb69dbccbC4Fc";
 // MUMBAI
 const mumbaiAddress = "0x044f3e29ECB231169a1cdfaD1bAaA847A69482D0";
 
@@ -25,7 +25,6 @@ exports.handler = async (event) => {
     var tokenType = messageAttributes.tokenType?.stringValue;
 
     const masterWallet = new ethers.Wallet(PP2, defaultProvider);
-    const value = ethers.utils.parseEther("1");
     const fees = await fetch(`https://polygon-${LIVE ? "mainnet" : "mumbai"}.g.alchemyapi.io/v2/` + ALCHEMY_KEY, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -40,30 +39,31 @@ exports.handler = async (event) => {
     const contract = new ethers.Contract(contractAddress, ContractInterface.abi, masterWallet.provider);
     const signer = contract.connect(masterWallet);
 
-    const nftData = {
-      tokenType,
-      receiver: winner,
-    };
+    // const nftData = {
+    //   tokenType,
+    //   receiver: winner,
+    // };
 
-    const signature = await masterWallet._signTypedData(
-      {
-        name: "teh-raptor",
-        version: "1.0",
-        chainId: chainId,
-        verifyingContract: contractAddress,
-      },
-      {
-        Voucher: [
-          { name: "tokenType", type: "string" },
-          { name: "receiver", type: "address" },
-        ],
-      },
-      nftData
-    );
-    console.log(signature, nftData, chainId, masterWallet.address);
-    var tx = await signer.discover(nftData, signature, {
+    // const signature = await masterWallet._signTypedData(
+    //   {
+    //     name: "teh-raptor",
+    //     version: "1.0",
+    //     chainId: chainId,
+    //     verifyingContract: contractAddress,
+    //   },
+    //   {
+    //     Voucher: [
+    //       { name: "tokenType", type: "string" },
+    //       { name: "receiver", type: "address" },
+    //     ],
+    //   },
+    //   nftData
+    // );
+    // console.log(signature, contractAddress, nftData, chainId, masterWallet.address);
+    // var tx = await signer.discover(nftData, signature, {
+    var tx = await signer.discover(winner, tokenType, {
       gasPrice: fees.result,
-      gasLimit: 40000,
+      gasLimit: 200000,
     });
     // END MINT TOKEN
 

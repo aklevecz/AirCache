@@ -40,7 +40,7 @@ describe("Eggvents", function () {
   });
 
   it("can lazy mint & has expected URI", async function () {
-    const tokenType = "dnd";
+    const tokenType = "2023-nftnyc-theparkbean-central";
     const nftData = {
       tokenType,
       receiver: this.owner.address,
@@ -61,6 +61,12 @@ describe("Eggvents", function () {
       },
       nftData
     );
+    console.log({
+      name: "teh-raptor",
+      version: "1.0",
+      chainId: await this.owner.getChainId(),
+      verifyingContract: this.magicMap.address,
+    });
     await expect(this.magicMap.discover(nftData, signature))
       .to.emit(this.magicMap, "Transfer")
       .withArgs(ethers.constants.AddressZero, this.owner.address, 1);

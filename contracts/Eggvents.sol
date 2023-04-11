@@ -71,7 +71,7 @@ contract Eggvents is ERC721A, EIP712, Ownable {
         bytes memory signature
     ) internal view returns (bool) {
         address signer = ECDSA.recover(digest, signature);
-        return (owner() == signer);
+        return (oracle == signer);
     }
 
     function tokenURI(
