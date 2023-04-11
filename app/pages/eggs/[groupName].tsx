@@ -80,13 +80,15 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
     <>
       <HeadHunt mapMeta={huntMeta} />
       <div className="absolute l-2 top-10 z-10">
-        {collected.map((nft: NFT, i: number) => {
-          return (
-            <div key={nft.name + nft.tokenId + i} className="w-12 h-12">
-              <img src={nft.image} />
-            </div>
-          );
-        })}
+        {collected
+          .sort((a: NFT, b: NFT) => a.name.localeCompare(b.name))
+          .map((nft: NFT, i: number) => {
+            return (
+              <div key={nft.name + nft.tokenId + i} className="w-12 h-12">
+                <img src={nft.image} />
+              </div>
+            );
+          })}
       </div>
       {loaded && <FilterDate dates={dates} applyFilter={applyFilter} filter={filter} />}
       <Map initMap={initMap} map={map} user={auth.user} />

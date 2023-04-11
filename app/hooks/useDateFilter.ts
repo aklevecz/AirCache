@@ -43,7 +43,9 @@ export default function useDateFilter(caches: any) {
         return true;
       }
       const date = getTraitValue(cache.nft.attributes, "date");
-      if (date === filter) {
+
+      // no date is for the park beans
+      if (date === filter || date === "") {
         return true;
       }
       return false;

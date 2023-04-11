@@ -22,6 +22,7 @@ const sqsUrl = "https://sqs.us-west-1.amazonaws.com/669844428319/air-cash.fifo";
 var sqs = new AWS.SQS({ apiVersion: "2012-11-05" });
 var db = new AWS.DynamoDB.DocumentClient({ apiVersion: "2012-08-10" });
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data | any>) {
+  const { device, loc } = req.query;
   if (!req.headers.authorization) {
     return res.status(405).json({
       error: "NO_AUTH",
@@ -42,6 +43,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const { cacheId, groupName, userLocation, cacheLocation, navigator, tokenAddress, tokenType } = req.body;
 
     // return console.log(tokenAddress, "token address", ALPHABET_CITY);
+    // transform loc to lat lng
+    const middlewareLoc = loc as string;
+    const locSplit = middlewareLoc.split(",");
+    const deviceLoc = { lat: parseFloat(locSplit[0]), lng: parseFloat(locSplit[1]) };
+    const deviceDistance = haversineDistance(userLocation, deviceLoc);
+    console.log(deviceDistance);
+    const newYorkAreaCodes = [];
+    const isSpoofed = deviceDistance > 1000;
+
+    if (isSpoofed) {
+      return res.json({
+        tx: null,
+        message: `Your location looks weird....`,
+        error: "TOO_FAR",
+      });
+    }
+
     const distance = haversineDistance(userLocation, cacheLocation);
     const isTooFar = distance > 20;
     const isAdmin =
@@ -60,9 +78,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     // NOT OPTIMIZED - check if they already claimed this egg
     const allClaims = await db.scan({ TableName: "air-yaytso-claims" }).promise();
 
-    const alreadyClaimed = allClaims
-      .Items!.filter((claim) => claim.cacheId === "eggvents")
-      .find((claim) => claim.tokenType == tokenType);
+    const alreadyClaimed = allClaims.Items!.filter((claim) => claim.cacheId === "eggvents").find((claim) => claim.tokenType == tokenType);
 
     if (alreadyClaimed) {
       return res.status(405).json({
@@ -105,9 +121,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
           },
         };
         db.put(params).promise();
-        return res
-          .status(200)
-          .json({ tx: data.MessageId, message: "Yay! your egg is being minted as be speak :)", success: true });
+        return res.status(200).json({ tx: data.MessageId, message: "Yay! your egg is being minted as be speak :)", success: true });
       }
     });
   } catch (e) {
