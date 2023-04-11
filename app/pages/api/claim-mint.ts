@@ -60,11 +60,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
     const distance = haversineDistance(userLocation, cacheLocation);
     const isTooFar = distance > 20;
-    const isAdmin =
-      user.email === "arielklevecz@gmail.com" ||
-      // user.email === "ariel@yaytso.art" ||
-      // user.email === "teh@raptor.pizza" ||
-      user.phoneNumber === "+14159671642";
+    const isAdmin = user.email === "arielklevecz@gmail.com";
+    // user.email === "ariel@yaytso.art" ||
+    // user.email === "teh@raptor.pizza" ||
+    // user.phoneNumber === "+14159671642";
     if (isTooFar && !isAdmin) {
       return res.json({
         tx: null,

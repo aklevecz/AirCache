@@ -16,7 +16,7 @@ export default function Error({ error, toggleModal }: Props) {
       <div className="max-w-xs px-2 m-auto">
         {error.error === "TOO_FAR" && (
           <div className="w-1/2 m-auto">
-            <MapIcon />
+            <MapIcon color="black" />
           </div>
         )}
         {error.error === "TOO_FAR" && (
@@ -24,9 +24,7 @@ export default function Error({ error, toggleModal }: Props) {
             Ok
           </Button>
         )}
-        {error.error === "NO_AUTH" && (
-          <ModalCommonLogin toggleModal={toggleModal} />
-        )}
+        {error.error === "NO_AUTH" && <ModalCommonLogin toggleModal={toggleModal} />}
       </div>
     </>
   );

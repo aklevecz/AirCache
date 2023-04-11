@@ -54,6 +54,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         error: "TOO_FAR",
       });
     }
+    console.log(isAdmin, isTooFar);
+    return;
 
     const mintParams = {
       MessageAttributes: {
