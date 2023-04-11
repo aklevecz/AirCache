@@ -48,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       user.email === "arielklevecz@gmail.com" ||
       user.email === "ariel@yaytso.art" ||
       user.email === "teh@raptor.pizza" ||
-      user.phoneNumber === "+14159671642";
+      // user.phoneNumber === "+14159671642";
 
     if (isTooFar && !isAdmin) {
       return res.json({
