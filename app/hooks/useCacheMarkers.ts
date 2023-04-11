@@ -135,7 +135,7 @@ export default function useCacheMarkers(
     if (collected.length) {
       for (const nft of collected) {
         // @todo change image to type
-        const marker = markersRef.current.find((marker) => marker.nft.image === nft.image);
+        const marker = markersRef.current.find((marker) => marker.nft.name === nft.name);
         if (marker) {
           marker.setOpacity(0.5);
         }
@@ -198,7 +198,7 @@ export default function useCacheMarkers(
           animate(currentSize, size, -1);
         }
       } else {
-        const size = 80;
+        const size = 60;
         if (currentSize !== size && !animating) {
           animate(currentSize, size, 1);
         }

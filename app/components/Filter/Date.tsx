@@ -30,12 +30,12 @@ export default function FilterDate({ filter, applyFilter, dates }: Props) {
 
   return (
     <>
-      <div className="absolute flex flex-col gap-2 right-2 top-[100px] z-10" style={{ width: 130 }}>
+      <div className="absolute flex flex-col gap-2 right-2 top-[120px] z-10" style={{ maxWidth: 150 }}>
         <motion.div layout onClick={toggleOpen} className="bg-white rounded- text-black p-2 cursor-pointer">
           {!open ? (
-            <div className="flex gap-2 px-1 items-center">
+            <div className="flex gap-2 px-1 items-center justify-between">
               <div style={{ color: colors.lavender }} className={`font-bold text-[${colors.red}]`}>
-                {filter || "4/11-4/15"}
+                {filter.replace("/2023", "") || "4/11 - 4/15"}
               </div>{" "}
               <div className="h-6">
                 <DateIcon />
@@ -46,19 +46,20 @@ export default function FilterDate({ filter, applyFilter, dates }: Props) {
           )}
         </motion.div>
       </div>
-      <motion.div className="absolute z-[19] right-2 top-[160px]" initial={{ opacity: 0 }} exit={{ opacity: 0 }} animate={controls}>
+      <motion.div className="absolute z-[19] right-2 top-[170px]" initial={{ opacity: 0 }} exit={{ opacity: 0 }} animate={controls}>
         <div onClick={() => onApply("")} className={clsx(filter === "" ? `bg-lavender` : "bg-white", "text-black p-2 cursor-pointer")}>
-          4/11-4/15
+          4/11 - 4/15
         </div>
         {dates
           .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+          .filter((d) => d)
           .map((date) => (
             <div
               onClick={() => onApply(date)}
               className={clsx(filter === date ? `bg-lavender` : "bg-white", "text-black p-2 cursor-pointer")}
               key={date}
             >
-              {date}
+              {date.replace("/2023", "")}
             </div>
           ))}
       </motion.div>

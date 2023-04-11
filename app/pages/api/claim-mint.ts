@@ -44,22 +44,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     // return console.log(tokenAddress, "token address", ALPHABET_CITY);
     // transform loc to lat lng
-    const middlewareLoc = loc as string;
-    const locSplit = middlewareLoc.split(",");
-    const deviceLoc = { lat: parseFloat(locSplit[0]), lng: parseFloat(locSplit[1]) };
-    const deviceDistance = haversineDistance(userLocation, deviceLoc);
-    console.log(deviceDistance);
-    const newYorkAreaCodes = [];
-    const isSpoofed = deviceDistance > 1000;
+    if (loc && loc !== "{}") {
+      const middlewareLoc = JSON.parse(loc as string);
+      const deviceLoc = { lat: parseFloat(middlewareLoc.latitude), lng: parseFloat(middlewareLoc.longitude) };
+      const deviceDistance = haversineDistance(userLocation, deviceLoc);
+      const isSpoofed = deviceDistance > 100000;
 
-    if (isSpoofed) {
-      return res.json({
-        tx: null,
-        message: `Your location looks weird....`,
-        error: "TOO_FAR",
-      });
+      if (isSpoofed) {
+        return res.json({
+          tx: null,
+          message: `Your location looks weird....`,
+          error: "TOO_FAR",
+        });
+      }
     }
-
     const distance = haversineDistance(userLocation, cacheLocation);
     const isTooFar = distance > 20;
     const isAdmin =

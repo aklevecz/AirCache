@@ -68,7 +68,7 @@ export default function Claim({ groupName, NFT, claim, fetching, huntType, isCol
         {/* {txState !== TxState.Fetching ? ( */}
         {!fetching ? (
           <Button
-            disabled={true}
+            // disabled={true}
             // disabled={isCollected || fetching}
             onClick={claim}
             className="self-end"
