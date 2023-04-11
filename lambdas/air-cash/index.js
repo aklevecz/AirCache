@@ -3,7 +3,7 @@ const fetch = require("node-fetch");
 const ContractInterface = require("./Eggvents.json");
 
 // 4/8
-const maticAddress = "0x754D19624d32f746d1393AA364ED50FeCcc577EB";
+const maticAddress = "0x067Cc02D3C49f844009e15Bd0DDeb69dbccbC4Fc";
 
 // MUMBAI
 const mumbaiAddress = "0x044f3e29ECB231169a1cdfaD1bAaA847A69482D0";
@@ -49,7 +49,7 @@ exports.handler = async (event) => {
       {
         name: "teh-raptor",
         version: "1.0",
-        chainId: await masterWallet.getChainId(),
+        chainId: chainId,
         verifyingContract: contractAddress,
       },
       {
@@ -60,10 +60,10 @@ exports.handler = async (event) => {
       },
       nftData
     );
-    console.log(signature, nftData);
+    console.log(signature, nftData, chainId, masterWallet.address);
     var tx = await signer.discover(nftData, signature, {
       gasPrice: fees.result,
-      gasLimit: 900000,
+      gasLimit: 40000,
     });
     // END MINT TOKEN
 
