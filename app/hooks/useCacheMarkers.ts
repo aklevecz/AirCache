@@ -110,6 +110,11 @@ export default function useCacheMarkers(
     });
     (cacheMarker as any).cacheId = id;
     (cacheMarker as any).nft = nft;
+
+    const isToday = filteredCaches.find((cache: any) => cache.nft.tokenId === nft.tokenId);
+    if (!isToday) {
+      cacheMarker.setVisible(false);
+    }
     cacheMarker.addListener("click", () => {
       modal.toggleModal({
         cache: {
@@ -152,7 +157,7 @@ export default function useCacheMarkers(
         marker.setVisible(true);
       }
     }
-  }, [filteredCaches]);
+  }, [filteredCaches, markersRef]);
 
   useEffect(() => {
     // Lots of redundancy here -- hmm what the hell was I doing here
