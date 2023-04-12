@@ -13,14 +13,12 @@ export default function NFT({ nft }: any) {
 
   useEffect(() => {
     if (inView) {
-      console.log(nft.image);
       localforage.getItem(nft.image).then((blob: any) => {
         if (imgRef.current) {
           if (blob) {
             imgRef.current.src = URL.createObjectURL(blob);
           } else {
             const url = isIpfs(nft.image) ? ipfsToPinata(nft.image) : nft.image;
-            console.log(url);
             axios.get(url, { headers: { "Access-Control-Allow-Origin": "*" }, responseType: "arraybuffer" }).then((res) => {
               const blob = new Blob([res.data], {
                 type: res.headers["content-type"],
@@ -38,7 +36,7 @@ export default function NFT({ nft }: any) {
       <div className="text-center font-bold text-2xl mt-4">{nft.name}</div>
       <div className="">
         {/* <img src={nft.image} /> */}
-        <img ref={imgRef} className="m-auto p-5 mb-4" />
+        <img className="m-auto p-5 mb-4" src={nft.image} />
         {/* <a
           className="bg-polygon px-6 py-2 rounded-full flex items-center justify-around w-40 m-auto"
           target="_blank"
