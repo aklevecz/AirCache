@@ -75,7 +75,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     // NOT OPTIMIZED - check if they already claimed this egg
     const allClaims = await db.scan({ TableName: "air-yaytso-claims" }).promise();
 
-    const alreadyClaimed = allClaims.Items!.filter((claim) => claim.cacheId === "eggvents").find((claim) => claim.tokenType == tokenType);
+    const alreadyClaimed = allClaims.Items!.filter((claim) => claim.cacheId === "eggvents").find((claim) => claim.tokenType == tokenType && claim.wallet== user.publicAddress);
 
     if (alreadyClaimed) {
       return res.status(405).json({
