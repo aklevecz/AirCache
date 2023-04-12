@@ -59,7 +59,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       }
     }
     const distance = haversineDistance(userLocation, cacheLocation);
-    const isTooFar = distance > 20;
+    const isTooFar = distance > 50;
     const isAdmin = user.email === "arielklevecz@gmail.com";
     // user.email === "ariel@yaytso.art" ||
     // user.email === "teh@raptor.pizza" ||
