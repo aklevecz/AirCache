@@ -81,6 +81,14 @@ export default function Merch() {
     >
       <div className="relative flex flex-col gap-4 justify-center items-start px-4 sm:flex-row">
         <AnimatePresence>
+          <div
+            onClick={() => {
+              window.open("https://digitalbespoke.xyz");
+            }}
+            className="pointer bg-red-500 text-white px-4 py-2 rounded-full font-bold m-auto shift"
+          >
+            DIGITALBESPOKE.XYZ
+          </div>
           <Card
             key={"card-0"}
             i={0}
