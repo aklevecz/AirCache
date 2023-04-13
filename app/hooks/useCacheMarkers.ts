@@ -218,7 +218,6 @@ export default function useCacheMarkers(
       caches
         .sort((a, b) => b.tokenId.localeCompare(a.tokenId))
         .map((cache, index) => {
-          console.log(cache.priority);
           const markerExists = markersRef.current.find((marker) => marker.cacheId === cache.cacheId);
           if (markerExists) {
             const icon = getIcon(cache.tokenId, cache.nft);
@@ -226,6 +225,7 @@ export default function useCacheMarkers(
             markers.push(markerExists);
             return;
           }
+
           const marker = createCacheMarker(
             parseFloat(cache.lat),
             parseFloat(cache.lng),

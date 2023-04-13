@@ -233,7 +233,7 @@ export default function CacheContentModal({ open, toggleModal, airCache, auth, d
                 setError({ message: res.message, error: res.error });
               }
             } else {
-              console.log(data);
+              console.log("HELLO", data.cache.location);
               // is prog hunt
               const res = await claimMint(data.progContract, data.progContractTokenType, data.cache.location, userLocation, { timestamp, o });
               // this is resolving on success right now as well since the changes to minting on the lambda with optismtic feedback

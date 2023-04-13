@@ -9,6 +9,7 @@ import { cacheByGroupTableName } from "../libs/constants";
 import web3Api from "../libs/web3Api";
 import { fetchHuntMeta } from "../libs/api";
 import axios from "axios";
+import { getTraitValue } from "../libs/utils";
 const wordHunts = ["nft-nyc", "venice", "la"];
 
 export const isWordHunt = (hunt: string) => wordHunts.includes(hunt);
@@ -78,6 +79,13 @@ async function main() {
           tokenAddress: huntMeta.contract,
         };
         data.nft = nft;
+        // MONKEY PATCH FOR UVR LOCATION CHANGE
+        if (nft.name === "UVR SECRET SHOW") {
+          const location = getTraitValue(nft.attributes, "location");
+          const locSplit = location.split(",");
+          data.lat = locSplit[0].trim();
+          data.lng = locSplit[1].trim();
+        }
       }
 
       mergedData.push(data);
