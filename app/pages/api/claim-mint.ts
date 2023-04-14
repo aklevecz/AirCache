@@ -48,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       const middlewareLoc = JSON.parse(loc as string);
       const deviceLoc = { lat: parseFloat(middlewareLoc.latitude), lng: parseFloat(middlewareLoc.longitude) };
       const deviceDistance = haversineDistance(userLocation, deviceLoc);
-      const isSpoofed = deviceDistance > 100000;
+      const isSpoofed = deviceDistance > 1000000;
 
       if (isSpoofed) {
         return res.json({
