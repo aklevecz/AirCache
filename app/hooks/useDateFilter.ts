@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { currentDateNoHours, getTraitValue } from "../libs/utils";
 
 export default function useDateFilter(caches: any) {
-  const [filter, setFilter] = useState("4/13/2023");
+  const [filter, setFilter] = useState("");
 
   const applyFilter = (date: string) => {
     setFilter(date);
@@ -24,9 +24,9 @@ export default function useDateFilter(caches: any) {
   useEffect(() => {
     const currentDate = currentDateNoHours();
     for (const date of dates) {
-      const dateTime = new Date(date).getTime();
+      const dateTime = new Date(date).getTime() - 1000 * 60 * 60 * 8;
       if (currentDate === dateTime) {
-        //setFilter(date);
+        setFilter(date);
       }
     }
   }, [dates]);
