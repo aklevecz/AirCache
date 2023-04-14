@@ -63,7 +63,7 @@ exports.handler = async (event) => {
     // var tx = await signer.discover(nftData, signature, {
     var tx = await signer.discover(winner, tokenType, {
       gasPrice: fees.result,
-      gasLimit: 200000,
+      gasLimit: 400000,
     });
     // END MINT TOKEN
 

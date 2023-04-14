@@ -24,7 +24,7 @@ export default function useDateFilter(caches: any) {
   useEffect(() => {
     const currentDate = currentDateNoHours();
     for (const date of dates) {
-      const dateTime = new Date(date).getTime() - 1000 * 60 * 60 * 8;
+      const dateTime = new Date(date).getTime();
       if (currentDate === dateTime) {
         setFilter(date);
       }
