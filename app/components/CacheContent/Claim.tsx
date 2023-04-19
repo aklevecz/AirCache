@@ -56,11 +56,13 @@ export default function Claim({ groupName, NFT, claim, fetching, huntType, isCol
             </a>
           </div>
         )}
-        <div className="mt-2 w-10">
-          <a className="underline text-red-500 font-bold" href={gmapUrl(progHuntInfo.location_name)} target="_blank">
-            <NavigateIcon />
-          </a>
-        </div>
+        {isProgHunt && progHuntInfo.location_name && (
+          <div className="mt-2 w-10">
+            <a className="underline text-red-500 font-bold" href={gmapUrl(progHuntInfo.location_name)} target="_blank">
+              <NavigateIcon />
+            </a>
+          </div>
+        )}
       </div>
       <div className="text-lg mb-4">{progHuntInfo.location_name}</div>
 
@@ -73,7 +75,7 @@ export default function Claim({ groupName, NFT, claim, fetching, huntType, isCol
             onClick={claim}
             className="self-end"
           >
-            {isCollected ? "You have this egg :)" : "Claim egg"}
+            {isCollected ? "You have already claimed :)" : "Claim"}
           </Button>
         ) : (
           <BouncyEgg />

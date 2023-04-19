@@ -8,11 +8,8 @@ import { easeOut } from "../motion/ease";
 function MyApp({ Component, pageProps, router }: AppProps) {
   return (
     <>
-      <Header />
-      <MotionConfig
-        reducedMotion="user"
-        transition={{ ease: easeOut, duration: 0.7 }}
-      >
+      {/* <Header /> */}
+      <MotionConfig reducedMotion="user" transition={{ ease: easeOut, duration: 0.7 }}>
         <AnimatePresence mode="wait">
           <Component {...pageProps} key={router.route} />
         </AnimatePresence>

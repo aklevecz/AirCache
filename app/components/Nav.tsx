@@ -44,7 +44,7 @@ export default function Nav() {
           <MapIcon color="black" />
         </div>
       </Link>
-      <Link key={"merch"} href={`/merch`}>
+      {/* <Link key={"merch"} href={`/merch`}>
         <div
           style={{
             width: ICON_DIMS,
@@ -54,7 +54,7 @@ export default function Nav() {
         >
           <QuestionIcon />
         </div>
-      </Link>
+      </Link> */}
       <Link key={"wallet"} href={`/wallet`}>
         <div
           style={{

@@ -76,6 +76,8 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
     }
   }, [map, user]);
 
+  const isProgHunt = huntMeta?.huntType === "prog";
+
   return (
     <>
       <HeadHunt mapMeta={huntMeta} />
@@ -90,7 +92,7 @@ export default function Group({ caches: c, groupName, nftMetadata, huntMeta }: P
             );
           })}
       </div>
-      {loaded && <FilterDate dates={dates} applyFilter={applyFilter} filter={filter} />}
+      {loaded && isProgHunt && <FilterDate dates={dates} applyFilter={applyFilter} filter={filter} />}
       <Map initMap={initMap} map={map} user={auth.user} />
 
       {true &&

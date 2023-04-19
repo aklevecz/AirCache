@@ -111,7 +111,7 @@ export default function useCacheMarkers(
     (cacheMarker as any).cacheId = id;
     (cacheMarker as any).nft = nft;
 
-    const isToday = filteredCaches.find((cache: any) => cache.nft.tokenId === nft.tokenId);
+    const isToday = filteredCaches.find((cache: any) => cache.nft?.tokenId === nft?.tokenId);
     if (!isToday) {
       cacheMarker.setVisible(false);
     }
@@ -216,7 +216,7 @@ export default function useCacheMarkers(
       const markers: any[] = [];
 
       caches
-        .sort((a, b) => b.tokenId.localeCompare(a.tokenId))
+        // .sort((a, b) => (typeof b.tokenId === "string" ? b?.tokenId.localeCompare(a?.tokenId) : 0))
         .map((cache, index) => {
           const markerExists = markersRef.current.find((marker) => marker.cacheId === cache.cacheId);
           if (markerExists) {
