@@ -35,6 +35,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       res.status(404);
     }
 
+    return res.json({
+      tx: null,
+      message: `the hunt is over`,
+      error: "HUNT_OVER",
+    });
+
     // More checks
     // Check if their magic link is valid
     // Check if the cache actually has a token
@@ -75,7 +81,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     // NOT OPTIMIZED - check if they already claimed this egg
     const allClaims = await db.scan({ TableName: "air-yaytso-claims" }).promise();
 
-    const alreadyClaimed = allClaims.Items!.filter((claim) => claim.cacheId === "eggvents").find((claim) => claim.tokenType == tokenType && claim.wallet== user.publicAddress);
+    const alreadyClaimed = allClaims
+      .Items!.filter((claim) => claim.cacheId === "eggvents")
+      .find((claim) => claim.tokenType == tokenType && claim.wallet == user.publicAddress);
 
     if (alreadyClaimed) {
       return res.status(405).json({
